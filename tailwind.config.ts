@@ -65,6 +65,7 @@ export default {
 				}
 			},
 			fontFamily: {
+				'dm-sans': ['DM Sans', 'system-ui', 'sans-serif'],
 				'inter': ['Inter', 'system-ui', 'sans-serif'],
 				'poppins': ['Poppins', 'system-ui', 'sans-serif'],
 			},

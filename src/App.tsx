@@ -14,8 +14,9 @@ const queryClient = new QueryClient();
 
 function App() {
   useEffect(() => {
-    // Force dark theme for the black & gold design
-    document.documentElement.classList.add('dark');
+    // Initialize with light theme by default
+    document.documentElement.classList.remove('dark');
+    document.body.classList.remove('dark');
   }, []);
 
   return (

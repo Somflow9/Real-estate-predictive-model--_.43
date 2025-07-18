@@ -2,6 +2,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Star, TrendingUp, MessageCircle, Building } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
   const location = useLocation();
@@ -23,29 +24,32 @@ const Navbar = () => {
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full animate-pulse shadow-lg"></div>
             </div>
             <div>
-              <span className="text-3xl font-bold font-poppins bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              <span className="text-3xl font-bold font-dm-sans bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 PropGyan
               </span>
               <div className="text-xs text-muted-foreground -mt-1 font-medium">Premium Property Intelligence</div>
             </div>
           </Link>
           
-          <div className="flex space-x-2">
-            {navItems.map(({ path, label, icon: Icon }) => (
-              <Link
-                key={path}
-                to={path}
-                className={cn(
-                  "flex items-center space-x-3 px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 hover:scale-105",
-                  location.pathname === path
-                    ? "bg-gradient-to-r from-primary to-accent text-background shadow-xl gold-glow"
-                    : "text-muted-foreground hover:text-foreground glassmorphism border border-primary/20 hover:border-primary/40"
-                )}
-              >
-                <Icon className="h-5 w-5" />
-                <span>{label}</span>
-              </Link>
-            ))}
+          <div className="flex items-center space-x-4">
+            <div className="flex space-x-2">
+              {navItems.map(({ path, label, icon: Icon }) => (
+                <Link
+                  key={path}
+                  to={path}
+                  className={cn(
+                    "flex items-center space-x-3 px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 hover:scale-105",
+                    location.pathname === path
+                      ? "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-xl primary-glow"
+                      : "text-muted-foreground hover:text-foreground glassmorphism border border-primary/20 hover:border-primary/40"
+                  )}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span>{label}</span>
+                </Link>
+              ))}
+            </div>
+            <ThemeToggle />
           </div>
         </div>
       </div>
