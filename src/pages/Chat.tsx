@@ -234,7 +234,7 @@ const Chat = () => {
 
   if (!hasApiKey) {
     return (
-      <div className={`max-w-4xl mx-auto h-[calc(100vh-12rem)] flex items-center justify-center bg-gradient-to-br from-background via-background to-card ${isDarkMode ? 'dark' : ''}`}>
+      <div className={`max-w-4xl mx-auto h-[calc(100vh-12rem)] flex items-center justify-center ${isDarkMode ? 'dark' : ''}`} style={{ background: 'var(--background-gradient)' }}>
         <div className="absolute top-4 right-4">
           <Button
             onClick={toggleTheme}
@@ -251,7 +251,7 @@ const Chat = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-card">
+    <div className="min-h-screen" style={{ background: 'var(--background-gradient)' }}>
       <div className="h-full flex flex-col max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-6 flex justify-between items-center p-6">
@@ -273,7 +273,7 @@ const Chat = () => {
             onClick={toggleTheme}
             variant="outline"
             size="icon"
-            className="glassmorphism hover:gold-glow border-primary/30 hover:border-primary/60"
+            className="glassmorphism primary-glow glow-border"
           >
             {isDarkMode ? <Sun className="h-5 w-5 text-primary" /> : <Moon className="h-5 w-5 text-primary" />}
           </Button>
@@ -287,15 +287,15 @@ const Chat = () => {
                 <div key={message.id} className="space-y-4">
                   <div className={`flex gap-4 ${message.isUser ? 'justify-end' : 'justify-start'}`}>
                     {!message.isUser && (
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center flex-shrink-0 shadow-lg gold-glow">
-                        <Bot className="w-5 h-5 text-background" />
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center flex-shrink-0 shadow-lg primary-glow">
+                        <Bot className="w-5 h-5 text-primary-foreground" />
                       </div>
                     )}
                     
                     <div
                       className={`max-w-[75%] p-5 rounded-3xl transition-all duration-500 ${
                         message.isUser
-                          ? 'bg-gradient-to-r from-primary to-accent text-background ml-auto shadow-lg hover:shadow-2xl hover:scale-[1.02] font-medium'
+                          ? 'bg-gradient-to-r from-primary to-accent text-primary-foreground ml-auto shadow-lg hover:shadow-2xl hover:scale-[1.02] font-medium primary-glow'
                           : 'message-card text-foreground'
                       }`}
                     >
@@ -321,7 +321,7 @@ const Chat = () => {
                       {message.flashCards.map((card, index) => (
                         <div
                           key={index}
-                          className="glassmorphism p-5 rounded-2xl border-2 border-primary/30 min-w-[160px] hover:border-primary/60 hover:gold-glow transition-all duration-500 cursor-pointer group"
+                          className="glassmorphism p-5 rounded-2xl glow-border min-w-[160px] transition-all duration-500 cursor-pointer group hover:primary-glow"
                           style={{ animationDelay: `${index * 150}ms` }}
                         >
                           <div className="flex items-center justify-between mb-3">
@@ -345,7 +345,7 @@ const Chat = () => {
                         3-Year Market Analysis
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="glassmorphism p-4 rounded-2xl border-2 border-primary/30">
+                        <div className="glassmorphism p-4 rounded-2xl glow-border">
                           <div className="flex items-center gap-2 mb-2">
                             <Calendar className="h-5 w-5 text-primary" />
                             <span className="text-xs text-muted-foreground font-medium">Annual Growth</span>
@@ -355,7 +355,7 @@ const Chat = () => {
                           </div>
                         </div>
                         
-                        <div className="glassmorphism p-4 rounded-2xl border-2 border-primary/30">
+                        <div className="glassmorphism p-4 rounded-2xl glow-border">
                           <div className="flex items-center gap-2 mb-2">
                             <TrendingUp className="h-5 w-5 text-primary" />
                             <span className="text-xs text-muted-foreground font-medium">Market Trend</span>
@@ -368,7 +368,7 @@ const Chat = () => {
                           </div>
                         </div>
                         
-                        <div className="glassmorphism p-4 rounded-2xl border-2 border-primary/30">
+                        <div className="glassmorphism p-4 rounded-2xl glow-border">
                           <div className="flex items-center gap-2 mb-2">
                             <Target className="h-5 w-5 text-primary" />
                             <span className="text-xs text-muted-foreground font-medium">Smart Advice</span>
@@ -382,12 +382,12 @@ const Chat = () => {
                         </div>
                       </div>
                       
-                      <div className="glassmorphism p-4 rounded-2xl border-2 border-primary/30">
+                      <div className="glassmorphism p-4 rounded-2xl glow-border">
                         <div className="text-xs text-muted-foreground mb-2 font-medium">Reasoning</div>
                         <div className="text-sm text-foreground">{message.temporalData.reasoning}</div>
                       </div>
                       
-                      <div className="glassmorphism p-4 rounded-2xl border-2 border-primary/30">
+                      <div className="glassmorphism p-4 rounded-2xl glow-border">
                         <div className="text-xs text-muted-foreground mb-2 font-medium">Seasonal Pattern</div>
                         <div className="text-sm text-foreground">{message.temporalData.seasonalPattern}</div>
                       </div>
@@ -398,8 +398,8 @@ const Chat = () => {
               
               {isLoading && (
                 <div className="flex gap-4 justify-start">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center flex-shrink-0 animate-spin shadow-lg gold-glow">
-                    <Bot className="w-5 h-5 text-background" />
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center flex-shrink-0 animate-spin shadow-lg primary-glow">
+                    <Bot className="w-5 h-5 text-primary-foreground" />
                   </div>
                   <div className="message-card">
                     <div className="flex space-x-3">
@@ -437,7 +437,7 @@ const Chat = () => {
                 onClick={handleSendMessage} 
                 disabled={!inputMessage.trim() || isLoading}
                 size="icon"
-                className="bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-background rounded-2xl h-12 w-12 shadow-lg hover:shadow-2xl hover:scale-110 transition-all duration-300 gold-glow"
+                className="bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-primary-foreground rounded-2xl h-12 w-12 shadow-lg hover:shadow-2xl hover:scale-110 transition-all duration-300 primary-glow"
               >
                 <Send className="w-5 h-5" />
               </Button>

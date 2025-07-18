@@ -66,14 +66,14 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-orange-50 to-pink-50">
+    <div className="min-h-screen" style={{ background: 'var(--background-gradient)' }}>
       {/* Hero Section */}
       <section className="relative px-4 py-16 md:py-24">
         <div className="max-w-6xl mx-auto text-center space-y-8">
           <div className="space-y-4">
             <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
               Tired of Guessing Property Prices?{' '}
-              <span className="bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Ask PropGyan.
               </span>
             </h1>
@@ -93,10 +93,10 @@ const Home = () => {
           </div>
 
           <div className="flex flex-wrap gap-4 justify-center items-center">
-            <Button asChild size="lg" className="bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 text-white px-8 py-3 rounded-xl hover:scale-105 transition-all duration-200 shadow-lg">
+            <Button asChild size="lg" className="bg-gradient-to-r from-primary to-accent hover:shadow-lg px-8 py-3 rounded-xl hover:scale-105 transition-all duration-200 primary-glow">
               <Link to="/chat">Start Conversation</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-2 border-orange-200 hover:border-orange-300 px-8 py-3 rounded-xl hover:scale-105 transition-all duration-200">
+            <Button asChild variant="outline" size="lg" className="glow-border px-8 py-3 rounded-xl hover:scale-105 transition-all duration-200">
               <Link to="/recommendations">Get Recommendations</Link>
             </Button>
           </div>
@@ -114,14 +114,14 @@ const Home = () => {
             {features.map((feature, index) => (
               <Card 
                 key={index} 
-                className={`group cursor-pointer transition-all duration-500 hover:scale-105 hover:shadow-xl border-2 border-orange-100 hover:border-orange-200 bg-gradient-to-br from-white to-gray-50 ${
+                className={`group cursor-pointer transition-all duration-500 hover:scale-105 card-shadow glassmorphism glow-border ${
                   visibleCards > index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
                 <CardHeader className="text-center pb-2">
-                  <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${feature.color} flex items-center justify-center group-hover:animate-pulse`}>
-                    <feature.icon className="h-8 w-8 text-white" />
+                  <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center group-hover:animate-pulse primary-glow`}>
+                    <feature.icon className="h-8 w-8 text-primary-foreground" />
                   </div>
                   <CardTitle className="text-xl font-bold">{feature.title}</CardTitle>
                 </CardHeader>
@@ -143,7 +143,7 @@ const Home = () => {
                 <Link
                   key={index}
                   to="/chat"
-                  className="group px-4 py-2 bg-white/80 backdrop-blur-sm border border-orange-200 rounded-full text-sm text-muted-foreground hover:text-foreground hover:border-orange-300 hover:bg-white transition-all duration-200 hover:scale-105 shadow-sm hover:shadow-md animate-bounce"
+                  className="group px-4 py-2 glassmorphism glow-border rounded-full text-sm text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105 shadow-sm hover:shadow-md animate-bounce"
                   style={{ animationDelay: `${index * 200}ms`, animationDuration: '2s' }}
                 >
                   💭 {prompt}
@@ -157,7 +157,7 @@ const Home = () => {
       {/* Stats Section */}
       <section className="px-4 py-16">
         <div className="max-w-4xl mx-auto">
-          <Card className="bg-gradient-to-r from-blue-500 to-orange-500 text-white border-0 shadow-2xl">
+          <Card className="bg-gradient-to-r from-primary to-accent text-primary-foreground border-0 shadow-2xl primary-glow">
             <CardHeader>
               <CardTitle className="text-center text-2xl font-bold">Market Overview</CardTitle>
             </CardHeader>
@@ -192,7 +192,7 @@ const Home = () => {
             "Where you live is your story — make sure the first chapter isn't a mistake."
           </blockquote>
           <div className="mt-8">
-            <Button asChild size="lg" className="bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 text-white px-8 py-3 rounded-xl hover:scale-105 transition-all duration-200 shadow-lg">
+            <Button asChild size="lg" className="bg-gradient-to-r from-primary to-accent px-8 py-3 rounded-xl hover:scale-105 transition-all duration-200 primary-glow">
               <Link to="/chat">Start Your Story with PropGyan</Link>
             </Button>
           </div>
