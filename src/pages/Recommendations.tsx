@@ -39,6 +39,10 @@ const Recommendations = () => {
     setPreferences(prev => ({ ...prev, [key]: value }));
   };
 
+  const handleSliderChange = (key: string, value: any) => {
+    setPreferences(prev => ({ ...prev, [key]: value }));
+  };
+
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
@@ -63,14 +67,14 @@ const Recommendations = () => {
       <div className="flex items-center justify-center py-12">
         <div className="text-center space-y-4">
           <div className="relative">
-            <Building className="h-12 w-12 mx-auto text-orange-500 animate-pulse" />
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-400 rounded-full animate-ping"></div>
+            <Building className="h-12 w-12 mx-auto text-primary animate-pulse" />
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full animate-ping"></div>
           </div>
           <p className="text-muted-foreground">Collecting real-time property data from trusted sources...</p>
           <div className="flex justify-center space-x-1">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-            <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce delay-100"></div>
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-200"></div>
+            <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+            <div className="w-2 h-2 bg-accent rounded-full animate-bounce delay-100"></div>
+            <div className="w-2 h-2 bg-primary rounded-full animate-bounce delay-200"></div>
           </div>
         </div>
       </div>
@@ -82,11 +86,11 @@ const Recommendations = () => {
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center space-x-3">
           <div className="relative">
-            <Building className="h-10 w-10 text-orange-500" />
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
+            <Building className="h-10 w-10 text-primary" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full animate-pulse"></div>
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
-            PropGyana Recommendations
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            PropGyan Recommendations
           </h1>
         </div>
         <p className="text-muted-foreground text-lg">
@@ -95,8 +99,8 @@ const Recommendations = () => {
       </div>
 
       {/* Enhanced Preferences Card */}
-      <Card className="border-2 border-orange-100 shadow-lg hover:shadow-xl transition-shadow">
-        <CardHeader className="bg-gradient-to-r from-blue-50 to-orange-50">
+      <Card className="glow-border shadow-lg hover:shadow-xl transition-shadow glassmorphism">
+        <CardHeader className="glassmorphism">
           <div className="flex items-center justify-between">
             <CardTitle className="text-xl text-foreground">Your Preferences</CardTitle>
             <Button
@@ -104,7 +108,7 @@ const Recommendations = () => {
               disabled={isRefreshing}
               variant="outline"
               size="sm"
-              className="hover:scale-105 transition-transform border-orange-200"
+              className="hover:scale-105 transition-transform glow-border"
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               Refresh Data
@@ -117,7 +121,8 @@ const Recommendations = () => {
               <label className="text-sm font-medium mb-2 block">Budget (₹ Lakhs)</label>
               <Slider
                 value={[preferences.budget]}
-                onValueChange={(value) => handlePreferenceChange('budget', value[0])}
+                onValueCommit={(value) => handlePreferenceChange('budget', value[0])}
+                onValueChange={(value) => handleSliderChange('budget', value[0])}
                 max={500}
                 min={20}
                 step={10}
@@ -159,7 +164,8 @@ const Recommendations = () => {
             <label className="text-sm font-medium mb-2 block">Minimum Bedrooms</label>
             <Slider
               value={[preferences.minBedrooms]}
-              onValueChange={(value) => handlePreferenceChange('minBedrooms', value[0])}
+              onValueCommit={(value) => handlePreferenceChange('minBedrooms', value[0])}
+              onValueChange={(value) => handleSliderChange('minBedrooms', value[0])}
               max={4}
               min={1}
               step={1}
@@ -171,16 +177,16 @@ const Recommendations = () => {
       </Card>
 
       {/* Enhanced Real-time Data Sources */}
-      <Card className="border border-green-200 bg-green-50">
+      <Card className="glow-border glassmorphism">
         <CardContent className="pt-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-green-800">Live data from trusted sources:</span>
+              <div className="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-foreground">Live data from trusted sources:</span>
             </div>
             <div className="flex space-x-2">
               {propertyDataService.getActiveSources().map(source => (
-                <Badge key={source.id} variant="secondary" className="text-xs bg-green-100 text-green-800 hover:bg-green-200 transition-colors">
+                <Badge key={source.id} variant="secondary" className="text-xs">
                   {source.name}
                 </Badge>
               ))}
@@ -192,7 +198,7 @@ const Recommendations = () => {
       {/* Enhanced Recommendations */}
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold flex items-center space-x-2">
-          <Star className="h-6 w-6 text-yellow-500 fill-current" />
+          <Star className="h-6 w-6 text-accent fill-current" />
           <span>Top AI Recommendations ({recommendations?.length || 0})</span>
         </h2>
 
@@ -208,25 +214,25 @@ const Recommendations = () => {
 
 const RecommendationCard = ({ property, rank }: { property: Property; rank: number }) => {
   const getRankBadge = (rank: number) => {
-    if (rank === 1) return <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white animate-pulse">🥇 Best Match</Badge>;
-    if (rank === 2) return <Badge className="bg-gradient-to-r from-gray-300 to-gray-500 text-white">🥈 Great Option</Badge>;
-    if (rank === 3) return <Badge className="bg-gradient-to-r from-amber-500 to-amber-700 text-white">🥉 Good Choice</Badge>;
-    return <Badge variant="outline" className="border-orange-200">#{rank}</Badge>;
+    if (rank === 1) return <Badge className="bg-gradient-to-r from-primary to-accent text-primary-foreground animate-pulse">🥇 Best Match</Badge>;
+    if (rank === 2) return <Badge className="bg-gradient-to-r from-muted to-muted-foreground text-primary-foreground">🥈 Great Option</Badge>;
+    if (rank === 3) return <Badge className="bg-gradient-to-r from-accent to-primary text-primary-foreground">🥉 Good Choice</Badge>;
+    return <Badge variant="outline" className="glow-border">#{rank}</Badge>;
   };
 
   return (
-    <Card className="hover:shadow-xl transition-all duration-300 border-l-4 border-l-orange-500 hover:scale-[1.02] bg-gradient-to-br from-white to-orange-50">
+    <Card className="hover:shadow-xl transition-all duration-300 glow-border hover:scale-[1.02] glassmorphism">
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle className="text-2xl text-green-600">₹{property.price}L</CardTitle>
+            <CardTitle className="text-2xl text-primary">₹{property.price}L</CardTitle>
             <p className="text-sm text-muted-foreground">₹{property.price_per_sqft}/sq ft</p>
           </div>
           <div className="flex flex-col items-end space-y-2">
             {getRankBadge(rank)}
-            <div className="flex items-center space-x-1 bg-yellow-100 px-2 py-1 rounded-full">
-              <Star className="h-4 w-4 text-yellow-500 fill-current" />
-              <span className="text-sm font-bold text-yellow-700">{property.recommendation_score}/10</span>
+            <div className="flex items-center space-x-1 bg-accent/20 px-2 py-1 rounded-full">
+              <Star className="h-4 w-4 text-accent fill-current" />
+              <span className="text-sm font-bold text-accent">{property.recommendation_score}/10</span>
             </div>
           </div>
         </div>
@@ -235,18 +241,18 @@ const RecommendationCard = ({ property, rank }: { property: Property; rank: numb
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <MapPin className="h-4 w-4 text-blue-500" />
+            <MapPin className="h-4 w-4 text-primary" />
             <span className="font-medium text-sm">{property.location}</span>
           </div>
-          <Badge variant="secondary" className="bg-blue-100 text-blue-800">{property.property_type}</Badge>
+          <Badge variant="secondary">{property.property_type}</Badge>
         </div>
         
         <div className="grid grid-cols-2 gap-4 text-sm">
-          <div className="flex items-center space-x-2 bg-orange-100 p-2 rounded-lg">
-            <Home className="h-4 w-4 text-orange-600" />
+          <div className="flex items-center space-x-2 bg-accent/20 p-2 rounded-lg">
+            <Home className="h-4 w-4 text-accent" />
             <span className="font-medium">{property.bedrooms} BHK, {property.bathrooms} Bath</span>
           </div>
-          <div className="bg-blue-100 p-2 rounded-lg text-center font-medium text-blue-800">
+          <div className="bg-primary/20 p-2 rounded-lg text-center font-medium text-primary">
             {property.area_sqft} sq ft
           </div>
         </div>
@@ -256,21 +262,21 @@ const RecommendationCard = ({ property, rank }: { property: Property; rank: numb
             <span className="text-sm text-muted-foreground">Builder:</span>
             <span className="text-sm font-medium">{property.builder}</span>
           </div>
-          <div className="flex justify-between bg-gray-50 p-2 rounded">
+          <div className="flex justify-between bg-muted/20 p-2 rounded">
             <span className="text-sm text-muted-foreground">Source:</span>
-            <Badge variant="outline" className="text-xs border-green-300 text-green-700">{(property as any).source}</Badge>
+            <Badge variant="outline" className="text-xs glow-border">{(property as any).source}</Badge>
           </div>
         </div>
         
         {property.predicted_price && (
-          <div className="flex items-center justify-between p-3 bg-gradient-to-r from-green-100 to-blue-100 rounded-lg border border-green-200">
+          <div className="flex items-center justify-between p-3 bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg glow-border">
             <div className="flex items-center space-x-2">
-              <TrendingUp className="h-4 w-4 text-green-600" />
-              <span className="text-sm font-medium text-green-800">AI Prediction: ₹{property.predicted_price}L</span>
+              <TrendingUp className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-foreground">AI Prediction: ₹{property.predicted_price}L</span>
             </div>
             <Badge 
               variant={property.price <= property.predicted_price ? "default" : "destructive"}
-              className={property.price <= property.predicted_price ? "bg-green-500" : ""}
+              className={property.price <= property.predicted_price ? "bg-primary" : ""}
             >
               {property.price <= property.predicted_price ? "💰 Good Value" : "⚠️ Overpriced"}
             </Badge>
@@ -278,9 +284,9 @@ const RecommendationCard = ({ property, rank }: { property: Property; rank: numb
         )}
         
         <div className="flex flex-wrap gap-2">
-          {property.parking && <Badge variant="outline" className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100">🚗 Parking</Badge>}
-          {property.metro_nearby && <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100">🚇 Metro</Badge>}
-          <Badge variant="outline" className="bg-orange-50 border-orange-200 text-orange-700">📅 {property.days_since_listed} days listed</Badge>
+          {property.parking && <Badge variant="outline" className="glow-border">🚗 Parking</Badge>}
+          {property.metro_nearby && <Badge variant="outline" className="glow-border">🚇 Metro</Badge>}
+          <Badge variant="outline" className="glow-border">📅 {property.days_since_listed} days listed</Badge>
         </div>
       </CardContent>
     </Card>

@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { Home, Star, TrendingUp, MessageCircle, Building } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ThemeToggle from './ThemeToggle';
+import logoLight from '@/assets/logo-light.png';
+import logoDark from '@/assets/logo-dark.png';
 
 const Navbar = () => {
   const location = useLocation();
@@ -20,14 +22,16 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center space-x-4 group">
             <div className="relative">
-              <Building className="h-10 w-10 text-primary group-hover:scale-110 transition-transform duration-300 drop-shadow-lg" />
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full animate-pulse shadow-lg"></div>
-            </div>
-            <div>
-              <span className="text-3xl font-bold font-dm-sans bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                PropGyan
-              </span>
-              <div className="text-xs text-muted-foreground -mt-1 font-medium">Premium Property Intelligence</div>
+              <img 
+                src={logoLight} 
+                alt="PropGyan Logo Light" 
+                className="h-12 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-lg dark:hidden" 
+              />
+              <img 
+                src={logoDark} 
+                alt="PropGyan Logo Dark" 
+                className="h-12 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-lg hidden dark:block" 
+              />
             </div>
           </Link>
           

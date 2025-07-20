@@ -10,7 +10,7 @@
   :root {
     /* Light mode - Lavender to white gradient with golden accents */
     --background: 0 0% 100%; /* white */
-    --background-gradient: linear-gradient(135deg, #e6dbff 0%, #ffffff 100%);
+    --background-gradient: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(270, 100%, 91%) 30%, hsl(270, 100%, 91%) 70%, hsl(0, 0%, 100%) 100%);
     --foreground: 25 7% 26%; /* #42403b gray text */
 
     --card: 0 0% 100%; /* white */
