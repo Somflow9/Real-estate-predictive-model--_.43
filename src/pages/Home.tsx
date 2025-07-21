@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Building, TrendingUp, Search, Star, MapPin, Shield, Clock, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 const Home = () => {
   const [visibleCards, setVisibleCards] = useState(0);
@@ -70,40 +71,75 @@ const Home = () => {
       {/* Hero Section */}
       <section className="relative px-4 py-16 md:py-24">
         <div className="max-w-6xl mx-auto text-center space-y-8">
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
+          <motion.div 
+            className="space-y-4"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <motion.h1 
+              className="text-4xl md:text-6xl font-bold text-foreground leading-tight"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.2 }}
+            >
               Tired of Guessing Property Prices?{' '}
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              <motion.span 
+                className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              >
                 Ask PropGyan.
-              </span>
-            </h1>
+              </motion.span>
+            </motion.h1>
             
-            <p className="text-xl md:text-2xl text-muted-foreground font-medium italic max-w-4xl mx-auto">
+            <motion.p 
+              className="text-xl md:text-2xl text-muted-foreground font-medium italic max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
               "Home isn't just a place, it's a decision — let's make it a smart one."
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
-          <div className="max-w-4xl mx-auto space-y-6 text-lg text-muted-foreground leading-relaxed">
+          <motion.div 
+            className="max-w-4xl mx-auto space-y-6 text-lg text-muted-foreground leading-relaxed"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
             <p>
               PropGyan is your AI-powered real estate guide — here to help you make smarter property decisions without the confusion.
             </p>
             <p>
               Whether you're exploring a new city, checking a builder's credibility, or comparing prices, PropGyan gives you:
             </p>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-wrap gap-4 justify-center items-center">
+          <motion.div 
+            className="flex flex-wrap gap-4 justify-center items-center"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+          >
             <Button asChild size="lg" className="bg-gradient-to-r from-primary to-accent hover:shadow-lg px-8 py-3 rounded-xl hover:scale-105 transition-all duration-200 primary-glow">
               <Link to="/chat">Start Conversation</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="glow-border px-8 py-3 rounded-xl hover:scale-105 transition-all duration-200">
               <Link to="/recommendations">Get Recommendations</Link>
             </Button>
-          </div>
+          </motion.div>
 
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          <motion.p 
+            className="text-lg text-muted-foreground max-w-3xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1 }}
+          >
             No fluff. No sales pitch. Just clean, data-backed property guidance in one smart conversation.
-          </p>
+          </motion.p>
         </div>
       </section>
 
@@ -112,13 +148,13 @@ const Home = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
-              <Card 
-                key={index} 
-                className={`group cursor-pointer transition-all duration-500 hover:scale-105 card-shadow glassmorphism glow-border ${
-                  visibleCards > index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
+              <motion.div key={index}>
+                <Card 
+                  className={`group cursor-pointer transition-all duration-500 hover:scale-105 card-shadow glassmorphism glow-border ${
+                    visibleCards > index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                  }`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                >
                 <CardHeader className="text-center pb-2">
                   <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center group-hover:animate-pulse primary-glow`}>
                     <feature.icon className="h-8 w-8 text-primary-foreground" />
@@ -128,7 +164,8 @@ const Home = () => {
                 <CardContent>
                   <p className="text-muted-foreground text-center">{feature.description}</p>
                 </CardContent>
-              </Card>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>

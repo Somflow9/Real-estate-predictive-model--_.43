@@ -13,7 +13,7 @@ const Navbar = () => {
     { path: '/', label: 'Home', icon: Home },
     { path: '/recommendations', label: 'Recommendations', icon: Star },
     { path: '/market-pulse', label: 'Market Pulse', icon: TrendingUp },
-    { path: '/chat', label: 'AI Chat', icon: MessageCircle },
+    { path: '/chat', label: 'Chat', icon: MessageCircle },
   ];
 
   return (

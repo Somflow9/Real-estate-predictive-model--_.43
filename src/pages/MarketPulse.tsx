@@ -9,11 +9,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TrendingUp, TrendingDown, Newspaper, Search, RefreshCw, ExternalLink, Calendar, BarChart3 } from 'lucide-react';
 import { marketPulseService } from '@/services/marketPulseService';
 import { useToast } from '@/hooks/use-toast';
+import { motion } from 'framer-motion';
+import AnimatedChart from '@/components/AnimatedChart';
 
 const MarketPulse = () => {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [timeFilter, setTimeFilter] = useState('3M');
 
   const { data: news, isLoading: newsLoading, refetch: refetchNews } = useQuery({
     queryKey: ['market-news'],
@@ -62,6 +65,67 @@ const MarketPulse = () => {
     }
   };
 
+  const getBadgeVariant = (timeFilter: string) => {
+    switch (timeFilter) {
+      case '3M': return 'default';
+      case '6M': return 'secondary';
+      case '1Y': return 'outline';
+      default: return 'default';
+    }
+  };
+
+  // Mock chart data for demonstration
+  const trendChartData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [
+      {
+        label: 'Property Prices',
+        data: [65, 68, 70, 75, 72, 78],
+        borderColor: 'hsl(var(--primary))',
+        backgroundColor: 'hsl(var(--primary) / 0.1)',
+        tension: 0.4,
+      },
+      {
+        label: 'Market Activity',
+        data: [45, 52, 48, 61, 55, 67],
+        borderColor: 'hsl(var(--accent))',
+        backgroundColor: 'hsl(var(--accent) / 0.1)',
+        tension: 0.4,
+      },
+    ],
+  };
+
+  const cityPerformanceData = {
+    labels: ['Mumbai', 'Delhi', 'Bangalore', 'Pune', 'Hyderabad'],
+    datasets: [
+      {
+        label: 'Price Growth %',
+        data: [15.8, 12.3, 18.5, 14.2, 16.7],
+        backgroundColor: [
+          'hsl(var(--primary) / 0.8)',
+          'hsl(var(--accent) / 0.8)',
+          'hsl(var(--primary) / 0.6)',
+          'hsl(var(--accent) / 0.6)',
+          'hsl(var(--primary) / 0.4)',
+        ],
+      },
+    ],
+  };
+
+  const marketShareData = {
+    labels: ['Residential', 'Commercial', 'Industrial'],
+    datasets: [
+      {
+        data: [65, 25, 10],
+        backgroundColor: [
+          'hsl(var(--primary))',
+          'hsl(var(--accent))',
+          'hsl(var(--muted))',
+        ],
+      },
+    ],
+  };
+
   if (newsLoading || insightsLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -75,7 +139,12 @@ const MarketPulse = () => {
 
   return (
     <div className="space-y-6">
-      <div className="text-center space-y-4">
+      <motion.div 
+        className="text-center space-y-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <h1 className="text-3xl font-bold flex items-center justify-center space-x-2">
           <TrendingUp className="h-8 w-8 text-primary" />
           <span>Market Pulse</span>
@@ -83,33 +152,131 @@ const MarketPulse = () => {
         <p className="text-muted-foreground">
           Real-time real estate news, trends, and market insights from trusted Indian property sources
         </p>
-      </div>
+      </motion.div>
 
       {/* Market Insights Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {insights?.map((insight) => (
-          <Card key={insight.id} className="border-l-4 border-l-primary">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between mb-2">
-                <BarChart3 className="h-5 w-5 text-muted-foreground" />
-                <div className={`flex items-center space-x-1 ${
-                  insight.changeType === 'positive' ? 'text-green-600' : 
-                  insight.changeType === 'negative' ? 'text-red-600' : 'text-gray-600'
-                }`}>
-                  {insight.changeType === 'positive' ? <TrendingUp className="h-4 w-4" /> : 
-                   insight.changeType === 'negative' ? <TrendingDown className="h-4 w-4" /> : null}
-                  <span className="text-sm font-medium">{insight.change > 0 ? '+' : ''}{insight.change}%</span>
+      <motion.div 
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        {insights?.map((insight, index) => (
+          <motion.div
+            key={insight.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+          >
+            <Card className="border-l-4 border-l-primary glassmorphism hover:shadow-lg transition-all duration-300">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-2">
+                  <BarChart3 className="h-5 w-5 text-muted-foreground" />
+                  <div className={`flex items-center space-x-1 ${
+                    insight.changeType === 'positive' ? 'text-green-600' : 
+                    insight.changeType === 'negative' ? 'text-red-600' : 'text-gray-600'
+                  }`}>
+                    {insight.changeType === 'positive' ? <TrendingUp className="h-4 w-4" /> : 
+                     insight.changeType === 'negative' ? <TrendingDown className="h-4 w-4" /> : null}
+                    <span className="text-sm font-medium">{insight.change > 0 ? '+' : ''}{insight.change}%</span>
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-semibold text-lg">{insight.value}</h3>
-                <p className="text-sm font-medium text-muted-foreground">{insight.title}</p>
-                <p className="text-xs text-muted-foreground">{insight.description}</p>
-              </div>
-            </CardContent>
-          </Card>
+                <div className="space-y-1">
+                  <h3 className="font-semibold text-lg">{insight.value}</h3>
+                  <p className="text-sm font-medium text-muted-foreground">{insight.title}</p>
+                  <p className="text-xs text-muted-foreground">{insight.description}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
+
+      {/* Enhanced Market Analysis with Charts */}
+      <motion.div 
+        className="space-y-6"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+      >
+        <Card className="glassmorphism glow-border">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-2xl flex items-center space-x-2">
+                <BarChart3 className="h-6 w-6 text-primary" />
+                <span>Market Trends Analysis</span>
+              </CardTitle>
+              <div className="flex space-x-2">
+                {['3M', '6M', '1Y'].map((filter) => (
+                  <Button
+                    key={filter}
+                    variant={timeFilter === filter ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setTimeFilter(filter)}
+                    className="hover:scale-105 transition-transform"
+                  >
+                    {filter}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="glassmorphism">
+                <CardHeader>
+                  <CardTitle className="text-lg">Price Trends & Market Activity</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <AnimatedChart type="line" data={trendChartData} />
+                </CardContent>
+              </Card>
+              
+              <Card className="glassmorphism">
+                <CardHeader>
+                  <CardTitle className="text-lg">City Performance</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <AnimatedChart type="bar" data={cityPerformanceData} />
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <Card className="glassmorphism">
+                <CardHeader>
+                  <CardTitle className="text-lg">Market Share Distribution</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <AnimatedChart type="doughnut" data={marketShareData} />
+                </CardContent>
+              </Card>
+              
+              <Card className="glassmorphism lg:col-span-2">
+                <CardHeader>
+                  <CardTitle className="text-lg">Market Status Badges</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-3">
+                    <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 text-sm animate-pulse">
+                      🔥 Booming
+                    </Badge>
+                    <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 text-sm">
+                      📈 Investor-Focused
+                    </Badge>
+                    <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-2 text-sm">
+                      ⚡ High Demand
+                    </Badge>
+                    <Badge className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2 text-sm">
+                      💎 Premium Growth
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
 
       <Tabs defaultValue="news" className="space-y-4">
         <div className="flex items-center justify-between">
