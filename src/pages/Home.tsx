@@ -140,7 +140,6 @@ const Home = () => {
                 <Link to="/recommendations">Get Recommendations</Link>
               </Button>
             </motion.div>
-            </Button>
           </motion.div>
 
           <motion.p 
