@@ -265,7 +265,7 @@ const Chat = () => {
                 <h1 className="text-4xl font-bold font-poppins bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                   BrickMatric AI
                 </h1>
-                <p className="text-muted-foreground font-medium">AI-Powered Real Estate Intelligence Platform</p>
+                <p className="text-muted-foreground font-medium">Real Estate Intelligence Platform</p>
               </div>
             </div>
           </div>

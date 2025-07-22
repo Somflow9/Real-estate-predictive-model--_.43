@@ -9,6 +9,8 @@ import { Star, MapPin, Home, TrendingUp, Sparkles, RefreshCw, Clock, Building } 
 import { Property } from '@/types/property';
 import { propertyDataService } from '@/services/propertyDataService';
 import { useToast } from '@/hooks/use-toast';
+import EnhancedRecommendationBar from '@/components/EnhancedRecommendationBar';
+import { tierCityService } from '@/services/tierCityService';
 
 const Recommendations = () => {
   const { toast } = useToast();
@@ -21,6 +23,9 @@ const Recommendations = () => {
 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  // Get city tier information
+  const cityData = tierCityService.getCityData(preferences.location);
+  const cityTier = cityData?.tier || 2;
   const { data: recommendations, isLoading, refetch } = useQuery({
     queryKey: ['recommendations', preferences],
     queryFn: () => propertyDataService.scrapeProperties({
@@ -98,6 +103,12 @@ const Recommendations = () => {
         </p>
       </div>
 
+      {/* Enhanced Recommendation Bar */}
+      <EnhancedRecommendationBar 
+        city={preferences.location}
+        tier={cityTier}
+        preferences={preferences}
+      />
       {/* Enhanced Preferences Card */}
       <Card className="glow-border shadow-lg hover:shadow-xl transition-shadow glassmorphism">
         <CardHeader className="glassmorphism">

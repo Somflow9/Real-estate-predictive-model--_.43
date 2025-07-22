@@ -11,12 +11,15 @@ import { marketPulseService } from '@/services/marketPulseService';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import AnimatedChart from '@/components/AnimatedChart';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const MarketPulse = () => {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [timeFilter, setTimeFilter] = useState('3M');
+  const [selectedCity, setSelectedCity] = useState('All Cities');
+  const [marketInsightFilter, setMarketInsightFilter] = useState('All');
 
   const { data: news, isLoading: newsLoading, refetch: refetchNews } = useQuery({
     queryKey: ['market-news'],
@@ -125,6 +128,27 @@ const MarketPulse = () => {
       },
     ],
   };
+  // Enhanced market insights with city-specific data
+  const getEnhancedInsights = () => {
+    if (!insights) return [];
+    
+    let filteredInsights = [...insights];
+    
+    if (selectedCity !== 'All Cities') {
+      filteredInsights = filteredInsights.filter(insight => 
+        insight.city === selectedCity || !insight.city
+      );
+    }
+    
+    if (marketInsightFilter !== 'All') {
+      // Add filtering logic based on insight type
+      filteredInsights = filteredInsights.filter(insight => 
+        insight.title.toLowerCase().includes(marketInsightFilter.toLowerCase())
+      );
+    }
+    
+    return filteredInsights;
+  };
 
   if (newsLoading || insightsLoading) {
     return (
@@ -147,13 +171,53 @@ const MarketPulse = () => {
       >
         <h1 className="text-3xl md:text-4xl font-bold gradient-text-primary flex items-center justify-center space-x-2">
           <TrendingUp className="h-8 w-8" />
-          <span>BrickMatric Market Pulse</span>
+          <span>Market Pulse - Live Intelligence</span>
         </h1>
         <p className="text-muted-foreground">
-          Live intelligence from India's premier property markets • Real-time data feeds • AI-powered insights
+          Interactive market analytics • Real-time data feeds • AI-powered insights • Tier 1-3 city coverage
         </p>
       </motion.div>
 
+      {/* Enhanced Filters */}
+      <motion.div 
+        className="flex flex-wrap gap-4 justify-center items-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+      >
+        <Select value={selectedCity} onValueChange={setSelectedCity}>
+          <SelectTrigger className="w-48 glassmorphism glow-border">
+            <SelectValue placeholder="Select City" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="All Cities">All Cities</SelectItem>
+            <SelectItem value="Mumbai">Mumbai</SelectItem>
+            <SelectItem value="Delhi">Delhi</SelectItem>
+            <SelectItem value="Bangalore">Bangalore</SelectItem>
+            <SelectItem value="Pune">Pune</SelectItem>
+            <SelectItem value="Hyderabad">Hyderabad</SelectItem>
+            <SelectItem value="Chennai">Chennai</SelectItem>
+          </SelectContent>
+        </Select>
+        
+        <Select value={marketInsightFilter} onValueChange={setMarketInsightFilter}>
+          <SelectTrigger className="w-48 glassmorphism glow-border">
+            <SelectValue placeholder="Market Insights" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="All">All Insights</SelectItem>
+            <SelectItem value="Price">Price Trends</SelectItem>
+            <SelectItem value="Inventory">Inventory Levels</SelectItem>
+            <SelectItem value="Launch">New Launches</SelectItem>
+          </SelectContent>
+        </Select>
+        
+        <div className="flex space-x-2">
+          <Badge className="bg-green-500 text-white animate-pulse">🔥 Hot Market</Badge>
+          <Badge className="bg-blue-500 text-white">📈 Investor Attention</Badge>
+          <Badge className="bg-orange-500 text-white">⚡ High Demand</Badge>
+        </div>
+      </motion.div>
       {/* Market Insights Cards */}
       <motion.div 
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
@@ -161,14 +225,14 @@ const MarketPulse = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        {insights?.map((insight, index) => (
+        {getEnhancedInsights().map((insight, index) => (
           <motion.div
             key={insight.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
           >
-            <Card className="border-l-4 border-l-primary glassmorphism hover:shadow-lg transition-all duration-300">
+            <Card className="border-l-4 border-l-primary glassmorphism hover:shadow-lg transition-all duration-300 hover:scale-105">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
                   <BarChart3 className="h-5 w-5 text-muted-foreground" />
@@ -199,7 +263,7 @@ const MarketPulse = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.4 }}
       >
-        <Card className="glassmorphism glow-border">
+        <Card className="glassmorphism glow-border hover:shadow-2xl transition-all duration-500">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-2xl flex items-center space-x-2">
@@ -213,7 +277,7 @@ const MarketPulse = () => {
                     variant={timeFilter === filter ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setTimeFilter(filter)}
-                    className="hover:scale-105 transition-transform"
+                    className="hover:scale-105 transition-transform glassmorphism"
                   >
                     {filter}
                   </Button>
@@ -223,7 +287,7 @@ const MarketPulse = () => {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="glassmorphism">
+              <Card className="glassmorphism hover:glow-border transition-all duration-300">
                 <CardHeader>
                   <CardTitle className="text-lg">Price Trends & Market Activity</CardTitle>
                 </CardHeader>
@@ -232,7 +296,7 @@ const MarketPulse = () => {
                 </CardContent>
               </Card>
               
-              <Card className="glassmorphism">
+              <Card className="glassmorphism hover:glow-border transition-all duration-300">
                 <CardHeader>
                   <CardTitle className="text-lg">City Performance</CardTitle>
                 </CardHeader>
@@ -243,7 +307,7 @@ const MarketPulse = () => {
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <Card className="glassmorphism">
+              <Card className="glassmorphism hover:glow-border transition-all duration-300">
                 <CardHeader>
                   <CardTitle className="text-lg">Market Share Distribution</CardTitle>
                 </CardHeader>
@@ -252,23 +316,23 @@ const MarketPulse = () => {
                 </CardContent>
               </Card>
               
-              <Card className="glassmorphism lg:col-span-2">
+              <Card className="glassmorphism lg:col-span-2 hover:glow-border transition-all duration-300">
                 <CardHeader>
                   <CardTitle className="text-lg">Market Status Badges</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-3">
                     <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 text-sm animate-pulse">
-                      🔥 Booming
+                      🔥 Hot Market
                     </Badge>
                     <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 text-sm">
-                      📈 Investor-Focused
+                      📈 Investor Attention
                     </Badge>
                     <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-2 text-sm">
                       ⚡ High Demand
                     </Badge>
                     <Badge className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2 text-sm">
-                      💎 Premium Growth
+                      🏗️ Under Development
                     </Badge>
                   </div>
                 </CardContent>
@@ -280,7 +344,7 @@ const MarketPulse = () => {
 
       <Tabs defaultValue="news" className="space-y-4">
         <div className="flex items-center justify-between">
-          <TabsList>
+          <TabsList className="glassmorphism">
             <TabsTrigger value="news">Latest News</TabsTrigger>
             <TabsTrigger value="analysis">Market Analysis</TabsTrigger>
           </TabsList>
@@ -289,6 +353,7 @@ const MarketPulse = () => {
             disabled={isRefreshing}
             variant="outline"
             size="sm"
+            className="glassmorphism glow-border hover:scale-105 transition-transform"
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
             Refresh
@@ -303,14 +368,14 @@ const MarketPulse = () => {
               placeholder="Search news articles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 glassmorphism glow-border"
             />
           </div>
 
           {/* News Articles */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredNews?.map((article) => (
-              <Card key={article.id} className="hover:shadow-lg transition-shadow">
+              <Card key={article.id} className="glassmorphism hover:shadow-lg transition-all duration-300 hover:scale-105 glow-border">
                 <CardHeader>
                   <div className="flex items-start justify-between space-x-4">
                     <div className="space-y-2">
@@ -343,7 +408,7 @@ const MarketPulse = () => {
 
         <TabsContent value="analysis" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
+            <Card className="glassmorphism glow-border hover:shadow-xl transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <TrendingUp className="h-5 w-5 text-green-600" />
@@ -368,7 +433,7 @@ const MarketPulse = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="glassmorphism glow-border hover:shadow-xl transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <BarChart3 className="h-5 w-5 text-blue-600" />
@@ -399,7 +464,7 @@ const MarketPulse = () => {
       </Tabs>
 
       {/* Data Sources */}
-      <Card>
+      <Card className="glassmorphism glow-border">
         <CardContent className="pt-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
