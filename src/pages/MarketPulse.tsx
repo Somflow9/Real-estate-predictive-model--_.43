@@ -145,12 +145,12 @@ const MarketPulse = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h1 className="text-3xl font-bold flex items-center justify-center space-x-2">
-          <TrendingUp className="h-8 w-8 text-primary" />
-          <span>Market Pulse</span>
+        <h1 className="text-3xl md:text-4xl font-bold gradient-text-primary flex items-center justify-center space-x-2">
+          <TrendingUp className="h-8 w-8" />
+          <span>BrickMatric Market Pulse</span>
         </h1>
         <p className="text-muted-foreground">
-          Real-time real estate news, trends, and market insights from trusted Indian property sources
+          Live intelligence from India's premier property markets • Real-time data feeds • AI-powered insights
         </p>
       </motion.div>
 

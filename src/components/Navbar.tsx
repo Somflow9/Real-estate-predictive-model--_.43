@@ -17,19 +17,19 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="glassmorphism shadow-2xl border-b-2 border-primary/20 sticky top-0 z-50">
+    <nav className="glassmorphism shadow-2xl border-b-2 border-primary/20 sticky top-0 z-50 backdrop-blur-xl">
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center space-x-4 group">
             <div className="relative">
               <img 
                 src={logoLight} 
-                alt="PropGyan Logo Light" 
+                alt="BrickMatric Logo Light" 
                 className="h-12 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-lg dark:hidden" 
               />
               <img 
                 src={logoDark} 
-                alt="PropGyan Logo Dark" 
+                alt="BrickMatric Logo Dark" 
                 className="h-12 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-lg hidden dark:block" 
               />
             </div>

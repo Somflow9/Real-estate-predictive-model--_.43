@@ -34,7 +34,7 @@ const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: 'Hello! I\'m PropGyan, your AI Property Advisor powered by advanced analytics. I can help you with:\n\n🏠 Property recommendations with detailed analysis\n💰 Real-time pricing and market trends\n🏗️ Builder credibility scores\n🌍 Neighborhood insights\n📈 Smart buy/sell/wait recommendations\n📊 3-year price history and seasonal patterns\n\nI cover properties across Tier-1 and Tier-2 Indian cities. How can I assist you today?',
+      content: 'Hello! I\'m BrickMatric AI, your intelligent real estate advisor powered by cutting-edge analytics and live market data. I can help you with:\n\n🏠 AI-powered property recommendations with valuation insights\n💰 Real-time pricing from 99acres, NoBroker & MagicBricks\n🏗️ Comprehensive builder credibility analysis\n🌍 Tier-wise city intelligence & neighborhood insights\n📈 Smart investment recommendations with market pulse\n📊 Historical trends and predictive analytics\n🔄 Live scheme tracking and exclusive deal alerts\n\nI cover the entire Indian real estate spectrum - from luxury penthouses in Mumbai to affordable homes in emerging cities. How can I assist your property journey today?',
       isUser: false,
       timestamp: new Date(),
     },
@@ -156,7 +156,7 @@ const Chat = () => {
 
       const systemMessage = {
         role: 'system' as const,
-        content: `You are PropGyan, an AI Property Advisor specializing in Indian real estate. For every property query, provide comprehensive analysis including:
+        content: `You are BrickMatric AI, an advanced real estate intelligence system specializing in Indian property markets. For every property query, provide comprehensive analysis including:
         1. Estimated price range with specific numbers in ₹ lakhs/crores
         2. Builder credibility score (1-10) 
         3. Neighborhood overview with key amenities
@@ -197,7 +197,7 @@ const Chat = () => {
       console.error('Error calling OpenAI API:', error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to get response from PropGyan",
+        description: error instanceof Error ? error.message : "Failed to get response from BrickMatric AI",
         variant: "destructive",
       });
 
@@ -263,9 +263,9 @@ const Chat = () => {
               </div>
               <div>
                 <h1 className="text-4xl font-bold font-poppins bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  PropGyan AI
+                  BrickMatric AI
                 </h1>
-                <p className="text-muted-foreground font-medium">Your Premium Property Intelligence Assistant</p>
+                <p className="text-muted-foreground font-medium">AI-Powered Real Estate Intelligence Platform</p>
               </div>
             </div>
           </div>

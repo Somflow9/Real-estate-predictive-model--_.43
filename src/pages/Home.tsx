@@ -54,7 +54,7 @@ const Home = () => {
     {
       icon: Users,
       title: "Expert Consultation",
-      description: "Chat with PropGyan for personalized advice and recommendations",
+      description: "Chat with BrickMatric AI for personalized advice and recommendations",
       color: "from-indigo-400 to-indigo-600"
     }
   ];
@@ -90,7 +90,7 @@ const Home = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
               >
-                Ask PropGyan.
+                Ask BrickMatric.
               </motion.span>
             </motion.h1>
             
@@ -100,7 +100,7 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              "Home isn't just a place, it's a decision — let's make it a smart one."
+              "Smart properties. Smarter decisions. Backed by data, driven by intelligence."
             </motion.p>
           </motion.div>
 
@@ -111,10 +111,10 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.6 }}
           >
             <p>
-              PropGyan is your AI-powered real estate guide — here to help you make smarter property decisions without the confusion.
+              BrickMatric is India's most advanced AI-powered real estate intelligence platform — transforming how you discover, analyze, and invest in properties.
             </p>
             <p>
-              Whether you're exploring a new city, checking a builder's credibility, or comparing prices, PropGyan gives you:
+              From Tier-1 metros to emerging Tier-3 cities, from luxury penthouses to affordable homes, BrickMatric delivers:
             </p>
           </motion.div>
 
@@ -138,7 +138,7 @@ const Home = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 1 }}
           >
-            No fluff. No sales pitch. Just clean, data-backed property guidance in one smart conversation.
+            Real-time market data • AI-powered valuations • Builder analytics • Live property feeds from 99acres, NoBroker & MagicBricks
           </motion.p>
         </div>
       </section>
@@ -226,11 +226,11 @@ const Home = () => {
       <section className="px-4 py-16">
         <div className="max-w-4xl mx-auto text-center">
           <blockquote className="text-2xl md:text-3xl font-bold text-foreground italic leading-relaxed">
-            "Where you live is your story — make sure the first chapter isn't a mistake."
+            "Every brick tells a story. Every decision shapes your future. Choose wisely with BrickMatric."
           </blockquote>
           <div className="mt-8">
             <Button asChild size="lg" className="bg-gradient-to-r from-primary to-accent px-8 py-3 rounded-xl hover:scale-105 transition-all duration-200 primary-glow">
-              <Link to="/chat">Start Your Story with PropGyan</Link>
+              <Link to="/chat">Start Your Journey with BrickMatric</Link>
             </Button>
           </div>
         </div>
