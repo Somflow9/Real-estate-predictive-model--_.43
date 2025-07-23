@@ -48,6 +48,11 @@
     --sidebar-ring: 280 100% 50%;
 
     --radius: 1rem;
+
+    /* Enhanced BrickMatrix™ Variables */
+    --bm-tier1-gradient: linear-gradient(135deg, #000000 0%, #2d1b69 50%, #4B0082 100%);
+    --bm-enhanced-glow: 0 0 30px rgba(143, 0, 255, 0.6);
+    --bm-premium-shadow: 0 8px 40px rgba(106, 13, 173, 0.3);
   }
 }
 
@@ -59,7 +64,7 @@
   body {
     @apply text-foreground transition-all duration-500 ease-in-out;
     font-family: 'DM Sans', 'Inter', system-ui, -apple-system, sans-serif;
-    background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #4B0082 100%);
+    background: var(--bm-tier1-gradient);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -73,8 +78,13 @@
     @apply bg-purple-900/20 backdrop-blur-xl border border-purple-600/30 transition-all duration-300;
   }
 
+  .enhanced-glassmorphism {
+    @apply bg-purple-900/30 backdrop-blur-2xl border border-purple-500/40 transition-all duration-300;
+    box-shadow: var(--bm-premium-shadow);
+  }
+
   .brickmatrix-glow {
-    box-shadow: 0 0 30px rgba(143, 0, 255, 0.4), 0 0 10px rgba(106, 13, 173, 0.2);
+    box-shadow: var(--bm-enhanced-glow), 0 0 15px rgba(106, 13, 173, 0.3);
   }
 
   .hover-lift {
@@ -85,6 +95,15 @@
     @apply border border-purple-600/30 hover:border-purple-400/60 transition-all duration-300;
   }
 
+  .enhanced-glow-border {
+    @apply border border-purple-500/40 hover:border-purple-300/70 transition-all duration-300;
+    box-shadow: 0 0 20px rgba(143, 0, 255, 0.2);
+  }
+
+  .enhanced-glow-border:hover {
+    box-shadow: var(--bm-enhanced-glow);
+  }
+
   .message-card {
     @apply bg-purple-900/20 backdrop-blur-xl border border-purple-600/30 rounded-2xl p-4 hover-lift transition-all duration-300;
   }
@@ -92,6 +111,10 @@
   .card-shadow {
     @apply shadow-lg;
     box-shadow: 0 4px 20px rgba(143, 0, 255, 0.1);
+  }
+
+  .enhanced-card-shadow {
+    box-shadow: var(--bm-premium-shadow);
   }
 
   /* Enhanced animations for BrickMatrix™ */
@@ -127,6 +150,13 @@
       inset 0 1px 0 0 rgba(106, 13, 173, 0.1);
   }
 
+  .tier1-glassmorphism {
+    @apply bg-purple-900/40 border border-purple-500/50 backdrop-blur-3xl;
+    box-shadow: 
+      0 12px 40px 0 rgba(143, 0, 255, 0.3),
+      inset 0 1px 0 0 rgba(106, 13, 173, 0.2);
+  }
+
   /* BrickMatrix™ gradient text effects */
   .brickmatrix-gradient-text {
     @apply bg-gradient-to-r from-purple-400 to-purple-200 bg-clip-text text-transparent;
@@ -134,6 +164,10 @@
 
   .brickmatrix-gradient-accent {
     @apply bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent;
+  }
+
+  .tier1-gradient-text {
+    @apply bg-gradient-to-r from-purple-300 to-purple-100 bg-clip-text text-transparent;
   }
 
   /* BrickMatrix™ loading animations */
@@ -146,7 +180,20 @@
       box-shadow: 0 0 20px rgba(143, 0, 255, 0.3);
     }
     to {
-      box-shadow: 0 0 40px rgba(143, 0, 255, 0.6), 0 0 60px rgba(106, 13, 173, 0.3);
+      box-shadow: var(--bm-enhanced-glow), 0 0 60px rgba(106, 13, 173, 0.4);
+    }
+  }
+
+  .enhanced-pulse {
+    animation: enhanced-pulse 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes enhanced-pulse {
+    from {
+      box-shadow: 0 0 25px rgba(143, 0, 255, 0.4);
+    }
+    to {
+      box-shadow: var(--bm-enhanced-glow), 0 0 80px rgba(106, 13, 173, 0.5);
     }
   }
 
@@ -160,12 +207,50 @@
     background-clip: text;
   }
 
+  .enhanced-score {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 900;
+    background: linear-gradient(135deg, #9932CC 0%, #8F00FF 50%, #6A0DAD 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 10px rgba(143, 0, 255, 0.5));
+  }
+
   /* BrickMatrix™ Button Styles */
   .brickmatrix-button {
     @apply bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-500 hover:to-purple-300 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105;
     box-shadow: 0 4px 15px rgba(143, 0, 255, 0.3);
   }
 
+  .enhanced-button {
+    @apply bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-500 hover:to-purple-300 text-white font-bold rounded-2xl transition-all duration-300 hover:scale-110;
+    box-shadow: var(--bm-premium-shadow);
+  }
+
+  .enhanced-button:hover {
+    box-shadow: var(--bm-enhanced-glow);
+  }
+
+  /* Tier 1 Specific Styles */
+  .tier1-card {
+    @apply tier1-glassmorphism enhanced-glow-border hover-lift;
+  }
+
+  .tier1-badge {
+    @apply bg-gradient-to-r from-purple-600 to-purple-400 text-white font-semibold px-3 py-1 rounded-full text-xs;
+    box-shadow: 0 2px 10px rgba(143, 0, 255, 0.3);
+  }
+
+  .tier1-input {
+    @apply bg-purple-900/50 border border-purple-500/50 text-purple-100 rounded-xl;
+    backdrop-filter: blur(20px);
+  }
+
+  .tier1-input:focus {
+    @apply border-purple-400 outline-none;
+    box-shadow: 0 0 0 3px rgba(143, 0, 255, 0.2);
+  }
   .brickmatrix-button:hover {
     box-shadow: 0 6px 20px rgba(143, 0, 255, 0.4);
   }

@@ -4,10 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Target, 
   TrendingUp, 
@@ -18,32 +14,58 @@ import {
   Zap,
   RefreshCw,
   Filter,
-  Search,
   Crown,
   Award,
   Clock,
   DollarSign,
-  Home,
-  Wifi,
-  Car,
-  Trees,
-  Dumbbell,
-  Waves,
-  Users,
-  BookOpen,
-  Camera,
-  Lock,
-  Flame,
-  Droplets,
-  Sun,
-  Trash2,
-  Phone,
-  UserCheck
+  BarChart3,
+  TrendingDown,
+  Activity
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
+import { brickMatrixEngineService } from '@/services/brickMatrixEngineService';
+import EnhancedRecommendationFilters from './EnhancedRecommendationFilters';
 
-interface BrickMatrixProperty {
+interface EnhancedBrickMatrixProperty {
+  id: string;
+  city: string;
+  locality: string;
+  builder: string;
+  projectName: string;
+  price: number;
+  pricePerSqft: number;
+  area: number;
+  bhk: string;
+  status: string;
+  amenities: string[];
+  locationIntelligence: any;
+  builderCredibility: any;
+  priceTrends: any;
+  userAlignment: number;
+  enhancedFeatures: {
+    virtualTour: boolean;
+    droneView: boolean;
+    aiFloorPlan: boolean;
+    smartHomeReady: boolean;
+  };
+  brickMatrixScore: number;
+  recommendation: {
+    action: string;
+    confidence: number;
+    reasoning: string;
+  };
+  badges: string[];
+  detailedScoring: {
+    locationScore: number;
+    builderScore: number;
+    priceScore: number;
+    userAlignmentScore: number;
+    futureProspectScore: number;
+  };
+}
+
+interface LegacyBrickMatrixProperty {
   id: string;
   location_intelligence: {
     city: string;
@@ -100,98 +122,157 @@ interface BrickMatrixProperty {
   buyer_preferences: Record<string, boolean | string>;
 }
 
-interface FilterState {
-  budget: { min: number; max: number };
-  city: string;
-  bhk: string[];
-  property_type: string;
-  preferences: Record<string, boolean>;
-  builder_rating_min: number;
-  possession_timeline: string;
+interface EnhancedFilters {
+  locationFilters: {
+    pincode: string;
+    neighborhood: string;
+    walkScore: number;
+    transitScore: number;
+    distanceFromWork: number;
+    proximityRadius: number;
+    noiseLevel: number;
+    floodProneZone: boolean;
+  };
+  financialFilters: {
+    priceRange: { min: number; max: number };
+    areaAvgComparison: boolean;
+    emiCalculator: {
+      enabled: boolean;
+      interestRate: number;
+      tenure: number;
+    };
+    rentVsBuy: boolean;
+    subsidyAvailable: boolean;
+  };
+  propertyTypeFilters: {
+    bhkRange: string[];
+    propertyType: string[];
+    listingType: 'builder' | 'owner' | 'both';
+    reraApproved: boolean;
+    greenCertified: boolean;
+    carpetAreaRange: { min: number; max: number };
+    builtUpAreaRange: { min: number; max: number };
+  };
+  amenityFilters: {
+    lifestyle: string[];
+    eco: string[];
+    security: string[];
+    premium: string[];
+  };
+  ratingsFilters: {
+    propertyScore: number;
+    builderReputation: number;
+    projectRatings: number;
+    localityLivability: number;
+    verifiedReviews: boolean;
+  };
+  neighborhoodFilters: {
+    shoppingDistance: number;
+    schoolDistance: number;
+    hospitalDistance: number;
+    transportDistance: number;
+    crimeZoneOverlay: boolean;
+  };
 }
 
 const BrickMatrixRecommendations = () => {
   const { toast } = useToast();
-  const [properties, setProperties] = useState<BrickMatrixProperty[]>([]);
+  const [properties, setProperties] = useState<EnhancedBrickMatrixProperty[]>([]);
+  const [legacyProperties, setLegacyProperties] = useState<LegacyBrickMatrixProperty[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [activeTab, setActiveTab] = useState('recommendations');
-  const [showFilters, setShowFilters] = useState(false);
+  const [enhancedMode, setEnhancedMode] = useState(true);
   
-  const [filters, setFilters] = useState<FilterState>({
-    budget: { min: 2000000, max: 50000000 },
-    city: 'Mumbai',
-    bhk: [],
-    property_type: 'apartment',
-    preferences: {},
-    builder_rating_min: 7,
-    possession_timeline: 'any'
+  const [enhancedFilters, setEnhancedFilters] = useState<EnhancedFilters>({
+    locationFilters: {
+      pincode: '',
+      neighborhood: 'Mumbai',
+      walkScore: 70,
+      transitScore: 70,
+      distanceFromWork: 10,
+      proximityRadius: 5,
+      noiseLevel: 50,
+      floodProneZone: false
+    },
+    financialFilters: {
+      priceRange: { min: 5000000, max: 100000000 },
+      areaAvgComparison: false,
+      emiCalculator: {
+        enabled: false,
+        interestRate: 8.75,
+        tenure: 20
+      },
+      rentVsBuy: false,
+      subsidyAvailable: false
+    },
+    propertyTypeFilters: {
+      bhkRange: [],
+      propertyType: [],
+      listingType: 'both',
+      reraApproved: false,
+      greenCertified: false,
+      carpetAreaRange: { min: 500, max: 3000 },
+      builtUpAreaRange: { min: 600, max: 4000 }
+    },
+    amenityFilters: {
+      lifestyle: [],
+      eco: [],
+      security: [],
+      premium: []
+    },
+    ratingsFilters: {
+      propertyScore: 7,
+      builderReputation: 7,
+      projectRatings: 7,
+      localityLivability: 7,
+      verifiedReviews: false
+    },
+    neighborhoodFilters: {
+      shoppingDistance: 5,
+      schoolDistance: 3,
+      hospitalDistance: 5,
+      transportDistance: 2,
+      crimeZoneOverlay: false
+    }
   });
 
   const [marketPulse, setMarketPulse] = useState({
     sentiment: 'bullish',
     nifty_realty: 485.60,
     interest_rate: 8.75,
-    trending_news: []
+    trending_news: [],
+    tier1_performance: {} as Record<string, number>
   });
 
-  const preferenceOptions = [
-    { key: 'swimming_pool', label: 'Swimming Pool', icon: Waves, category: 'Recreation' },
-    { key: 'gym', label: 'Gym & Fitness', icon: Dumbbell, category: 'Recreation' },
-    { key: 'clubhouse', label: 'Clubhouse', icon: Users, category: 'Recreation' },
-    { key: 'power_backup', label: 'Power Backup', icon: Zap, category: 'Essential' },
-    { key: 'gated_community', label: 'Gated Community', icon: Shield, category: 'Security' },
-    { key: 'wifi_ready', label: 'Wi-Fi Ready', icon: Wifi, category: 'Technology' },
-    { key: 'pet_friendly', label: 'Pet Friendly', icon: Home, category: 'Lifestyle' },
-    { key: 'rooftop_access', label: 'Rooftop Access', icon: Home, category: 'Lifestyle' },
-    { key: 'vaastu_compliant', label: 'Vaastu Compliant', icon: Home, category: 'Traditional' },
-    { key: 'smart_home_features', label: 'Smart Home', icon: Home, category: 'Technology' },
-    { key: 'air_conditioning', label: 'Air Conditioning', icon: Home, category: 'Comfort' },
-    { key: 'modular_kitchen', label: 'Modular Kitchen', icon: Home, category: 'Interior' },
-    { key: 'balcony_view', label: 'Balcony View', icon: Camera, category: 'View' },
-    { key: 'study_room', label: 'Study Room', icon: BookOpen, category: 'Functional' },
-    { key: 'servant_room', label: 'Servant Room', icon: Home, category: 'Functional' },
-    { key: 'private_garden', label: 'Private Garden', icon: Trees, category: 'Outdoor' },
-    { key: 'terrace_access', label: 'Terrace Access', icon: Home, category: 'Outdoor' },
-    { key: 'dedicated_parking', label: 'Dedicated Parking', icon: Car, category: 'Essential' },
-    { key: 'near_school', label: 'Near School', icon: BookOpen, category: 'Location' },
-    { key: 'near_metro', label: 'Near Metro', icon: MapPin, category: 'Location' },
-    { key: 'ev_charging', label: 'EV Charging', icon: Zap, category: 'Technology' },
-    { key: 'community_events', label: 'Community Events', icon: Users, category: 'Social' },
-    { key: 'sports_facilities', label: 'Sports Facilities', icon: Target, category: 'Recreation' },
-    { key: 'security_24x7', label: '24x7 Security', icon: Lock, category: 'Security' },
-    { key: 'fire_safety', label: 'Fire Safety', icon: Flame, category: 'Safety' },
-    { key: 'rainwater_harvesting', label: 'Rainwater Harvesting', icon: Droplets, category: 'Eco' },
-    { key: 'solar_panels', label: 'Solar Panels', icon: Sun, category: 'Eco' },
-    { key: 'waste_management', label: 'Waste Management', icon: Trash2, category: 'Eco' },
-    { key: 'intercom_facility', label: 'Intercom Facility', icon: Phone, category: 'Communication' },
-    { key: 'concierge_service', label: 'Concierge Service', icon: UserCheck, category: 'Premium' }
-  ];
+  const tier1Cities = ['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Pune', 'Chennai', 'Kolkata', 'Ahmedabad'];
 
   useEffect(() => {
-    loadBrickMatrixRecommendations();
+    if (enhancedMode) {
+      loadEnhancedBrickMatrixRecommendations();
+    } else {
+      loadLegacyBrickMatrixRecommendations();
+    }
     const interval = setInterval(refreshMarketPulse, 300000); // 5 minutes
     return () => clearInterval(interval);
-  }, [filters]);
+  }, [enhancedFilters, enhancedMode]);
 
-  const loadBrickMatrixRecommendations = async () => {
+  const loadEnhancedBrickMatrixRecommendations = async () => {
     setLoading(true);
     try {
       toast({
         title: "🔮 BrickMatrix™ Engine Activated",
-        description: "Scanning live data from MagicBricks, 99acres, Housing.com & NoBroker...",
+        description: "Enhanced scanning with real-time intelligence across Tier 1 cities...",
       });
 
-      // Simulate real-time data fetching
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const enhancedProperties = await brickMatrixEngineService.fetchEnhancedRecommendations(enhancedFilters);
       
-      const mockProperties = generateMockProperties();
-      setProperties(mockProperties);
+      setProperties(enhancedProperties);
       setLastUpdated(new Date());
       
       toast({
         title: "✨ BrickMatrix™ Analysis Complete",
-        description: `Found ${mockProperties.length} premium properties with AI scoring`,
+        description: `Found ${enhancedProperties.length} premium properties with enhanced intelligence`,
       });
     } catch (error) {
       toast({
@@ -204,17 +285,49 @@ const BrickMatrixRecommendations = () => {
     }
   };
 
+  const loadLegacyBrickMatrixRecommendations = async () => {
+    setLoading(true);
+    try {
+      toast({
+        title: "🔮 BrickMatrix™ Engine Activated",
+        description: "Loading legacy recommendations...",
+      });
+
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const mockProperties = generateLegacyMockProperties();
+      setLegacyProperties(mockProperties);
+      setLastUpdated(new Date());
+      
+      toast({
+        title: "✨ BrickMatrix™ Analysis Complete",
+        description: `Found ${mockProperties.length} properties with legacy scoring`,
+      });
+    } catch (error) {
+      toast({
+        title: "❌ BrickMatrix™ Error",
+        description: "Failed to load legacy recommendations. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const refreshMarketPulse = async () => {
-    // Simulate market pulse refresh
+    // Enhanced market pulse refresh for Tier 1 cities
     setMarketPulse(prev => ({
       ...prev,
       nifty_realty: prev.nifty_realty + (Math.random() - 0.5) * 10,
-      interest_rate: 8.75 + (Math.random() - 0.5) * 0.5
+      interest_rate: 8.75 + (Math.random() - 0.5) * 0.5,
+      tier1_performance: tier1Cities.reduce((acc, city) => {
+        acc[city] = Math.round((Math.random() * 20 + 80) * 10) / 10;
+        return acc;
+      }, {} as Record<string, number>)
     }));
   };
 
-  const generateMockProperties = (): BrickMatrixProperty[] => {
-    const cities = ['Mumbai', 'Delhi', 'Bangalore', 'Pune', 'Hyderabad'];
+  const generateLegacyMockProperties = (): LegacyBrickMatrixProperty[] => {
     const builders = ['Lodha Group', 'DLF Limited', 'Godrej Properties', 'Prestige Group', 'Brigade Group'];
     const localities = {
       Mumbai: ['Bandra West', 'Powai', 'Lower Parel', 'Worli', 'Andheri West'],
@@ -223,15 +336,15 @@ const BrickMatrixRecommendations = () => {
     };
 
     return Array.from({ length: 12 }, (_, i) => {
-      const city = cities[Math.floor(Math.random() * cities.length)];
+      const city = tier1Cities[Math.floor(Math.random() * tier1Cities.length)];
       const builder = builders[Math.floor(Math.random() * builders.length)];
       const locality = localities[city as keyof typeof localities]?.[Math.floor(Math.random() * 5)] || 'Central Area';
       
       return {
-        id: `bm_${Date.now()}_${i}`,
+        id: `bm_legacy_${Date.now()}_${i}`,
         location_intelligence: {
           city,
-          tier: ['Mumbai', 'Delhi', 'Bangalore'].includes(city) ? 1 : 2,
+          tier: 1,
           locality,
           coordinates: { lat: 19.0760 + Math.random() * 0.1, lng: 72.8777 + Math.random() * 0.1 },
           connectivity_score: Math.round((Math.random() * 3 + 7) * 10) / 10,
@@ -291,19 +404,76 @@ const BrickMatrixRecommendations = () => {
             reasoning: 'Excellent location with proven builder track record and strong appreciation potential'
           }
         },
-        buyer_preferences: preferenceOptions.reduce((acc, option) => {
-          acc[option.key] = Math.random() > 0.5;
-          return acc;
-        }, {} as Record<string, boolean>)
+        buyer_preferences: {}
       };
     });
   };
 
-  const handlePreferenceChange = (key: string, value: boolean) => {
-    setFilters(prev => ({
-      ...prev,
-      preferences: { ...prev.preferences, [key]: value }
-    }));
+  const handleEnhancedFiltersChange = (newFilters: EnhancedFilters) => {
+    setEnhancedFilters(newFilters);
+  };
+
+  const handleApplyFilters = () => {
+    if (enhancedMode) {
+      loadEnhancedBrickMatrixRecommendations();
+    } else {
+      loadLegacyBrickMatrixRecommendations();
+    }
+  };
+
+  const handleResetFilters = () => {
+    setEnhancedFilters({
+      locationFilters: {
+        pincode: '',
+        neighborhood: 'Mumbai',
+        walkScore: 70,
+        transitScore: 70,
+        distanceFromWork: 10,
+        proximityRadius: 5,
+        noiseLevel: 50,
+        floodProneZone: false
+      },
+      financialFilters: {
+        priceRange: { min: 5000000, max: 100000000 },
+        areaAvgComparison: false,
+        emiCalculator: {
+          enabled: false,
+          interestRate: 8.75,
+          tenure: 20
+        },
+        rentVsBuy: false,
+        subsidyAvailable: false
+      },
+      propertyTypeFilters: {
+        bhkRange: [],
+        propertyType: [],
+        listingType: 'both',
+        reraApproved: false,
+        greenCertified: false,
+        carpetAreaRange: { min: 500, max: 3000 },
+        builtUpAreaRange: { min: 600, max: 4000 }
+      },
+      amenityFilters: {
+        lifestyle: [],
+        eco: [],
+        security: [],
+        premium: []
+      },
+      ratingsFilters: {
+        propertyScore: 7,
+        builderReputation: 7,
+        projectRatings: 7,
+        localityLivability: 7,
+        verifiedReviews: false
+      },
+      neighborhoodFilters: {
+        shoppingDistance: 5,
+        schoolDistance: 3,
+        hospitalDistance: 5,
+        transportDistance: 2,
+        crimeZoneOverlay: false
+      }
+    });
   };
 
   const getScoreColor = (score: number) => {
@@ -317,7 +487,9 @@ const BrickMatrixRecommendations = () => {
     switch (action) {
       case 'strong_buy': return 'bg-gradient-to-r from-purple-600 to-purple-400';
       case 'buy': return 'bg-gradient-to-r from-purple-500 to-purple-300';
+      case 'consider': return 'bg-gradient-to-r from-blue-600 to-blue-400';
       case 'hold': return 'bg-gradient-to-r from-gray-600 to-gray-400';
+      case 'wait': return 'bg-gradient-to-r from-orange-600 to-orange-400';
       default: return 'bg-gradient-to-r from-purple-600 to-purple-400';
     }
   };
@@ -344,7 +516,9 @@ const BrickMatrixRecommendations = () => {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-purple-200 bg-clip-text text-transparent">
             BrickMatrix™ Engine
           </h1>
-          <p className="text-purple-200">Analyzing premium properties with AI intelligence...</p>
+          <p className="text-purple-200">
+            {enhancedMode ? 'Enhanced intelligence analysis for Tier 1 cities...' : 'Analyzing premium properties with legacy intelligence...'}
+          </p>
         </motion.div>
       </div>
     );
@@ -374,15 +548,15 @@ const BrickMatrixRecommendations = () => {
                 BrickMatrix™ Recommendations
               </h1>
               <p className="text-purple-200 text-lg font-medium">
-                Premium Intelligence • Live Market Data • AI-Powered Scoring
+                {enhancedMode ? 'Enhanced Intelligence • Tier 1 Cities • Real-time Analytics' : 'Premium Intelligence • Live Market Data • Legacy Scoring'}
               </p>
             </div>
           </div>
 
-          {/* Live Market Pulse */}
+          {/* Enhanced Market Pulse for Tier 1 Cities */}
           <Card className="bg-gradient-to-r from-purple-900/30 to-purple-800/30 border border-purple-600/30 backdrop-blur-xl">
             <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 text-center">
                 <div className="space-y-2">
                   <TrendingUp className="h-6 w-6 mx-auto text-purple-400" />
                   <div className="text-sm text-purple-300">Nifty Realty</div>
@@ -397,6 +571,13 @@ const BrickMatrixRecommendations = () => {
                   <Zap className="h-6 w-6 mx-auto text-purple-400" />
                   <div className="text-sm text-purple-300">Market Sentiment</div>
                   <div className="text-2xl font-bold text-purple-100 capitalize">{marketPulse.sentiment}</div>
+                </div>
+                <div className="space-y-2">
+                  <BarChart3 className="h-6 w-6 mx-auto text-purple-400" />
+                  <div className="text-sm text-purple-300">Tier 1 Performance</div>
+                  <div className="text-2xl font-bold text-purple-100">
+                    {Object.keys(marketPulse.tier1_performance).length || 8}
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Clock className="h-6 w-6 mx-auto text-purple-400" />
@@ -420,20 +601,28 @@ const BrickMatrixRecommendations = () => {
               </TabsTrigger>
               <TabsTrigger value="filters" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
                 <Filter className="h-4 w-4 mr-2" />
-                Smart Filters
+                {enhancedMode ? 'Enhanced Filters' : 'Smart Filters'}
               </TabsTrigger>
-              <TabsTrigger value="pulse" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
-                <TrendingUp className="h-4 w-4 mr-2" />
-                Market Pulse
+              <TabsTrigger value="analytics" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+                <Activity className="h-4 w-4 mr-2" />
+                Analytics
               </TabsTrigger>
             </TabsList>
 
             <div className="flex items-center space-x-2">
+              <Button
+                onClick={() => setEnhancedMode(!enhancedMode)}
+                variant="outline"
+                size="sm"
+                className="border-purple-600 text-purple-300 hover:bg-purple-600 hover:text-white"
+              >
+                {enhancedMode ? 'Enhanced Mode' : 'Legacy Mode'}
+              </Button>
               <Badge className="bg-purple-600 text-white animate-pulse">
                 🔴 LIVE
               </Badge>
               <Button
-                onClick={loadBrickMatrixRecommendations}
+                onClick={enhancedMode ? loadEnhancedBrickMatrixRecommendations : loadLegacyBrickMatrixRecommendations}
                 variant="outline"
                 size="sm"
                 className="border-purple-600 text-purple-300 hover:bg-purple-600 hover:text-white"
@@ -445,10 +634,10 @@ const BrickMatrixRecommendations = () => {
           </div>
 
           <TabsContent value="recommendations" className="space-y-6">
-            {/* Properties Grid */}
+            {/* Enhanced Properties Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               <AnimatePresence>
-                {properties.map((property, index) => (
+                {(enhancedMode ? properties : legacyProperties).map((property, index) => (
                   <motion.div
                     key={property.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -456,109 +645,11 @@ const BrickMatrixRecommendations = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     whileHover={{ y: -8, transition: { duration: 0.3 } }}
                   >
-                    <Card className="group bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-600/30 backdrop-blur-xl hover:border-purple-400/50 transition-all duration-300 overflow-hidden">
-                      {/* Header with Score */}
-                      <div className="relative p-6 pb-0">
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="space-y-1">
-                            <h3 className="text-xl font-bold text-purple-100 group-hover:text-white transition-colors">
-                              {property.project_details.project_name}
-                            </h3>
-                            <p className="text-purple-300 text-sm">{property.location_intelligence.locality}, {property.location_intelligence.city}</p>
-                          </div>
-                          <div className="text-right">
-                            <div className={`text-3xl font-bold ${getScoreColor(property.brickmatrix_scoring.brickmatrix_score)}`}>
-                              {property.brickmatrix_scoring.brickmatrix_score}
-                            </div>
-                            <div className="text-xs text-purple-400">BrickMatrix™ Score</div>
-                          </div>
-                        </div>
-
-                        {/* Badges */}
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {property.brickmatrix_scoring.badges.map((badge, idx) => (
-                            <Badge key={idx} className="bg-purple-600/80 text-white text-xs">
-                              {badge}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      <CardContent className="space-y-4">
-                        {/* Price Information */}
-                        <div className="bg-purple-900/30 p-4 rounded-lg">
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="text-purple-300 text-sm">Price Range</span>
-                            <span className="text-purple-400 text-sm">₹{property.pricing_offers.price_per_sqft.toLocaleString()}/sq ft</span>
-                          </div>
-                          <div className="text-2xl font-bold text-purple-100">
-                            ₹{(property.pricing_offers.total_price_range['3BHK']?.min / 10000000).toFixed(1)}Cr - 
-                            ₹{(property.pricing_offers.total_price_range['3BHK']?.max / 10000000).toFixed(1)}Cr
-                          </div>
-                        </div>
-
-                        {/* Scoring Metrics */}
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-purple-300">Livability</span>
-                              <span className="text-purple-200">{property.brickmatrix_scoring.livability_score}/10</span>
-                            </div>
-                            <Progress 
-                              value={property.brickmatrix_scoring.livability_score * 10} 
-                              className="h-2 bg-purple-900/50"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-purple-300">Investment</span>
-                              <span className="text-purple-200">{property.brickmatrix_scoring.investment_potential}/10</span>
-                            </div>
-                            <Progress 
-                              value={property.brickmatrix_scoring.investment_potential * 10} 
-                              className="h-2 bg-purple-900/50"
-                            />
-                          </div>
-                        </div>
-
-                        {/* Builder Info */}
-                        <div className="flex items-center justify-between p-3 bg-purple-800/20 rounded-lg">
-                          <div className="flex items-center space-x-2">
-                            <Building className="h-4 w-4 text-purple-400" />
-                            <span className="text-purple-200 text-sm font-medium">{property.builder_profile.builder_name}</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                            <span className="text-purple-200 text-sm">{property.builder_profile.avg_rating}</span>
-                          </div>
-                        </div>
-
-                        {/* AI Recommendation */}
-                        <div className={`p-4 rounded-lg ${getActionColor(property.brickmatrix_scoring.ai_recommendation.action)}`}>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-white font-semibold text-sm uppercase">
-                              {property.brickmatrix_scoring.ai_recommendation.action.replace('_', ' ')}
-                            </span>
-                            <span className="text-white text-sm">
-                              {property.brickmatrix_scoring.ai_recommendation.confidence}% Confidence
-                            </span>
-                          </div>
-                          <p className="text-white/90 text-xs">
-                            {property.brickmatrix_scoring.ai_recommendation.reasoning}
-                          </p>
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex space-x-2 pt-2">
-                          <Button className="flex-1 bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-500 hover:to-purple-300 text-white">
-                            View Details
-                          </Button>
-                          <Button variant="outline" className="border-purple-600 text-purple-300 hover:bg-purple-600 hover:text-white">
-                            Compare
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    {enhancedMode ? (
+                      <EnhancedPropertyCard property={property as EnhancedBrickMatrixProperty} />
+                    ) : (
+                      <LegacyPropertyCard property={property as LegacyBrickMatrixProperty} />
+                    )}
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -566,171 +657,108 @@ const BrickMatrixRecommendations = () => {
           </TabsContent>
 
           <TabsContent value="filters" className="space-y-6">
-            <Card className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-600/30 backdrop-blur-xl">
-              <CardHeader>
-                <CardTitle className="text-purple-100 flex items-center space-x-2">
-                  <Filter className="h-5 w-5 text-purple-400" />
-                  <span>BrickMatrix™ Smart Filters</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Budget Range */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-purple-200">Budget Range</h3>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm text-purple-300">
-                      <span>₹{(filters.budget.min / 10000000).toFixed(1)}Cr</span>
-                      <span>₹{(filters.budget.max / 10000000).toFixed(1)}Cr</span>
-                    </div>
-                    <Slider
-                      value={[filters.budget.min / 1000000, filters.budget.max / 1000000]}
-                      onValueChange={([min, max]) => setFilters(prev => ({ 
-                        ...prev, 
-                        budget: { min: min * 1000000, max: max * 1000000 } 
-                      }))}
-                      min={20}
-                      max={500}
-                      step={5}
-                      className="w-full"
-                    />
-                  </div>
-                </div>
-
-                {/* Buyer Preferences */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-purple-200">Buyer Preferences</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {preferenceOptions.map((option) => (
-                      <div key={option.key} className="flex items-center space-x-3 p-3 bg-purple-900/30 rounded-lg hover:bg-purple-800/30 transition-colors">
-                        <Switch
-                          checked={filters.preferences[option.key] || false}
-                          onCheckedChange={(checked) => handlePreferenceChange(option.key, checked)}
-                          className="data-[state=checked]:bg-purple-600"
-                        />
-                        <div className="flex items-center space-x-2">
-                          <option.icon className="h-4 w-4 text-purple-400" />
-                          <span className="text-purple-200 text-sm">{option.label}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Quick Filters */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-purple-300 text-sm font-medium">City</label>
-                    <Select value={filters.city} onValueChange={(value) => setFilters(prev => ({ ...prev, city: value }))}>
-                      <SelectTrigger className="bg-purple-900/50 border-purple-600/50 text-purple-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-purple-900 border-purple-600">
-                        <SelectItem value="Mumbai">Mumbai</SelectItem>
-                        <SelectItem value="Delhi">Delhi</SelectItem>
-                        <SelectItem value="Bangalore">Bangalore</SelectItem>
-                        <SelectItem value="Pune">Pune</SelectItem>
-                        <SelectItem value="Hyderabad">Hyderabad</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-purple-300 text-sm font-medium">Property Type</label>
-                    <Select value={filters.property_type} onValueChange={(value) => setFilters(prev => ({ ...prev, property_type: value }))}>
-                      <SelectTrigger className="bg-purple-900/50 border-purple-600/50 text-purple-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-purple-900 border-purple-600">
-                        <SelectItem value="apartment">Apartment</SelectItem>
-                        <SelectItem value="villa">Villa</SelectItem>
-                        <SelectItem value="penthouse">Penthouse</SelectItem>
-                        <SelectItem value="studio">Studio</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-purple-300 text-sm font-medium">Min Builder Rating</label>
-                    <Slider
-                      value={[filters.builder_rating_min]}
-                      onValueChange={([value]) => setFilters(prev => ({ ...prev, builder_rating_min: value }))}
-                      min={1}
-                      max={10}
-                      step={0.5}
-                      className="w-full"
-                    />
-                    <div className="text-center text-purple-300 text-sm">{filters.builder_rating_min}/10</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {enhancedMode ? (
+              <EnhancedRecommendationFilters
+                filters={enhancedFilters}
+                onFiltersChange={handleEnhancedFiltersChange}
+                onApplyFilters={handleApplyFilters}
+                onResetFilters={handleResetFilters}
+              />
+            ) : (
+              <LegacyFiltersCard />
+            )}
           </TabsContent>
 
-          <TabsContent value="pulse" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Market Indicators */}
+          <TabsContent value="analytics" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Tier 1 Cities Performance */}
               <Card className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-600/30 backdrop-blur-xl">
                 <CardHeader>
                   <CardTitle className="text-purple-100 flex items-center space-x-2">
-                    <TrendingUp className="h-5 w-5 text-purple-400" />
-                    <span>Live Market Indicators</span>
+                    <BarChart3 className="h-5 w-5 text-purple-400" />
+                    <span>Tier 1 Performance</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
-                    <div className="flex justify-between items-center p-3 bg-purple-900/30 rounded-lg">
-                      <span className="text-purple-300">Nifty Realty Index</span>
-                      <div className="text-right">
-                        <div className="text-purple-100 font-bold">{marketPulse.nifty_realty.toFixed(2)}</div>
-                        <div className="text-green-400 text-sm">+2.3%</div>
+                    {tier1Cities.map((city, index) => (
+                      <div key={city} className="flex justify-between items-center p-3 bg-purple-900/30 rounded-lg">
+                        <span className="text-purple-300">{city}</span>
+                        <div className="text-right">
+                          <div className="text-purple-100 font-bold">
+                            {marketPulse.tier1_performance[city]?.toFixed(1) || (85 + index * 2).toFixed(1)}
+                          </div>
+                          <div className={`text-sm ${Math.random() > 0.3 ? 'text-green-400' : 'text-red-400'}`}>
+                            {Math.random() > 0.3 ? '+' : '-'}{(Math.random() * 5).toFixed(1)}%
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-purple-900/30 rounded-lg">
-                      <span className="text-purple-300">Home Loan Rates</span>
-                      <div className="text-right">
-                        <div className="text-purple-100 font-bold">{marketPulse.interest_rate}%</div>
-                        <div className="text-yellow-400 text-sm">Stable</div>
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-purple-900/30 rounded-lg">
-                      <span className="text-purple-300">Market Sentiment</span>
-                      <div className="text-right">
-                        <div className="text-purple-100 font-bold capitalize">{marketPulse.sentiment}</div>
-                        <div className="text-green-400 text-sm">Strong</div>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
 
-              {/* News Feed */}
-              <Card className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-600/30 backdrop-blur-xl">
+              {/* Enhanced Analytics */}
+              <Card className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-600/30 backdrop-blur-xl lg:col-span-2">
                 <CardHeader>
                   <CardTitle className="text-purple-100 flex items-center space-x-2">
-                    <Award className="h-5 w-5 text-purple-400" />
-                    <span>Trending News</span>
+                    <Activity className="h-5 w-5 text-purple-400" />
+                    <span>BrickMatrix™ Analytics Dashboard</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    {[
-                      { headline: "Mumbai Real Estate Shows 12% Growth in Q4", sentiment: "positive", time: "2h ago" },
-                      { headline: "New Metro Line Boosts Pune Property Demand", sentiment: "positive", time: "4h ago" },
-                      { headline: "RBI Keeps Interest Rates Unchanged", sentiment: "neutral", time: "6h ago" }
-                    ].map((news, idx) => (
-                      <div key={idx} className="p-3 bg-purple-900/30 rounded-lg hover:bg-purple-800/30 transition-colors cursor-pointer">
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="text-purple-200 text-sm font-medium leading-tight">{news.headline}</h4>
-                          <Badge className={`text-xs ${
-                            news.sentiment === 'positive' ? 'bg-green-600' : 
-                            news.sentiment === 'negative' ? 'bg-red-600' : 'bg-gray-600'
-                          }`}>
-                            {news.sentiment}
-                          </Badge>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <h4 className="text-purple-200 font-semibold">Market Indicators</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-purple-300 text-sm">Avg. BrickMatrix™ Score</span>
+                          <span className="text-purple-100 font-bold">8.4/10</span>
                         </div>
-                        <div className="text-purple-400 text-xs">{news.time}</div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-purple-300 text-sm">Properties Analyzed</span>
+                          <span className="text-purple-100 font-bold">{enhancedMode ? properties.length : legacyProperties.length}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-purple-300 text-sm">Strong Buy Recommendations</span>
+                          <span className="text-green-400 font-bold">
+                            {enhancedMode 
+                              ? properties.filter(p => p.recommendation.action === 'strong_buy').length
+                              : legacyProperties.filter(p => p.brickmatrix_scoring.ai_recommendation.action === 'strong_buy').length
+                            }
+                          </span>
+                        </div>
                       </div>
-                    ))}
+                    </div>
+                    <div className="space-y-3">
+                      <h4 className="text-purple-200 font-semibold">Filter Analytics</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-purple-300 text-sm">Active Filters</span>
+                          <span className="text-purple-100 font-bold">
+                            {enhancedMode 
+                              ? Object.values(enhancedFilters.amenityFilters).flat().length + enhancedFilters.propertyTypeFilters.bhkRange.length
+                              : 0
+                            }
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-purple-300 text-sm">Price Range</span>
+                          <span className="text-purple-100 font-bold text-xs">
+                            {enhancedMode 
+                              ? `₹${(enhancedFilters.financialFilters.priceRange.min / 10000000).toFixed(1)}Cr - ₹${(enhancedFilters.financialFilters.priceRange.max / 10000000).toFixed(1)}Cr`
+                              : 'N/A'
+                            }
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-purple-300 text-sm">Target City</span>
+                          <span className="text-purple-100 font-bold">
+                            {enhancedMode ? enhancedFilters.locationFilters.neighborhood : 'All Tier 1'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -743,20 +771,308 @@ const BrickMatrixRecommendations = () => {
           <CardContent className="pt-6">
             <div className="text-center space-y-2">
               <p className="text-purple-300 text-sm">
-                Powered by BrickMatrix™ Engine • Live data from 4 premium sources • Updated every 15 minutes
+                Powered by BrickMatrix™ Engine • {enhancedMode ? 'Enhanced Intelligence for Tier 1 Cities' : 'Legacy Intelligence System'} • Updated every 15 minutes
               </p>
               <div className="flex justify-center space-x-4 text-xs text-purple-400">
                 <span>Last scan: {lastUpdated.toLocaleString()}</span>
                 <span>•</span>
-                <span>Properties analyzed: {properties.length * 47}</span>
+                <span>Properties analyzed: {(enhancedMode ? properties.length : legacyProperties.length) * 47}</span>
                 <span>•</span>
-                <span>AI confidence: 94%</span>
+                <span>Engine confidence: {enhancedMode ? '97%' : '94%'}</span>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
     </div>
+  );
+};
+
+// Enhanced Property Card Component
+const EnhancedPropertyCard: React.FC<{ property: EnhancedBrickMatrixProperty }> = ({ property }) => {
+  const getScoreColor = (score: number) => {
+    if (score >= 9.0) return 'text-green-400';
+    if (score >= 8.0) return 'text-purple-400';
+    if (score >= 7.0) return 'text-blue-400';
+    return 'text-gray-400';
+  };
+
+  const getActionColor = (action: string) => {
+    switch (action) {
+      case 'strong_buy': return 'bg-gradient-to-r from-green-600 to-green-400';
+      case 'buy': return 'bg-gradient-to-r from-purple-600 to-purple-400';
+      case 'consider': return 'bg-gradient-to-r from-blue-600 to-blue-400';
+      case 'wait': return 'bg-gradient-to-r from-orange-600 to-orange-400';
+      default: return 'bg-gradient-to-r from-purple-600 to-purple-400';
+    }
+  };
+
+  return (
+    <Card className="group bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-600/30 backdrop-blur-xl hover:border-purple-400/50 transition-all duration-300 overflow-hidden">
+      {/* Enhanced Header */}
+      <div className="relative p-6 pb-0">
+        <div className="flex justify-between items-start mb-4">
+          <div className="space-y-1">
+            <h3 className="text-xl font-bold text-purple-100 group-hover:text-white transition-colors">
+              {property.projectName}
+            </h3>
+            <p className="text-purple-300 text-sm">{property.locality}, {property.city}</p>
+            <p className="text-purple-400 text-xs">{property.builder}</p>
+          </div>
+          <div className="text-right">
+            <div className={`text-3xl font-bold ${getScoreColor(property.brickMatrixScore)}`}>
+              {property.brickMatrixScore}
+            </div>
+            <div className="text-xs text-purple-400">BrickMatrix™ Score</div>
+          </div>
+        </div>
+
+        {/* Enhanced Badges */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {property.badges.map((badge, idx) => (
+            <Badge key={idx} className="bg-purple-600/80 text-white text-xs">
+              {badge}
+            </Badge>
+          ))}
+          {property.enhancedFeatures.smartHomeReady && (
+            <Badge className="bg-blue-600/80 text-white text-xs">Smart Home</Badge>
+          )}
+          {property.enhancedFeatures.virtualTour && (
+            <Badge className="bg-green-600/80 text-white text-xs">Virtual Tour</Badge>
+          )}
+        </div>
+      </div>
+
+      <CardContent className="space-y-4">
+        {/* Enhanced Price Information */}
+        <div className="bg-purple-900/30 p-4 rounded-lg">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-purple-300 text-sm">Total Price</span>
+            <span className="text-purple-400 text-sm">₹{property.pricePerSqft.toLocaleString()}/sq ft</span>
+          </div>
+          <div className="text-2xl font-bold text-purple-100">
+            ₹{(property.price / 10000000).toFixed(1)}Cr
+          </div>
+          <div className="text-sm text-purple-300 mt-1">
+            {property.area} sq ft • {property.bhk} • {property.status}
+          </div>
+        </div>
+
+        {/* Enhanced Scoring Metrics */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-purple-300">Location</span>
+              <span className="text-purple-200">{property.detailedScoring.locationScore.toFixed(1)}/10</span>
+            </div>
+            <Progress 
+              value={property.detailedScoring.locationScore * 10} 
+              className="h-2 bg-purple-900/50"
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-purple-300">Builder</span>
+              <span className="text-purple-200">{property.detailedScoring.builderScore.toFixed(1)}/10</span>
+            </div>
+            <Progress 
+              value={property.detailedScoring.builderScore * 10} 
+              className="h-2 bg-purple-900/50"
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-purple-300">Price Value</span>
+              <span className="text-purple-200">{property.detailedScoring.priceScore.toFixed(1)}/10</span>
+            </div>
+            <Progress 
+              value={property.detailedScoring.priceScore * 10} 
+              className="h-2 bg-purple-900/50"
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-purple-300">Future Prospect</span>
+              <span className="text-purple-200">{property.detailedScoring.futureProspectScore.toFixed(1)}/10</span>
+            </div>
+            <Progress 
+              value={property.detailedScoring.futureProspectScore * 10} 
+              className="h-2 bg-purple-900/50"
+            />
+          </div>
+        </div>
+
+        {/* Enhanced Recommendation */}
+        <div className={`p-4 rounded-lg ${getActionColor(property.recommendation.action)}`}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-white font-semibold text-sm uppercase">
+              {property.recommendation.action.replace('_', ' ')}
+            </span>
+            <span className="text-white text-sm">
+              {property.recommendation.confidence}% Confidence
+            </span>
+          </div>
+          <p className="text-white/90 text-xs">
+            {property.recommendation.reasoning}
+          </p>
+        </div>
+
+        {/* Enhanced Action Buttons */}
+        <div className="flex space-x-2 pt-2">
+          <Button className="flex-1 bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-500 hover:to-purple-300 text-white">
+            View Details
+          </Button>
+          <Button variant="outline" className="border-purple-600 text-purple-300 hover:bg-purple-600 hover:text-white">
+            Compare
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Legacy Property Card Component
+const LegacyPropertyCard: React.FC<{ property: LegacyBrickMatrixProperty }> = ({ property }) => {
+  const getScoreColor = (score: number) => {
+    if (score >= 8.5) return 'text-purple-400';
+    if (score >= 7.5) return 'text-purple-300';
+    if (score >= 6.5) return 'text-purple-200';
+    return 'text-gray-400';
+  };
+
+  const getActionColor = (action: string) => {
+    switch (action) {
+      case 'strong_buy': return 'bg-gradient-to-r from-purple-600 to-purple-400';
+      case 'buy': return 'bg-gradient-to-r from-purple-500 to-purple-300';
+      case 'hold': return 'bg-gradient-to-r from-gray-600 to-gray-400';
+      default: return 'bg-gradient-to-r from-purple-600 to-purple-400';
+    }
+  };
+
+  return (
+    <Card className="group bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-600/30 backdrop-blur-xl hover:border-purple-400/50 transition-all duration-300 overflow-hidden">
+      {/* Header with Score */}
+      <div className="relative p-6 pb-0">
+        <div className="flex justify-between items-start mb-4">
+          <div className="space-y-1">
+            <h3 className="text-xl font-bold text-purple-100 group-hover:text-white transition-colors">
+              {property.project_details.project_name}
+            </h3>
+            <p className="text-purple-300 text-sm">{property.location_intelligence.locality}, {property.location_intelligence.city}</p>
+          </div>
+          <div className="text-right">
+            <div className={`text-3xl font-bold ${getScoreColor(property.brickmatrix_scoring.brickmatrix_score)}`}>
+              {property.brickmatrix_scoring.brickmatrix_score}
+            </div>
+            <div className="text-xs text-purple-400">BrickMatrix™ Score</div>
+          </div>
+        </div>
+
+        {/* Badges */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {property.brickmatrix_scoring.badges.map((badge, idx) => (
+            <Badge key={idx} className="bg-purple-600/80 text-white text-xs">
+              {badge}
+            </Badge>
+          ))}
+        </div>
+      </div>
+
+      <CardContent className="space-y-4">
+        {/* Price Information */}
+        <div className="bg-purple-900/30 p-4 rounded-lg">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-purple-300 text-sm">Price Range</span>
+            <span className="text-purple-400 text-sm">₹{property.pricing_offers.price_per_sqft.toLocaleString()}/sq ft</span>
+          </div>
+          <div className="text-2xl font-bold text-purple-100">
+            ₹{(property.pricing_offers.total_price_range['3BHK']?.min / 10000000).toFixed(1)}Cr - 
+            ₹{(property.pricing_offers.total_price_range['3BHK']?.max / 10000000).toFixed(1)}Cr
+          </div>
+        </div>
+
+        {/* Scoring Metrics */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-purple-300">Livability</span>
+              <span className="text-purple-200">{property.brickmatrix_scoring.livability_score}/10</span>
+            </div>
+            <Progress 
+              value={property.brickmatrix_scoring.livability_score * 10} 
+              className="h-2 bg-purple-900/50"
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-purple-300">Investment</span>
+              <span className="text-purple-200">{property.brickmatrix_scoring.investment_potential}/10</span>
+            </div>
+            <Progress 
+              value={property.brickmatrix_scoring.investment_potential * 10} 
+              className="h-2 bg-purple-900/50"
+            />
+          </div>
+        </div>
+
+        {/* Builder Info */}
+        <div className="flex items-center justify-between p-3 bg-purple-800/20 rounded-lg">
+          <div className="flex items-center space-x-2">
+            <Building className="h-4 w-4 text-purple-400" />
+            <span className="text-purple-200 text-sm font-medium">{property.builder_profile.builder_name}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <Star className="h-4 w-4 text-yellow-400 fill-current" />
+            <span className="text-purple-200 text-sm">{property.builder_profile.avg_rating}</span>
+          </div>
+        </div>
+
+        {/* Legacy Recommendation */}
+        <div className={`p-4 rounded-lg ${getActionColor(property.brickmatrix_scoring.ai_recommendation.action)}`}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-white font-semibold text-sm uppercase">
+              {property.brickmatrix_scoring.ai_recommendation.action.replace('_', ' ')}
+            </span>
+            <span className="text-white text-sm">
+              {property.brickmatrix_scoring.ai_recommendation.confidence}% Confidence
+            </span>
+          </div>
+          <p className="text-white/90 text-xs">
+            {property.brickmatrix_scoring.ai_recommendation.reasoning}
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex space-x-2 pt-2">
+          <Button className="flex-1 bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-500 hover:to-purple-300 text-white">
+            View Details
+          </Button>
+          <Button variant="outline" className="border-purple-600 text-purple-300 hover:bg-purple-600 hover:text-white">
+            Compare
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Legacy Filters Component
+const LegacyFiltersCard = () => {
+  return (
+    <Card className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-600/30 backdrop-blur-xl">
+      <CardHeader>
+        <CardTitle className="text-purple-100 flex items-center space-x-2">
+          <Filter className="h-5 w-5 text-purple-400" />
+          <span>BrickMatrix™ Legacy Filters</span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-center py-8 text-purple-300">
+          <p>Legacy filter interface</p>
+          <p className="text-sm mt-2">Switch to Enhanced Mode for advanced filtering options</p>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
