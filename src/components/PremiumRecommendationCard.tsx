@@ -256,7 +256,7 @@ const PremiumRecommendationCard = ({
             <div className="bg-gradient-to-r from-primary/10 to-accent/10 p-4 rounded-lg border border-primary/20">
               <div className="flex items-center space-x-2 mb-2">
                 <Target className="h-4 w-4 text-primary" />
-                <span className="font-semibold text-sm">AI Recommendation Analysis</span>
+                <span className="font-semibold text-sm">BrickMatrix™ Analysis</span>
               </div>
               <div className="space-y-1">
                 {recommendationScore.explanation.slice(0, 2).map((exp: string, idx: number) => (

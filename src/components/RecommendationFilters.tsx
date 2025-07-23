@@ -245,7 +245,7 @@ const RecommendationFilters = ({
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
                   <span>₹{filters.budget.min}L</span>
                   <span>₹{filters.budget.max}L</span>
-                </div>
+                <Label className="text-sm font-medium">BrickMatrix™ Powered</Label>
               </div>
             </div>
 
@@ -400,10 +400,10 @@ const RecommendationFilters = ({
           <div className="bg-gradient-to-r from-primary/10 to-accent/10 p-4 rounded-lg border border-primary/20">
             <div className="flex items-center space-x-2 mb-2">
               <Target className="h-4 w-4 text-primary" />
-              <span className="font-semibold text-sm">AI Recommendation Engine</span>
+              <span className="font-semibold text-sm">BrickMatrix™ Recommendation Engine</span>
             </div>
             <p className="text-xs text-muted-foreground">
-              Our AI analyzes 50+ factors including location intelligence, builder credibility, 
+              Our BrickMatrix™ engine analyzes 50+ factors including location intelligence, builder credibility, 
               price trends, and market dynamics to provide personalized recommendations.
             </p>
           </div>

@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Building, TrendingUp, Search, Star, MapPin, Shield, Clock, Users } from 'lucide-react';
+import { Building, TrendingUp, Search, Star, MapPin, Shield, Clock, Users, Crown, Home, Zap, Gift } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 const Home = () => {
   const [visibleCards, setVisibleCards] = useState(0);
   const [showPrompts, setShowPrompts] = useState(false);
+  const [showBestSegments, setShowBestSegments] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -16,6 +17,7 @@ const Home = () => {
     }, 200);
 
     setTimeout(() => setShowPrompts(true), 2000);
+    setTimeout(() => setShowBestSegments(true), 2500);
 
     return () => clearInterval(timer);
   }, []);
@@ -66,10 +68,50 @@ const Home = () => {
     "Compare investment opportunities?"
   ];
 
+  const bestSegments = [
+    {
+      icon: Crown,
+      title: "Luxury Villas",
+      description: "Premium villas with world-class amenities",
+      price: "₹2.5Cr+",
+      color: "from-yellow-400 to-amber-600",
+      bgGradient: "from-yellow-900/20 to-amber-900/20"
+    },
+    {
+      icon: Home,
+      title: "Budget Apartments",
+      description: "Affordable homes for first-time buyers",
+      price: "₹25L+",
+      color: "from-green-400 to-emerald-600",
+      bgGradient: "from-green-900/20 to-emerald-900/20"
+    },
+    {
+      icon: Zap,
+      title: "New Launches",
+      description: "Latest projects with early bird offers",
+      price: "₹45L+",
+      color: "from-blue-400 to-cyan-600",
+      bgGradient: "from-blue-900/20 to-cyan-900/20"
+    },
+    {
+      icon: Gift,
+      title: "Builder Offers",
+      description: "Exclusive deals and limited-time schemes",
+      price: "Save 15%",
+      color: "from-purple-400 to-violet-600",
+      bgGradient: "from-purple-900/20 to-violet-900/20"
+    }
+  ];
   return (
-    <div className="min-h-screen" style={{ background: 'var(--background-gradient)' }}>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
       {/* Hero Section */}
       <section className="relative px-4 py-16 md:py-24">
+        {/* Background Effects */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+        
         <div className="max-w-6xl mx-auto text-center space-y-8">
           <motion.div 
             className="space-y-4"
@@ -78,14 +120,14 @@ const Home = () => {
             transition={{ duration: 1, ease: "easeOut" }}
           >
             <motion.h1 
-              className="text-4xl md:text-6xl font-bold text-foreground leading-tight"
+              className="text-4xl md:text-6xl font-bold text-white leading-tight"
               initial={{ opacity: 0, scale: 0.8, rotateX: -15 }}
               animate={{ opacity: 1, scale: 1, rotateX: 0 }}
               transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
             >
               Tired of Guessing Property Prices?{' '}
               <motion.span 
-                className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
@@ -95,7 +137,7 @@ const Home = () => {
             </motion.h1>
             
             <motion.p 
-              className="text-xl md:text-2xl text-muted-foreground font-medium italic max-w-4xl mx-auto"
+              className="text-xl md:text-2xl text-gray-300 font-medium italic max-w-4xl mx-auto"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
@@ -105,7 +147,7 @@ const Home = () => {
           </motion.div>
 
           <motion.div 
-            className="max-w-4xl mx-auto space-y-6 text-lg text-muted-foreground leading-relaxed"
+            className="max-w-4xl mx-auto space-y-6 text-lg text-gray-300 leading-relaxed"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1 }}
@@ -128,7 +170,7 @@ const Home = () => {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Button asChild size="lg" className="bg-gradient-to-r from-primary to-accent hover:shadow-lg px-8 py-3 rounded-xl transition-all duration-300 primary-glow">
+              <Button asChild size="lg" className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold hover:shadow-2xl hover:shadow-yellow-500/25 px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105">
                 <Link to="/chat">Start Conversation</Link>
               </Button>
             </motion.div>
@@ -136,23 +178,96 @@ const Home = () => {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Button asChild variant="outline" size="lg" className="glow-border px-8 py-3 rounded-xl transition-all duration-300">
+              <Button asChild variant="outline" size="lg" className="border-2 border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/10 hover:border-yellow-400 px-8 py-4 rounded-2xl transition-all duration-300 backdrop-blur-sm">
                 <Link to="/recommendations">Get Recommendations</Link>
               </Button>
             </motion.div>
           </motion.div>
 
           <motion.p 
-            className="text-lg text-muted-foreground max-w-3xl mx-auto"
+            className="text-lg text-gray-400 max-w-3xl mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.4 }}
           >
-            Real-time market data • AI-powered valuations • Builder analytics • Tier 1-3 city coverage • Live feeds from 99acres, NoBroker & MagicBricks
+            Real-time market data • BrickMatrix™ valuations • Builder analytics • Tier 1-3 city coverage • Live feeds from 99acres, NoBroker & MagicBricks
           </motion.p>
         </div>
       </section>
 
+      {/* Best of Each Segment Section */}
+      {showBestSegments && (
+        <section className="px-4 py-16">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Best of Each Segment
+              </h2>
+              <p className="text-gray-300 text-lg">
+                Curated selections powered by BrickMatrix™ intelligence
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {bestSegments.map((segment, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.6, delay: index * 0.15 }}
+                  whileHover={{ 
+                    scale: 1.05, 
+                    y: -10,
+                    transition: { duration: 0.3 }
+                  }}
+                >
+                  <Card className={`group cursor-pointer transition-all duration-500 bg-gradient-to-br ${segment.bgGradient} border border-gray-700/50 hover:border-gray-600 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/10`}>
+                    <CardHeader className="text-center pb-2">
+                      <motion.div 
+                        className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${segment.color} flex items-center justify-center shadow-lg`}
+                        whileHover={{ 
+                          rotate: 360,
+                          scale: 1.1,
+                          transition: { duration: 0.6 }
+                        }}
+                      >
+                        <segment.icon className="h-8 w-8 text-white" />
+                      </motion.div>
+                      <CardTitle className="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors">
+                        {segment.title}
+                      </CardTitle>
+                      <div className={`text-2xl font-bold bg-gradient-to-r ${segment.color} bg-clip-text text-transparent`}>
+                        {segment.price}
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-300 text-center text-sm leading-relaxed">
+                        {segment.description}
+                      </p>
+                      <motion.div
+                        className="mt-4 text-center"
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        <Button 
+                          size="sm" 
+                          className={`bg-gradient-to-r ${segment.color} text-white hover:shadow-lg transition-all duration-300 rounded-xl px-6`}
+                        >
+                          Explore
+                        </Button>
+                      </motion.div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
       {/* Features Grid */}
       <section className="px-4 py-16">
         <div className="max-w-6xl mx-auto">
@@ -175,23 +290,23 @@ const Home = () => {
                 }}
               >
                 <Card 
-                  className="group cursor-pointer transition-all duration-500 card-shadow glassmorphism glow-border hover:shadow-2xl"
+                  className="group cursor-pointer transition-all duration-500 bg-gray-800/50 border border-gray-700/50 hover:border-gray-600 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/10 rounded-2xl"
                 >
                 <CardHeader className="text-center pb-2">
                   <motion.div 
-                    className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center primary-glow"
+                    className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center shadow-lg`}
                     whileHover={{ 
                       rotate: 360,
                       scale: 1.1,
                       transition: { duration: 0.6 }
                     }}
                   >
-                    <feature.icon className="h-8 w-8 text-primary-foreground" />
+                    <feature.icon className="h-8 w-8 text-white" />
                   </motion.div>
-                  <CardTitle className="text-xl font-bold">{feature.title}</CardTitle>
+                  <CardTitle className="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground text-center">{feature.description}</p>
+                  <p className="text-gray-300 text-center leading-relaxed">{feature.description}</p>
                 </CardContent>
                 </Card>
               </motion.div>
@@ -220,7 +335,7 @@ const Home = () => {
                 >
                   <Link
                   to="/chat"
-                    className="group px-4 py-2 glassmorphism glow-border rounded-full text-sm text-muted-foreground hover:text-foreground transition-all duration-300 shadow-sm hover:shadow-md"
+                    className="group px-4 py-2 bg-gray-800/50 border border-gray-700/50 hover:border-gray-600 rounded-full text-sm text-gray-300 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md backdrop-blur-sm"
                 >
                   💭 {prompt}
                 </Link>
@@ -239,7 +354,7 @@ const Home = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
           >
-            <Card className="bg-gradient-to-r from-primary to-accent text-primary-foreground border-0 shadow-2xl primary-glow">
+            <Card className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black border-0 shadow-2xl shadow-yellow-500/25 rounded-2xl">
             <CardHeader>
               <CardTitle className="text-center text-2xl font-bold">Market Overview</CardTitle>
             </CardHeader>
@@ -302,7 +417,7 @@ const Home = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               whileHover={{ scale: 1.05, y: -3 }}
             >
-              <Button asChild size="lg" className="bg-gradient-to-r from-primary to-accent px-8 py-3 rounded-xl transition-all duration-300 primary-glow">
+              <Button asChild size="lg" className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold hover:shadow-2xl hover:shadow-yellow-500/25 px-8 py-4 rounded-2xl transition-all duration-300">
                 <Link to="/chat">Start Your Journey with BrickMatric</Link>
               </Button>
             </motion.div>

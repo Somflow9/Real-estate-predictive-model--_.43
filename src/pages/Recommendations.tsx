@@ -322,7 +322,7 @@ const Recommendations = () => {
             </div>
             <div>
               <h1 className="text-4xl md:text-5xl font-bold gradient-text-primary">
-                AI Property Recommendations
+                BrickMatrix™ Property Recommendations
               </h1>
               <p className="text-lg text-muted-foreground font-medium">
                 Premium intelligence • Live market data • Tier {cityTier} city analysis

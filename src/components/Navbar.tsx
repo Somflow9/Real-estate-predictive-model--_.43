@@ -2,7 +2,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Star, TrendingUp, MessageCircle, Building } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import ThemeToggle from './ThemeToggle';
 import logoLight from '@/assets/logo-light.png';
 import logoDark from '@/assets/logo-dark.png';
 
@@ -53,7 +52,6 @@ const Navbar = () => {
                 </Link>
               ))}
             </div>
-            <ThemeToggle />
           </div>
         </div>
       </div>

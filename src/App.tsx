@@ -14,9 +14,9 @@ const queryClient = new QueryClient();
 
 function App() {
   useEffect(() => {
-    // Initialize with light theme by default
-    document.documentElement.classList.remove('dark');
-    document.body.classList.remove('dark');
+    // Initialize with dark theme by default
+    document.documentElement.classList.add('dark');
+    document.body.classList.add('dark');
   }, []);
 
   return (
