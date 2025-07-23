@@ -285,7 +285,7 @@ const Home = () => {
                 whileHover={{ 
                   scale: 1.05, 
                   y: -10,
-                  rotateY: 5,
+                  rotateY: '5deg',
                   transition: { duration: 0.3 }
                 }}
               >
