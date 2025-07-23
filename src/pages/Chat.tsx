@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,7 +33,7 @@ const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: 'Hello! I\'m BrickMatric AI, your intelligent real estate advisor powered by cutting-edge analytics and live market data. I can help you with:\n\n🏠 AI-powered property recommendations with valuation insights\n💰 Real-time pricing from 99acres, NoBroker & MagicBricks\n🏗️ Comprehensive builder credibility analysis\n🌍 Tier-wise city intelligence & neighborhood insights\n📈 Smart investment recommendations with market pulse\n📊 Historical trends and predictive analytics\n🔄 Live scheme tracking and exclusive deal alerts\n\nI cover the entire Indian real estate spectrum - from luxury penthouses in Mumbai to affordable homes in emerging cities. How can I assist your property journey today?',
+      content: 'Hello! I\'m BrickMatric AI, your intelligent real estate advisor powered by cutting-edge analytics and live market data. I can help you with:\n\n🏠 BrickMatrix™ property recommendations with valuation insights\n💰 Real-time pricing from 99acres, NoBroker & MagicBricks\n🏗️ Comprehensive builder credibility analysis\n🌍 Tier-wise city intelligence & neighborhood insights\n📈 Smart investment recommendations with market pulse\n📊 Historical trends and predictive analytics\n🔄 Live scheme tracking and exclusive deal alerts\n\nI cover the entire Indian real estate spectrum - from luxury penthouses in Mumbai to affordable homes in emerging cities. How can I assist your property journey today?',
       isUser: false,
       timestamp: new Date(),
     },
@@ -156,7 +155,7 @@ const Chat = () => {
 
       const systemMessage = {
         role: 'system' as const,
-        content: `You are BrickMatric AI, an advanced real estate intelligence system specializing in Indian property markets. For every property query, provide comprehensive analysis including:
+        content: `You are BrickMatric AI, an advanced real estate intelligence system powered by BrickMatrix™ engine, specializing in Indian property markets. For every property query, provide comprehensive analysis including:
         1. Estimated price range with specific numbers in ₹ lakhs/crores
         2. Builder credibility score (1-10) 
         3. Neighborhood overview with key amenities

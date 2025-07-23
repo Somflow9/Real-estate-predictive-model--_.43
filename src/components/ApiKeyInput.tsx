@@ -23,19 +23,19 @@ const ApiKeyInput = ({ onApiKeySet }: ApiKeyInputProps) => {
   };
 
   return (
-    <Card className="p-6 max-w-md mx-auto bg-card">
+    <Card className="p-6 max-w-md mx-auto bg-gray-800/50 border border-gray-700/50 backdrop-blur-sm">
       <div className="flex items-center gap-2 mb-4">
         <Key className="w-5 h-5 text-primary" />
-        <h2 className="text-lg font-semibold text-foreground">Enter OpenAI API Key</h2>
+        <h2 className="text-lg font-semibold text-white">Enter OpenAI API Key</h2>
       </div>
       
-      <p className="text-sm text-muted-foreground mb-4">
+      <p className="text-sm text-gray-300 mb-4">
         To use the ChatGPT AI chat feature, please enter your OpenAI API key. You can get one from{' '}
         <a 
           href="https://platform.openai.com/api-keys" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="text-primary hover:underline"
+          className="text-yellow-400 hover:underline"
         >
           OpenAI Platform
         </a>
@@ -48,7 +48,7 @@ const ApiKeyInput = ({ onApiKeySet }: ApiKeyInputProps) => {
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder="sk-..."
-            className="pr-10 bg-background"
+            className="pr-10 bg-gray-900/50 border-gray-600 text-white"
           />
           <Button
             type="button"
@@ -61,12 +61,12 @@ const ApiKeyInput = ({ onApiKeySet }: ApiKeyInputProps) => {
           </Button>
         </div>
         
-        <Button type="submit" className="w-full" disabled={!apiKey.trim()}>
+        <Button type="submit" className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-bold hover:from-yellow-500 hover:to-orange-600" disabled={!apiKey.trim()}>
           Set API Key
         </Button>
       </form>
 
-      <p className="text-xs text-muted-foreground mt-4">
+      <p className="text-xs text-gray-400 mt-4">
         Your API key is stored locally and never sent to our servers.
       </p>
     </Card>
