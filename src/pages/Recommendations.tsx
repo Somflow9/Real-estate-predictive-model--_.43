@@ -82,7 +82,8 @@ const Recommendations = () => {
   const [aiInsights, setAiInsights] = useState<any>(null);
 
   useEffect(() => {
-    const tier = tierCityService.getCityTier(preferences.city);
+    const cityData = tierCityService.getCityData(preferences.city);
+    const tier = cityData ? cityData.tier : 1;
     setCityTier(tier);
     loadRecommendations();
   }, [preferences.city]);
