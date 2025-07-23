@@ -2,35 +2,30 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Star, TrendingUp, MessageCircle, Building } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import logoLight from '@/assets/logo-light.png';
-import logoDark from '@/assets/logo-dark.png';
 
 const Navbar = () => {
   const location = useLocation();
 
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
-    { path: '/recommendations', label: 'Recommendations', icon: Star },
+    { path: '/recommendations', label: 'BrickMatrix™', icon: Star },
     { path: '/market-pulse', label: 'Market Pulse', icon: TrendingUp },
     { path: '/chat', label: 'Chat', icon: MessageCircle },
   ];
 
   return (
-    <nav className="glassmorphism shadow-2xl border-b-2 border-primary/20 sticky top-0 z-50 backdrop-blur-xl">
+    <nav className="bg-gradient-to-r from-purple-900/50 to-purple-800/50 border-b-2 border-purple-600/30 sticky top-0 z-50 backdrop-blur-xl">
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center space-x-4 group">
             <div className="relative">
-              <img 
-                src={logoLight} 
-                alt="BrickMatric Logo Light" 
-                className="h-12 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-lg dark:hidden" 
-              />
-              <img 
-                src={logoDark} 
-                alt="BrickMatric Logo Dark" 
-                className="h-12 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-lg hidden dark:block" 
-              />
+              <Building className="h-12 w-12 text-purple-400 group-hover:scale-110 transition-transform duration-300 drop-shadow-lg" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-purple-200 bg-clip-text text-transparent">
+                BrickMatrix™
+              </h1>
+              <p className="text-xs text-purple-300">Premium Intelligence</p>
             </div>
           </Link>
           
@@ -43,8 +38,8 @@ const Navbar = () => {
                   className={cn(
                     "flex items-center space-x-3 px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 hover:scale-105",
                     location.pathname === path
-                      ? "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-xl primary-glow"
-                      : "text-muted-foreground hover:text-foreground glassmorphism border border-primary/20 hover:border-primary/40"
+                      ? "bg-gradient-to-r from-purple-600 to-purple-400 text-white shadow-xl"
+                      : "text-purple-300 hover:text-white bg-purple-900/30 border border-purple-600/30 hover:border-purple-400/50"
                   )}
                 >
                   <Icon className="h-5 w-5" />

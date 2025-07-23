@@ -3,49 +3,49 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Modern Light/Dark Theme System */
+/* BrickMatrix™ Premium Dark Theme System */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    /* Dark mode - Charcoal with purple accents */
-    --background: 0 0% 7%; /* #121212 charcoal */
-    --background-gradient: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
-    --foreground: 0 0% 95%; /* #f1f1f1 white text */
+    /* BrickMatrix™ Premium Dark Theme */
+    --background: 0 0% 7%;
+    --background-gradient: linear-gradient(135deg, #000000 0%, #1a0033 50%, #4B0082 100%);
+    --foreground: 230 100% 95%; /* #E6E6FA lilac text */
 
-    --card: 0 0% 12%; /* #1e1e1e dark gray */
-    --card-foreground: 0 0% 95%;
+    --card: 270 100% 8%; /* Deep purple card background */
+    --card-foreground: 230 100% 95%;
 
-    --popover: 0 0% 12%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 270 100% 8%;
+    --popover-foreground: 230 100% 95%;
 
-    --primary: 45 100% 50%; /* #FFD700 golden yellow */
+    --primary: 270 100% 37%; /* #6A0DAD deep purple */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 270 50% 15%;
+    --secondary-foreground: 230 100% 95%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 270 50% 15%;
+    --muted-foreground: 230 50% 75%;
 
-    --accent: 25 100% 50%; /* #FF8000 orange */
+    --accent: 280 100% 50%; /* #8F00FF electric violet */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 95%;
+    --destructive-foreground: 230 100% 95%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 15%;
-    --ring: 45 100% 50%;
+    --border: 270 50% 20%;
+    --input: 270 50% 15%;
+    --ring: 280 100% 50%;
 
-    --sidebar-background: 0 0% 12%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 45 100% 50%;
+    --sidebar-background: 270 100% 8%;
+    --sidebar-foreground: 230 100% 95%;
+    --sidebar-primary: 270 100% 37%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 45 100% 50%;
+    --sidebar-accent: 270 50% 15%;
+    --sidebar-accent-foreground: 230 100% 95%;
+    --sidebar-border: 270 50% 20%;
+    --sidebar-ring: 280 100% 50%;
 
     --radius: 1rem;
   }
@@ -59,7 +59,7 @@
   body {
     @apply text-foreground transition-all duration-500 ease-in-out;
     font-family: 'DM Sans', 'Inter', system-ui, -apple-system, sans-serif;
-    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%);
+    background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #4B0082 100%);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -68,12 +68,13 @@
 }
 
 @layer components {
+  /* BrickMatrix™ Premium Components */
   .glassmorphism {
-    @apply bg-gray-800/30 backdrop-blur-xl border border-gray-700/50 transition-all duration-300;
+    @apply bg-purple-900/20 backdrop-blur-xl border border-purple-600/30 transition-all duration-300;
   }
 
-  .primary-glow {
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), 0 0 10px rgba(255, 215, 0, 0.2);
+  .brickmatrix-glow {
+    box-shadow: 0 0 30px rgba(143, 0, 255, 0.4), 0 0 10px rgba(106, 13, 173, 0.2);
   }
 
   .hover-lift {
@@ -81,19 +82,19 @@
   }
 
   .glow-border {
-    @apply border border-yellow-400/30 hover:border-yellow-400/60 transition-all duration-300;
+    @apply border border-purple-600/30 hover:border-purple-400/60 transition-all duration-300;
   }
 
   .message-card {
-    @apply glassmorphism rounded-2xl p-4 hover-lift glow-border;
+    @apply bg-purple-900/20 backdrop-blur-xl border border-purple-600/30 rounded-2xl p-4 hover-lift transition-all duration-300;
   }
 
   .card-shadow {
     @apply shadow-lg;
-    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(143, 0, 255, 0.1);
   }
 
-  /* Enhanced animations for BrickMatric */
+  /* Enhanced animations for BrickMatrix™ */
   .bounce-subtle {
     animation: bounce-subtle 2s infinite;
   }
@@ -118,34 +119,54 @@
     @apply transform -translate-y-2 shadow-2xl;
   }
 
-  /* Enhanced glassmorphism effects */
-  .enhanced-glassmorphism {
-    @apply bg-gray-800/40 border border-gray-700/30 backdrop-blur-2xl;
+  /* BrickMatrix™ glassmorphism effects */
+  .brickmatrix-glassmorphism {
+    @apply bg-purple-900/30 border border-purple-600/30 backdrop-blur-2xl;
     box-shadow: 
-      0 8px 32px 0 rgba(255, 215, 0, 0.2),
-      inset 0 1px 0 0 rgba(255, 215, 0, 0.1);
+      0 8px 32px 0 rgba(143, 0, 255, 0.2),
+      inset 0 1px 0 0 rgba(106, 13, 173, 0.1);
   }
 
-  /* Gradient text effects */
-  .gradient-text-primary {
-    @apply bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent;
+  /* BrickMatrix™ gradient text effects */
+  .brickmatrix-gradient-text {
+    @apply bg-gradient-to-r from-purple-400 to-purple-200 bg-clip-text text-transparent;
   }
 
-  .gradient-text-secondary {
-    @apply bg-gradient-to-r from-orange-500 to-yellow-400 bg-clip-text text-transparent;
+  .brickmatrix-gradient-accent {
+    @apply bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent;
   }
 
-  /* Loading animations */
-  .pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite alternate;
+  /* BrickMatrix™ loading animations */
+  .brickmatrix-pulse {
+    animation: brickmatrix-pulse 2s ease-in-out infinite alternate;
   }
 
-  @keyframes pulse-glow {
+  @keyframes brickmatrix-pulse {
     from {
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 20px rgba(143, 0, 255, 0.3);
     }
     to {
-      box-shadow: 0 0 40px rgba(255, 215, 0, 0.6), 0 0 60px rgba(255, 128, 0, 0.3);
+      box-shadow: 0 0 40px rgba(143, 0, 255, 0.6), 0 0 60px rgba(106, 13, 173, 0.3);
     }
+  }
+
+  /* BrickMatrix™ Score Display */
+  .brickmatrix-score {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 800;
+    background: linear-gradient(135deg, #8F00FF 0%, #6A0DAD 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* BrickMatrix™ Button Styles */
+  .brickmatrix-button {
+    @apply bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-500 hover:to-purple-300 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105;
+    box-shadow: 0 4px 15px rgba(143, 0, 255, 0.3);
+  }
+
+  .brickmatrix-button:hover {
+    box-shadow: 0 6px 20px rgba(143, 0, 255, 0.4);
   }
 }

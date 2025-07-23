@@ -1,0 +1,438 @@
+{
+  "brickmatrix_property_schema": {
+    "version": "2.0",
+    "last_updated": "2024-01-15T10:30:00Z",
+    "data_sources": {
+      "primary_platforms": [
+        {
+          "platform": "MagicBricks",
+          "api_endpoint": "https://api.magicbricks.com/v2/properties",
+          "refresh_interval": 900,
+          "priority": 1
+        },
+        {
+          "platform": "99acres",
+          "api_endpoint": "https://api.99acres.com/v3/search",
+          "refresh_interval": 900,
+          "priority": 2
+        },
+        {
+          "platform": "Housing.com",
+          "api_endpoint": "https://api.housing.com/v2/listings",
+          "refresh_interval": 1200,
+          "priority": 3
+        },
+        {
+          "platform": "NoBroker",
+          "api_endpoint": "https://api.nobroker.in/v2/properties",
+          "refresh_interval": 1200,
+          "priority": 4
+        }
+      ],
+      "market_pulse_feeds": [
+        {
+          "source": "MoneyControl",
+          "feed_url": "https://api.moneycontrol.com/realestate/feed",
+          "refresh_interval": 300
+        },
+        {
+          "source": "Nifty_Realty",
+          "feed_url": "https://api.nseindia.com/realty-index",
+          "refresh_interval": 600
+        },
+        {
+          "source": "Housing_Interest_Rates",
+          "feed_url": "https://api.rbi.org.in/housing-rates",
+          "refresh_interval": 3600
+        }
+      ]
+    },
+    "property_object": {
+      "location_intelligence": {
+        "city": "Mumbai",
+        "tier": 1,
+        "locality": "Bandra West",
+        "coordinates": {
+          "lat": 19.0596,
+          "lng": 72.8295
+        },
+        "connectivity_score": 8.7,
+        "nearby_schemes_density": 12,
+        "competing_projects": [
+          {
+            "project_name": "Godrej Platinum",
+            "distance_km": 0.8,
+            "price_per_sqft": 18500,
+            "builder": "Godrej Properties"
+          },
+          {
+            "project_name": "Oberoi Sky City",
+            "distance_km": 1.2,
+            "price_per_sqft": 22000,
+            "builder": "Oberoi Realty"
+          }
+        ],
+        "hotspot_status": true,
+        "metro_connectivity": {
+          "nearest_station": "Bandra Station",
+          "distance_km": 0.6,
+          "lines": ["Western Line", "Harbour Line"]
+        },
+        "infrastructure_score": 9.2,
+        "social_infrastructure": {
+          "schools_within_2km": 8,
+          "hospitals_within_3km": 5,
+          "malls_within_5km": 4
+        }
+      },
+      "builder_profile": {
+        "builder_name": "Lodha Group",
+        "rera_registered": true,
+        "rera_id": "P51700000271",
+        "delivery_score": 8.4,
+        "avg_rating": 4.2,
+        "builder_rank": 3,
+        "projects_active": 15,
+        "multi_platform_presence": {
+          "magicbricks": true,
+          "99acres": true,
+          "housing": true,
+          "nobroker": false
+        },
+        "market_sentiment_score": 7.8,
+        "financial_stability": "AAA",
+        "on_time_delivery_percentage": 87,
+        "customer_satisfaction": 8.1,
+        "awards": ["Best Developer 2023", "Quality Excellence Award"],
+        "certifications": ["ISO 9001", "ISO 14001", "OHSAS 18001"]
+      },
+      "project_details": {
+        "project_name": "Lodha Eternis",
+        "status": "under_construction",
+        "property_type": "apartment",
+        "bhk_configurations": ["2BHK", "3BHK", "4BHK"],
+        "launch_year": 2023,
+        "possession_date": "2026-12-31",
+        "total_units": 450,
+        "green_certified": true,
+        "green_rating": "IGBC Gold",
+        "amenities_score": 9.1,
+        "floor_count": 42,
+        "unit_details": {
+          "carpet_area_range": {
+            "2BHK": {"min": 650, "max": 850},
+            "3BHK": {"min": 950, "max": 1250},
+            "4BHK": {"min": 1400, "max": 1800}
+          },
+          "balcony_count": {"2BHK": 1, "3BHK": 2, "4BHK": 2},
+          "bathroom_count": {"2BHK": 2, "3BHK": 3, "4BHK": 4}
+        }
+      },
+      "pricing_offers": {
+        "price_per_sqft": 19500,
+        "total_price_range": {
+          "2BHK": {"min": 12675000, "max": 16575000},
+          "3BHK": {"min": 18525000, "max": 24375000},
+          "4BHK": {"min": 27300000, "max": 35100000}
+        },
+        "gst_included": false,
+        "gst_percentage": 5,
+        "platform_specific_pricing": {
+          "magicbricks": 19500,
+          "99acres": 19200,
+          "housing": 19800,
+          "nobroker": 19300
+        },
+        "active_offers": {
+          "cashback_offers": [
+            {
+              "offer_name": "Early Bird Special",
+              "cashback_amount": 200000,
+              "valid_till": "2024-03-31"
+            }
+          ],
+          "loan_offers": [
+            {
+              "bank": "HDFC Bank",
+              "interest_rate": 8.75,
+              "processing_fee_waived": true
+            },
+            {
+              "bank": "SBI",
+              "interest_rate": 8.85,
+              "pre_approved_limit": 5000000
+            }
+          ],
+          "payment_plans": [
+            {
+              "plan_name": "80:20 Plan",
+              "description": "80% on possession, 20% during construction"
+            },
+            {
+              "plan_name": "Flexi Plan",
+              "description": "No EMI till possession"
+            }
+          ]
+        },
+        "price_trend_direction": "rising",
+        "price_appreciation_3yr": 15.2,
+        "market_comparison": {
+          "vs_locality_avg": 8.5,
+          "vs_city_avg": 12.3
+        }
+      },
+      "buyer_preferences": {
+        "swimming_pool": true,
+        "gym": true,
+        "clubhouse": true,
+        "power_backup": true,
+        "gated_community": true,
+        "wifi_ready": true,
+        "pet_friendly": false,
+        "rooftop_access": true,
+        "vaastu_compliant": true,
+        "smart_home_features": true,
+        "air_conditioning": false,
+        "modular_kitchen": true,
+        "semi_furnished": false,
+        "fully_furnished": false,
+        "balcony_view": true,
+        "study_room": true,
+        "servant_room": true,
+        "private_garden": false,
+        "terrace_access": true,
+        "dedicated_parking": true,
+        "near_school": true,
+        "near_metro": true,
+        "floor_preference": "high_floor",
+        "ev_charging": true,
+        "community_events": true,
+        "sports_facilities": true,
+        "jogging_track": true,
+        "children_play_area": true,
+        "senior_citizen_area": false,
+        "library": true,
+        "business_center": false,
+        "concierge_service": true,
+        "security_24x7": true,
+        "cctv_surveillance": true,
+        "intercom_facility": true,
+        "fire_safety": true,
+        "earthquake_resistant": true,
+        "rainwater_harvesting": true,
+        "solar_panels": false,
+        "waste_management": true,
+        "visitor_parking": true,
+        "maintenance_staff": true
+      },
+      "brickmatrix_scoring": {
+        "brickmatrix_score": 8.7,
+        "affordability_index": 6.8,
+        "livability_score": 9.2,
+        "investment_potential": 8.9,
+        "demand_index": 8.5,
+        "area_price_volatility": 3.2,
+        "roi_projection_5yr": 18.5,
+        "rental_yield": 3.8,
+        "resale_potential": 8.6,
+        "badges": [
+          "BrickMatrix™ Top Choice",
+          "Trending Now",
+          "Premium Location",
+          "High ROI Potential",
+          "Builder Excellence"
+        ],
+        "risk_assessment": {
+          "overall_risk": "low",
+          "market_risk": 2.1,
+          "builder_risk": 1.8,
+          "location_risk": 1.5
+        },
+        "ai_recommendation": {
+          "action": "strong_buy",
+          "confidence": 87,
+          "reasoning": "Excellent location with proven builder track record and strong appreciation potential"
+        }
+      },
+      "user_personalization": {
+        "user_budget": {
+          "min": 15000000,
+          "max": 25000000
+        },
+        "preferred_localities": ["Bandra", "Juhu", "Powai", "Lower Parel"],
+        "previous_interactions": {
+          "viewed_properties": 23,
+          "shortlisted_count": 5,
+          "contacted_builders": 3
+        },
+        "shortlisted_projects": [
+          "lodha_eternis_001",
+          "godrej_platinum_002",
+          "oberoi_sky_city_003"
+        ],
+        "intent_score": 8.4,
+        "search_patterns": {
+          "preferred_bhk": "3BHK",
+          "max_floor_preference": 25,
+          "amenity_priorities": ["gym", "swimming_pool", "parking"]
+        },
+        "communication_preferences": {
+          "email_updates": true,
+          "sms_alerts": false,
+          "whatsapp_notifications": true
+        }
+      },
+      "market_pulse_data": {
+        "live_sentiment": {
+          "overall_market": "bullish",
+          "locality_sentiment": "very_positive",
+          "builder_sentiment": "positive",
+          "sentiment_score": 7.8
+        },
+        "interest_rates": {
+          "current_rate": 8.75,
+          "trend": "stable",
+          "last_updated": "2024-01-15T09:00:00Z"
+        },
+        "market_indicators": {
+          "nifty_realty_index": 485.60,
+          "nifty_realty_change": 2.3,
+          "housing_price_index": 142.8,
+          "demand_supply_ratio": 1.4
+        },
+        "news_sentiment": {
+          "positive_mentions": 15,
+          "negative_mentions": 3,
+          "neutral_mentions": 8,
+          "trending_topics": [
+            "Infrastructure Development",
+            "Metro Connectivity",
+            "Builder Launches"
+          ]
+        },
+        "live_updates": [
+          {
+            "timestamp": "2024-01-15T10:15:00Z",
+            "source": "MoneyControl",
+            "headline": "Mumbai Real Estate Shows 12% Growth in Q4",
+            "sentiment": "positive",
+            "impact_score": 8.2
+          },
+          {
+            "timestamp": "2024-01-15T09:45:00Z",
+            "source": "Economic Times",
+            "headline": "Lodha Group Announces New Sustainability Initiative",
+            "sentiment": "positive",
+            "impact_score": 6.8
+          }
+        ]
+      }
+    }
+  },
+  "ui_theme_specifications": {
+    "color_palette": {
+      "primary_purple": "#6A0DAD",
+      "deep_purple": "#4B0082",
+      "midnight_black": "#000000",
+      "charcoal_black": "#121212",
+      "electric_violet": "#8F00FF",
+      "lilac_text": "#E6E6FA",
+      "white_purple": "#F8F8FF",
+      "gradient_background": "linear-gradient(135deg, #000000 0%, #1a0033 50%, #4B0082 100%)"
+    },
+    "component_styling": {
+      "cards": {
+        "background": "rgba(75, 0, 130, 0.15)",
+        "border": "1px solid rgba(106, 13, 173, 0.3)",
+        "backdrop_filter": "blur(20px)",
+        "border_radius": "16px",
+        "box_shadow": "0 8px 32px rgba(106, 13, 173, 0.2)"
+      },
+      "buttons": {
+        "primary": {
+          "background": "linear-gradient(135deg, #6A0DAD 0%, #8F00FF 100%)",
+          "hover": "#8F00FF",
+          "text": "#FFFFFF",
+          "border_radius": "12px"
+        },
+        "secondary": {
+          "background": "transparent",
+          "border": "2px solid #6A0DAD",
+          "hover": "rgba(106, 13, 173, 0.2)",
+          "text": "#E6E6FA"
+        }
+      },
+      "inputs": {
+        "background": "rgba(18, 18, 18, 0.8)",
+        "border": "1px solid rgba(106, 13, 173, 0.4)",
+        "focus_border": "#8F00FF",
+        "text": "#E6E6FA",
+        "placeholder": "rgba(230, 230, 250, 0.6)"
+      },
+      "charts": {
+        "primary_color": "#6A0DAD",
+        "secondary_color": "#8F00FF",
+        "grid_color": "rgba(106, 13, 173, 0.2)",
+        "text_color": "#E6E6FA"
+      }
+    },
+    "typography": {
+      "headings": {
+        "font_family": "DM Sans, Inter, system-ui",
+        "color": "#E6E6FA",
+        "font_weight": "700"
+      },
+      "body": {
+        "font_family": "Inter, system-ui",
+        "color": "#E6E6FA",
+        "font_weight": "400"
+      },
+      "accent": {
+        "color": "#8F00FF",
+        "font_weight": "600"
+      }
+    },
+    "animations": {
+      "hover_lift": "transform: translateY(-4px); transition: all 0.3s ease;",
+      "glow_effect": "box-shadow: 0 0 20px rgba(143, 0, 255, 0.4);",
+      "pulse_animation": "animation: pulse 2s infinite;"
+    }
+  },
+  "api_integration_notes": {
+    "real_time_updates": {
+      "property_refresh_interval": "15 minutes",
+      "market_pulse_refresh": "5 minutes",
+      "news_sentiment_refresh": "10 minutes"
+    },
+    "caching_strategy": {
+      "property_data": "Redis cache with 30-minute TTL",
+      "builder_profiles": "24-hour cache",
+      "market_indicators": "5-minute cache"
+    },
+    "error_handling": {
+      "fallback_data": "Use cached data if API fails",
+      "retry_logic": "Exponential backoff with 3 retries",
+      "user_notification": "Show data freshness indicators"
+    }
+  },
+  "frontend_rendering_guidelines": {
+    "recommendation_cards": {
+      "layout": "CSS Grid with responsive breakpoints",
+      "animation": "Staggered fade-in with 100ms delays",
+      "hover_effects": "Lift animation with purple glow",
+      "data_visualization": "Progress bars and score circles in purple theme"
+    },
+    "filtering_interface": {
+      "layout": "Collapsible sidebar with category groupings",
+      "search": "Real-time search with debounced API calls",
+      "toggles": "Custom purple-themed switches",
+      "sliders": "Purple gradient range sliders"
+    },
+    "market_pulse_dashboard": {
+      "layout": "Grid layout with live update indicators",
+      "charts": "Chart.js with purple color scheme",
+      "news_feed": "Infinite scroll with sentiment indicators",
+      "refresh_mechanism": "Auto-refresh with manual override"
+    }
+  }
+}

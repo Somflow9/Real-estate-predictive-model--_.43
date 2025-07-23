@@ -1,24 +1,24 @@
+# BrickMatrix™ - Premium Real Estate Intelligence Platform
 
-# PropGyan - AI-Powered Real Estate Assistant
-
-PropGyan is an intelligent real estate consultation platform that provides data-driven property insights for Indian markets. Built with React, TypeScript, and powered by OpenAI's GPT-4, it offers comprehensive property analysis, market trends, and investment recommendations.
+BrickMatrix™ is India's most advanced real estate intelligence platform that provides data-driven property insights powered by cutting-edge AI technology. Built with React, TypeScript, and featuring the revolutionary BrickMatrix™ Engine, it offers comprehensive property analysis, market trends, and investment recommendations.
 
 ## 🚀 Features
 
 ### Core AI Capabilities
-- **Conversational AI Chat**: Powered by GPT-4 for natural property consultations
-- **Real-time Price Estimation**: Dynamic pricing based on location, property type, and market conditions
-- **Builder Credibility Scores**: Trust ratings for major developers across Indian cities
-- **Neighborhood Insights**: Comprehensive area analysis including amenities, connectivity, and safety
-- **3-Year Market Analysis**: Historical price trends and seasonal patterns
-- **Smart Investment Recommendations**: AI-driven buy/sell/wait advice with detailed reasoning
+- **BrickMatrix™ Engine**: Revolutionary AI-powered property scoring and recommendation system
+- **Real-time Multi-Platform Data**: Live feeds from MagicBricks, 99acres, Housing.com & NoBroker
+- **Builder Intelligence**: Comprehensive credibility analysis with RERA verification and delivery scores
+- **Location Intelligence**: Advanced connectivity scoring, hotspot detection, and infrastructure analysis
+- **Market Pulse Integration**: Live sentiment analysis from MoneyControl, Nifty Realty, and interest rate feeds
+- **Smart Investment Scoring**: AI-driven affordability, livability, and investment potential analysis
 
 ### Advanced Features
-- **Temporal Analysis**: 36-month price history with seasonal variations
-- **Dynamic Prompt Suggestions**: Context-aware query recommendations
-- **Flash Cards**: Visual data presentation for key metrics
-- **Property Listings**: Comprehensive database covering Tier-1 and Tier-2 Indian cities
-- **Real-time Market Pulse**: Current trends and market indicators
+- **Premium Dark UI**: Deep purple and black theme with glassmorphism effects
+- **25+ Buyer Preferences**: Comprehensive filtering including smart home features, sustainability options
+- **Live Market Indicators**: Real-time Nifty Realty index, interest rates, and sentiment tracking
+- **Competing Projects Analysis**: Nearby scheme detection with distance and pricing comparison
+- **BrickMatrix™ Scoring**: Proprietary 10-point scoring system for properties
+- **AI Recommendation Engine**: Strong Buy/Buy/Hold recommendations with confidence levels
 
 ### Supported Cities
 **Tier-1 Cities**: Mumbai, Delhi, Bangalore, Pune, Hyderabad, Chennai, Kolkata, Gurgaon
@@ -27,41 +27,42 @@ PropGyan is an intelligent real estate consultation platform that provides data-
 ## 🎨 Design System
 
 ### Theme
-- **Background**: Pure black (#0d0d0d) with charcoal accents (#121212)
-- **Primary**: Rich gold (#FFD700) for highlights and CTAs
-- **Secondary**: Warm gold (#e4b343) for accents
-- **Typography**: Poppins and Inter fonts for modern readability
-- **Effects**: Glassmorphism, soft shadows, and animated hover states
+- **Background**: Gradient from midnight black to deep purple (#000000 to #4B0082)
+- **Primary**: Deep purple (#6A0DAD) for main elements
+- **Accent**: Electric violet (#8F00FF) for highlights and CTAs
+- **Text**: Lilac (#E6E6FA) for optimal contrast and readability
+- **Effects**: Advanced glassmorphism, purple glow effects, and premium animations
 
 ### UI Components
-- Rounded corners (2xl) for soft, approachable design
-- Animated flash cards for data visualization
-- Glowing input elements with gold accents
+- Rounded corners (16px) for premium, modern design
+- Animated property cards with hover lift effects
+- Glowing input elements with purple accents
 - Responsive layout for desktop and mobile
-- Dynamic prompt bubbles with contextual suggestions
+- BrickMatrix™ scoring visualizations with progress indicators
 
 ## 🛠️ Technical Stack
 
 - **Frontend**: React 18, TypeScript, Vite
-- **Styling**: Tailwind CSS with custom design system
+- **Styling**: Tailwind CSS with custom BrickMatrix™ theme
 - **UI Components**: Shadcn/ui library
 - **State Management**: React Query for API state
 - **Routing**: React Router v6
-- **AI Integration**: OpenAI GPT-4 API
+- **AI Integration**: BrickMatrix™ Engine with OpenAI GPT-4 API
 - **Icons**: Lucide React
 - **Charts**: Recharts for data visualization
+- **Animations**: Framer Motion for premium interactions
 
 ## 📦 Installation & Setup
 
 ### Prerequisites
 - Node.js 18+ and npm
-- OpenAI API key
+- OpenAI API key (for chat functionality)
 
 ### Quick Start
 1. **Clone the repository**
    ```bash
    git clone <your-repo-url>
-   cd propgyan
+   cd brickmatrix
    ```
 
 2. **Install dependencies**
@@ -81,6 +82,20 @@ PropGyan is an intelligent real estate consultation platform that provides data-
    - The app will prompt you to enter your OpenAI API key on first launch
    - Your key is stored securely in localStorage
    - Get your API key from: https://platform.openai.com/api-keys
+
+## 🔮 BrickMatrix™ Engine
+
+### Core Features
+- **Multi-Platform Integration**: Real-time data from 4 major property portals
+- **AI Scoring Algorithm**: Proprietary 10-point scoring system
+- **Location Intelligence**: Connectivity, infrastructure, and hotspot analysis
+- **Builder Credibility**: RERA verification, delivery scores, and market sentiment
+- **Investment Analysis**: ROI projections, rental yields, and risk assessment
+
+### Data Sources
+- **Property Platforms**: MagicBricks, 99acres, Housing.com, NoBroker
+- **Market Data**: MoneyControl, Nifty Realty Index, RBI Interest Rates
+- **News Sentiment**: Real-time builder and market news analysis
 
 ## 🚀 Deployment
 
@@ -151,11 +166,11 @@ For production deployments, consider:
    - Check price trends: "Show me 3-year trends for Pune"
 
 ### Sample Queries
-- "What's the price trend in Gurgaon for 2BHK apartments?"
-- "Is Sobha a reliable builder for projects in Bangalore?"
-- "Compare property prices between Delhi and Noida"
-- "Should I invest in real estate in Hyderabad right now?"
-- "What are the best localities in Mumbai under ₹1 crore?"
+- "Show me BrickMatrix™ top picks in Mumbai under ₹2 crores"
+- "What's the builder credibility score for DLF in Gurgaon?"
+- "Compare investment potential between Bangalore and Pune"
+- "Find properties with swimming pool and gym in Bandra"
+- "Show me new launches with high BrickMatrix™ scores"
 
 ## 🏗️ Architecture
 
@@ -164,53 +179,63 @@ For production deployments, consider:
 src/
 ├── components/          # Reusable UI components
 │   ├── ui/             # Shadcn/ui components
-│   ├── ApiKeyInput.tsx # API key configuration
+│   ├── BrickMatrixRecommendations.tsx # Main recommendation component
 │   ├── Navbar.tsx      # Navigation header
-│   └── PromptBubbles.tsx # Dynamic suggestions
+│   └── PremiumRecommendationCard.tsx # Property cards
 ├── pages/              # Route components
 │   ├── Home.tsx        # Landing page
 │   ├── Chat.tsx        # Main chat interface
 │   ├── Recommendations.tsx # Property listings
 │   └── MarketPulse.tsx # Market insights
 ├── services/           # Business logic
-│   ├── openaiService.ts # AI chat integration
-│   ├── propertyDataService.ts # Property data
-│   ├── temporalAnalysisService.ts # Market analysis
-│   └── promptSuggestionsService.ts # Dynamic prompts
+│   ├── brickMatrixService.ts # Core BrickMatrix™ engine
+│   ├── realTimePropertyService.ts # Multi-platform data fetching
+│   ├── marketPulseService.ts # Live market data
+│   └── builderSchemesService.ts # Builder analysis
+├── schemas/            # Data schemas
+│   └── brickmatrixSchema.json # Complete API schema
+├── styles/             # Custom styling
+│   └── brickMatrixTheme.css # Premium dark theme
 ├── types/              # TypeScript definitions
 ├── contexts/           # React contexts
 └── hooks/              # Custom React hooks
 ```
 
 ### Key Services
-- **OpenAI Service**: Manages GPT-4 API interactions
-- **Property Data Service**: Handles property listings and filters
-- **Temporal Analysis Service**: Generates market trends and recommendations
-- **Prompt Suggestions Service**: Provides contextual query suggestions
+- **BrickMatrix™ Service**: Core AI engine for property analysis and scoring
+- **Real-time Property Service**: Multi-platform data aggregation and processing
+- **Market Pulse Service**: Live market indicators and sentiment analysis
+- **Builder Schemes Service**: Comprehensive builder credibility and project analysis
 
 ## 🔧 Customization
 
 ### Adding New Cities
-Update `src/services/propertyDataService.ts`:
+Update `src/services/brickMatrixService.ts`:
 ```typescript
-private tier2Cities = [...existingCities, 'YourNewCity'];
+private getRandomLocality(city: string): string {
+  const localities = {
+    ...existingCities,
+    'YourNewCity': ['Locality1', 'Locality2', 'Locality3']
+  };
+}
 ```
 
-### Modifying AI Prompts
-Edit the system message in `src/pages/Chat.tsx`:
+### Customizing BrickMatrix™ Scoring
+Modify the scoring algorithm in `src/services/brickMatrixService.ts`:
 ```typescript
-const systemMessage = {
-  role: 'system',
-  content: `Your custom PropGyan instructions...`
-};
+private calculateLocationScore(location: any): number {
+  // Customize location scoring logic
+  return Math.min(10, yourCustomLogic);
+}
 ```
 
 ### Styling Adjustments
-Update design tokens in `src/index.css`:
+Update BrickMatrix™ theme in `src/styles/brickMatrixTheme.css`:
 ```css
 :root {
-  --primary: 45 100% 50%; /* Gold */
-  --background: 210 11% 5%; /* Black */
+  --bm-primary-purple: #6A0DAD;
+  --bm-electric-violet: #8F00FF;
+  --bm-gradient-primary: linear-gradient(135deg, #000000 0%, #4B0082 100%);
 }
 ```
 
@@ -235,13 +260,14 @@ For issues, questions, or feature requests:
 
 ## 🔮 Roadmap
 
-- [ ] Integration with real property APIs
-- [ ] User authentication and saved searches
-- [ ] Property comparison tools
-- [ ] Mobile app development
-- [ ] Advanced analytics dashboard
-- [ ] Multi-language support
+- [ ] Enhanced BrickMatrix™ scoring with machine learning
+- [ ] Real-time property alerts and notifications
+- [ ] Virtual property tours integration
+- [ ] Blockchain-based property verification
+- [ ] Advanced predictive analytics
+- [ ] Mobile app with AR features
+- [ ] Integration with more international markets
 
 ---
 
-**PropGyan** - Where you live is your story — make sure the first chapter isn't a mistake. 🏠✨
+**BrickMatrix™** - Premium Real Estate Intelligence. Where data meets decisions. 🏠✨
