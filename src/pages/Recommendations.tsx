@@ -199,7 +199,110 @@ const Recommendations = () => {
   };
 
   if (state.loading) {
-    return <LoadingScreen message="Scanning live market data from 4 premium sources..." />;
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'var(--background-gradient)' }}>
+        <div className="text-center space-y-8">
+          {/* BrickMatric Logo */}
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            <motion.div
+              className="w-32 h-32 mx-auto relative"
+              animate={{
+                scale: [1, 1.1, 1],
+                opacity: [0.8, 1, 0.8],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-3xl primary-glow" />
+              <div className="absolute inset-2 bg-background/90 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                <img 
+                  src="/src/assets/logo-light.png" 
+                  alt="BrickMatric Logo" 
+                  className="h-16 w-auto dark:hidden" 
+                />
+                <img 
+                  src="/src/assets/logo-dark.png" 
+                  alt="BrickMatric Logo" 
+                  className="h-16 w-auto hidden dark:block" 
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Brand Name */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="space-y-2"
+          >
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              BrickMatric
+            </h1>
+            <p className="text-lg text-muted-foreground font-medium">
+              AI-Powered Real Estate Intelligence
+            </p>
+          </motion.div>
+
+          {/* Loading Message */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+            className="space-y-4"
+          >
+            <p className="text-sm text-muted-foreground">Scanning live market data from 4 premium sources...</p>
+            
+            {/* Progress Bar */}
+            <div className="w-64 h-2 bg-muted rounded-full overflow-hidden mx-auto">
+              <motion.div
+                className="h-full bg-gradient-to-r from-primary to-accent"
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ 
+                  duration: 3, 
+                  repeat: Infinity, 
+                  ease: "easeInOut",
+                  repeatType: "reverse"
+                }}
+              />
+            </div>
+          </motion.div>
+
+          {/* Animation Dots */}
+          <motion.div
+            className="flex justify-center space-x-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9, duration: 0.6 }}
+          >
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                className="w-2 h-2 bg-primary rounded-full"
+                animate={{
+                  scale: [1, 1.5, 1],
+                  opacity: [0.5, 1, 0.5]
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  delay: i * 0.2
+                }}
+              />
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    );
   }
 
   return (
