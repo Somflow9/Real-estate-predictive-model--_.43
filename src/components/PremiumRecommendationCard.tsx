@@ -177,6 +177,7 @@ const PremiumRecommendationCard = ({
                   ₹{property.pricePerSqft?.toLocaleString()}/sq ft
                 </div>
               </div>
+              
               <div className="text-right space-y-1">
                 <div className="text-lg font-semibold">
                   {property.carpetArea?.toLocaleString()} sq ft

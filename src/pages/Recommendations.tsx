@@ -2,50 +2,45 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
-import { Star, MapPin, Home, TrendingUp, Sparkles, RefreshCw, Clock, Building } from 'lucide-react';
+import { Star, TrendingUp, Sparkles, RefreshCw, Clock, Building, Zap, Target, Award } from 'lucide-react';
 import { Property } from '@/types/property';
-import { propertyDataService } from '@/services/propertyDataService';
+import { realTimePropertyService } from '@/services/realTimePropertyService';
 import { useToast } from '@/hooks/use-toast';
-import EnhancedRecommendationBar from '@/components/EnhancedRecommendationBar';
 import { tierCityService } from '@/services/tierCityService';
+import PremiumRecommendationCard from '@/components/PremiumRecommendationCard';
+import RecommendationFilters from '@/components/RecommendationFilters';
+import { motion } from 'framer-motion';
 
 const Recommendations = () => {
   const { toast } = useToast();
-  const [preferences, setPreferences] = useState({
-    budget: 100,
+  const [filters, setFilters] = useState({
+    budget: { min: 20, max: 200 },
     location: 'Mumbai',
-    propertyType: 'Any',
-    minBedrooms: 1,
+    bhk: 'Any',
+    propertyType: 'Any'
   });
 
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   // Get city tier information
-  const cityData = tierCityService.getCityData(preferences.location);
+  const cityData = tierCityService.getCityData(filters.location);
   const cityTier = cityData?.tier || 2;
+  
   const { data: recommendations, isLoading, refetch } = useQuery({
-    queryKey: ['recommendations', preferences],
-    queryFn: () => propertyDataService.scrapeProperties({
-      location: preferences.location,
-      maxPrice: preferences.budget,
-      propertyType: preferences.propertyType === 'Any' ? undefined : preferences.propertyType,
-      bedrooms: preferences.minBedrooms
+    queryKey: ['premium-recommendations', filters],
+    queryFn: () => realTimePropertyService.fetchRealTimeProperties({
+      city: filters.location,
+      budget: { min: filters.budget.min * 100000, max: filters.budget.max * 100000 },
+      bhk: filters.bhk === 'Any' ? undefined : filters.bhk,
+      propertyType: filters.propertyType === 'Any' ? undefined : filters.propertyType
     }),
-    refetchInterval: 5 * 60 * 1000, // Auto-refresh every 5 minutes
+    refetchInterval: 3 * 60 * 1000, // Auto-refresh every 3 minutes
   });
 
-  const locations = ['Mumbai', 'Delhi', 'Bangalore', 'Pune', 'Hyderabad', 'Chennai', 'Kolkata', 'Gurgaon', 'Noida'];
-  const propertyTypes = ['Any', 'Apartment', 'Villa', 'Studio', 'Penthouse'];
-
-  const handlePreferenceChange = (key: string, value: any) => {
-    setPreferences(prev => ({ ...prev, [key]: value }));
-  };
-
-  const handleSliderChange = (key: string, value: any) => {
-    setPreferences(prev => ({ ...prev, [key]: value }));
+  const handleFiltersChange = (newFilters: any) => {
+    setFilters(newFilters);
   };
 
   const handleRefresh = async () => {
@@ -53,8 +48,8 @@ const Recommendations = () => {
     try {
       await refetch();
       toast({
-        title: "Data Refreshed",
-        description: "Latest property listings have been loaded.",
+        title: "Live Data Refreshed",
+        description: "Latest property listings from all sources have been loaded.",
       });
     } catch (error) {
       toast({
@@ -67,15 +62,29 @@ const Recommendations = () => {
     }
   };
 
+  const getDataSourcesInfo = () => {
+    const sources = ['MagicBricks', '99acres', 'Housing.com', 'NoBroker'];
+    const totalProperties = recommendations?.length || 0;
+    return { sources, totalProperties };
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center space-y-4">
           <div className="relative">
-            <Building className="h-12 w-12 mx-auto text-primary animate-pulse" />
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            >
+              <Building className="h-12 w-12 mx-auto text-primary" />
+            </motion.div>
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full animate-ping"></div>
           </div>
-          <p className="text-muted-foreground">Collecting real-time property data from trusted sources...</p>
+          <div className="space-y-2">
+            <p className="text-lg font-semibold">AI is analyzing properties...</p>
+            <p className="text-muted-foreground">Fetching live data from MagicBricks, 99acres, Housing.com & NoBroker</p>
+          </div>
           <div className="flex justify-center space-x-1">
             <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
             <div className="w-2 h-2 bg-accent rounded-full animate-bounce delay-100"></div>
@@ -231,6 +240,8 @@ const RecommendationCard = ({ property, rank }: { property: Property; rank: numb
     return <Badge variant="outline" className="glow-border">#{rank}</Badge>;
   };
 
+  const dataInfo = getDataSourcesInfo();
+
   return (
     <Card className="hover:shadow-xl transition-all duration-300 glow-border hover:scale-[1.02] glassmorphism">
       <CardHeader>
@@ -253,55 +264,10 @@ const RecommendationCard = ({ property, rank }: { property: Property; rank: numb
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <MapPin className="h-4 w-4 text-primary" />
-            <span className="font-medium text-sm">{property.location}</span>
-          </div>
-          <Badge variant="secondary">{property.property_type}</Badge>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div className="flex items-center space-x-2 bg-accent/20 p-2 rounded-lg">
-            <Home className="h-4 w-4 text-accent" />
-            <span className="font-medium">{property.bedrooms} BHK, {property.bathrooms} Bath</span>
-          </div>
-          <div className="bg-primary/20 p-2 rounded-lg text-center font-medium text-primary">
-            {property.area_sqft} sq ft
-          </div>
-        </div>
-        
-        <div className="space-y-2">
-          <div className="flex justify-between bg-gray-50 p-2 rounded">
-            <span className="text-sm text-muted-foreground">Builder:</span>
-            <span className="text-sm font-medium">{property.builder}</span>
-          </div>
-          <div className="flex justify-between bg-muted/20 p-2 rounded">
-            <span className="text-sm text-muted-foreground">Source:</span>
-            <Badge variant="outline" className="text-xs glow-border">{(property as any).source}</Badge>
-          </div>
-        </div>
-        
-        {property.predicted_price && (
-          <div className="flex items-center justify-between p-3 bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg glow-border">
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium text-foreground">AI Prediction: ₹{property.predicted_price}L</span>
-            </div>
-            <Badge 
-              variant={property.price <= property.predicted_price ? "default" : "destructive"}
-              className={property.price <= property.predicted_price ? "bg-primary" : ""}
-            >
-              {property.price <= property.predicted_price ? "💰 Good Value" : "⚠️ Overpriced"}
-            </Badge>
-          </div>
-        )}
-        
-        <div className="flex flex-wrap gap-2">
-          {property.parking && <Badge variant="outline" className="glow-border">🚗 Parking</Badge>}
-          {property.metro_nearby && <Badge variant="outline" className="glow-border">🚇 Metro</Badge>}
-          <Badge variant="outline" className="glow-border">📅 {property.days_since_listed} days listed</Badge>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
+      {/* Property Sources Badge */}
+      <PropertySourcesBadge />
+        onFiltersChange={handleFiltersChange}
+      {/* Comparison Bar */}
+      {selectedProperties.length > 0 && (
+        <motion.div
 export default Recommendations;
