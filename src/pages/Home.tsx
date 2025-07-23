@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Building, TrendingUp, Search, Star, MapPin, Shield, Clock, Users, Crown, Home, Zap, Gift } from 'lucide-react';
@@ -6,21 +5,10 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-const Home = () => {
+const HomePage = () => {
   const [visibleCards, setVisibleCards] = useState(0);
   const [showPrompts, setShowPrompts] = useState(false);
   const [showBestSegments, setShowBestSegments] = useState(false);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setVisibleCards(prev => prev < features.length ? prev + 1 : prev);
-    }, 200);
-
-    setTimeout(() => setShowPrompts(true), 2000);
-    setTimeout(() => setShowBestSegments(true), 2500);
-
-    return () => clearInterval(timer);
-  }, []);
 
   const features = [
     {
@@ -102,6 +90,78 @@ const Home = () => {
       bgGradient: "from-purple-900/20 to-violet-900/20"
     }
   ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setVisibleCards(prev => {
+        const nextValue = prev < features.length ? prev + 1 : prev;
+        return nextValue;
+      });
+    }, 200);
+
+    const promptTimer = setTimeout(() => setShowPrompts(true), 2000);
+    const segmentTimer = setTimeout(() => setShowBestSegments(true), 2500);
+
+    return () => {
+      clearInterval(timer);
+      clearTimeout(promptTimer);
+      clearTimeout(segmentTimer);
+    };
+  }, [features.length]);
+
+  // Safe animation variants with fallback values
+  const cardVariants = {
+    initial: { 
+      opacity: 0, 
+      y: 50, 
+      rotateY: -15 
+    },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      rotateY: 0
+    }
+  };
+
+  const heroVariants = {
+    initial: { 
+      opacity: 0, 
+      y: 50, 
+      scale: 0.9 
+    },
+    animate: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1 
+    }
+  };
+
+  const titleVariants = {
+    initial: { 
+      opacity: 0, 
+      scale: 0.8, 
+      rotateX: -15 
+    },
+    animate: { 
+      opacity: 1, 
+      scale: 1, 
+      rotateX: 0 
+    }
+  };
+
+  const promptVariants = {
+    initial: { 
+      opacity: 0, 
+      scale: 0.8, 
+      y: 20 
+    },
+    animate: { 
+      opacity: 1, 
+      scale: 1, 
+      y: 0 
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
       {/* Hero Section */}
@@ -115,14 +175,16 @@ const Home = () => {
         <div className="max-w-6xl mx-auto text-center space-y-8">
           <motion.div 
             className="space-y-4"
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            variants={heroVariants}
+            initial="initial"
+            animate="animate"
             transition={{ duration: 1, ease: "easeOut" }}
           >
             <motion.h1 
               className="text-4xl md:text-6xl font-bold text-white leading-tight"
-              initial={{ opacity: 0, scale: 0.8, rotateX: -15 }}
-              animate={{ opacity: 1, scale: 1, rotateX: 0 }}
+              variants={titleVariants}
+              initial="initial"
+              animate="animate"
               transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
             >
               <span>Tired of Guessing Property Prices? </span>
@@ -214,103 +276,113 @@ const Home = () => {
             </motion.div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {bestSegments.map((segment, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.6, delay: index * 0.15 }}
+              {bestSegments.map((segment, index) => {
+                const segmentKey = `segment-${index}-${segment.title || 'unknown'}`;
+                return (
+                  <motion.div
+                    key={segmentKey}
+                    initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.6, delay: index * 0.15 }}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      y: -10,
+                      transition: { duration: 0.3 }
+                    }}
+                  >
+                    <Card className={`group cursor-pointer transition-all duration-500 bg-gradient-to-br ${segment.bgGradient || 'from-gray-800/50 to-gray-900/50'} border border-gray-700/50 hover:border-gray-600 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/10`}>
+                      <CardHeader className="text-center pb-2">
+                        <motion.div 
+                          className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${segment.color || 'from-gray-400 to-gray-600'} flex items-center justify-center shadow-lg`}
+                          whileHover={{ 
+                            rotate: 360,
+                            scale: 1.1,
+                            transition: { duration: 0.6 }
+                          }}
+                        >
+                          <segment.icon className="h-8 w-8 text-white" />
+                        </motion.div>
+                        <CardTitle className="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors">
+                          {segment.title || 'Unknown'}
+                        </CardTitle>
+                        <div className={`text-2xl font-bold bg-gradient-to-r ${segment.color || 'from-gray-400 to-gray-600'} bg-clip-text text-transparent`}>
+                          {segment.price || 'N/A'}
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-gray-300 text-center text-sm leading-relaxed">
+                          {segment.description || 'No description available'}
+                        </p>
+                        <motion.div
+                          className="mt-4 text-center"
+                          whileHover={{ scale: 1.05 }}
+                        >
+                          <Button 
+                            size="sm" 
+                            className={`bg-gradient-to-r ${segment.color || 'from-gray-400 to-gray-600'} text-white hover:shadow-lg transition-all duration-300 rounded-xl px-6`}
+                          >
+                            Explore
+                          </Button>
+                        </motion.div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Features Grid */}
+      <section className="px-4 py-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature, index) => {
+              const featureKey = `feature-${index}-${feature.title || 'unknown'}`;
+              const isVisible = visibleCards > index;
+              
+              return (
+                <motion.div 
+                  key={featureKey}
+                  variants={cardVariants}
+                  initial="initial"
+                  animate={isVisible ? "animate" : "initial"}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={{ 
                     scale: 1.05, 
                     y: -10,
+                    rotateY: 5,
                     transition: { duration: 0.3 }
                   }}
                 >
-                  <Card className={`group cursor-pointer transition-all duration-500 bg-gradient-to-br ${segment.bgGradient} border border-gray-700/50 hover:border-gray-600 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/10`}>
+                  <Card 
+                    className="group cursor-pointer transition-all duration-500 bg-gray-800/50 border border-gray-700/50 hover:border-gray-600 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/10 rounded-2xl"
+                  >
                     <CardHeader className="text-center pb-2">
                       <motion.div 
-                        className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${segment.color} flex items-center justify-center shadow-lg`}
+                        className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${feature.color || 'from-gray-400 to-gray-600'} flex items-center justify-center shadow-lg`}
                         whileHover={{ 
                           rotate: 360,
                           scale: 1.1,
                           transition: { duration: 0.6 }
                         }}
                       >
-                        <segment.icon className="h-8 w-8 text-white" />
+                        <feature.icon className="h-8 w-8 text-white" />
                       </motion.div>
                       <CardTitle className="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors">
-                        {segment.title}
+                        {feature.title || 'Unknown Feature'}
                       </CardTitle>
-                      <div className={`text-2xl font-bold bg-gradient-to-r ${segment.color} bg-clip-text text-transparent`}>
-                        {segment.price}
-                      </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-300 text-center text-sm leading-relaxed">
-                        {segment.description}
+                      <p className="text-gray-300 text-center leading-relaxed">
+                        {feature.description || 'No description available'}
                       </p>
-                      <motion.div
-                        className="mt-4 text-center"
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        <Button 
-                          size="sm" 
-                          className={`bg-gradient-to-r ${segment.color} text-white hover:shadow-lg transition-all duration-300 rounded-xl px-6`}
-                        >
-                          Explore
-                        </Button>
-                      </motion.div>
                     </CardContent>
                   </Card>
                 </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-      {/* Features Grid */}
-      <section className="px-4 py-16">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, y: 50, rotateY: -15 }}
-                animate={{ 
-                  opacity: visibleCards > index ? 1 : 0, 
-                  y: visibleCards > index ? 0 : 50,
-                  rotateY: visibleCards > index ? 0 : -15
-                }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ 
-                  scale: 1.05, 
-                  y: -10,
-                  rotateY: '5deg',
-                  transition: { duration: 0.3 }
-                }}
-              >
-                <Card 
-                  className="group cursor-pointer transition-all duration-500 bg-gray-800/50 border border-gray-700/50 hover:border-gray-600 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/10 rounded-2xl"
-                >
-                <CardHeader className="text-center pb-2">
-                  <motion.div 
-                    className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center shadow-lg`}
-                    whileHover={{ 
-                      rotate: 360,
-                      scale: 1.1,
-                      transition: { duration: 0.6 }
-                    }}
-                  >
-                    <feature.icon className="h-8 w-8 text-white" />
-                  </motion.div>
-                  <CardTitle className="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-300 text-center leading-relaxed">{feature.description}</p>
-                </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -320,27 +392,31 @@ const Home = () => {
         <section className="px-4 py-8">
           <div className="max-w-4xl mx-auto">
             <div className="flex flex-wrap gap-3 justify-center">
-              {promptSuggestions.map((prompt, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ 
-                    duration: 0.5, 
-                    delay: index * 0.1,
-                    type: "spring",
-                    stiffness: 100
-                  }}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                >
-                  <Link
-                  to="/chat"
-                    className="group px-4 py-2 bg-gray-800/50 border border-gray-700/50 hover:border-gray-600 rounded-full text-sm text-gray-300 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md backdrop-blur-sm"
-                >
-                  💭 {prompt}
-                </Link>
-                </motion.div>
-              ))}
+              {promptSuggestions.map((prompt, index) => {
+                const promptKey = `prompt-${index}-${prompt ? prompt.slice(0, 10) : 'unknown'}`;
+                return (
+                  <motion.div
+                    key={promptKey}
+                    variants={promptVariants}
+                    initial="initial"
+                    animate="animate"
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: index * 0.1,
+                      type: "spring",
+                      stiffness: 100
+                    }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                  >
+                    <Link
+                      to="/chat"
+                      className="group px-4 py-2 bg-gray-800/50 border border-gray-700/50 hover:border-gray-600 rounded-full text-sm text-gray-300 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md backdrop-blur-sm"
+                    >
+                      💭 {prompt || 'Ask a question'}
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -355,46 +431,46 @@ const Home = () => {
             transition={{ duration: 0.8 }}
           >
             <Card className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black border-0 shadow-2xl shadow-yellow-500/25 rounded-2xl">
-            <CardHeader>
-              <CardTitle className="text-center text-2xl font-bold">Market Overview</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                <motion.div 
-                  className="group cursor-pointer"
-                  whileHover={{ scale: 1.1, y: -5 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="text-3xl font-bold mb-1">500+</div>
-                  <div className="text-sm opacity-90">Properties Listed</div>
-                </motion.div>
-                <motion.div 
-                  className="group cursor-pointer"
-                  whileHover={{ scale: 1.1, y: -5 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="text-3xl font-bold mb-1">95%</div>
-                  <div className="text-sm opacity-90">Prediction Accuracy</div>
-                </motion.div>
-                <motion.div 
-                  className="group cursor-pointer"
-                  whileHover={{ scale: 1.1, y: -5 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="text-3xl font-bold mb-1">₹45L</div>
-                  <div className="text-sm opacity-90">Average Price</div>
-                </motion.div>
-                <motion.div 
-                  className="group cursor-pointer"
-                  whileHover={{ scale: 1.1, y: -5 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="text-3xl font-bold mb-1">1200</div>
-                  <div className="text-sm opacity-90">Avg. Sq. Ft.</div>
-                </motion.div>
-              </div>
-            </CardContent>
-          </Card>
+              <CardHeader>
+                <CardTitle className="text-center text-2xl font-bold">Market Overview</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                  <motion.div 
+                    className="group cursor-pointer"
+                    whileHover={{ scale: 1.1, y: -5 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="text-3xl font-bold mb-1">500+</div>
+                    <div className="text-sm opacity-90">Properties Listed</div>
+                  </motion.div>
+                  <motion.div 
+                    className="group cursor-pointer"
+                    whileHover={{ scale: 1.1, y: -5 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="text-3xl font-bold mb-1">95%</div>
+                    <div className="text-sm opacity-90">Prediction Accuracy</div>
+                  </motion.div>
+                  <motion.div 
+                    className="group cursor-pointer"
+                    whileHover={{ scale: 1.1, y: -5 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="text-3xl font-bold mb-1">₹45L</div>
+                    <div className="text-sm opacity-90">Average Price</div>
+                  </motion.div>
+                  <motion.div 
+                    className="group cursor-pointer"
+                    whileHover={{ scale: 1.1, y: -5 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="text-3xl font-bold mb-1">1200</div>
+                    <div className="text-sm opacity-90">Avg. Sq. Ft.</div>
+                  </motion.div>
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
         </div>
       </section>
@@ -428,4 +504,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
