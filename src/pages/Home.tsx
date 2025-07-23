@@ -125,7 +125,7 @@ const Home = () => {
               animate={{ opacity: 1, scale: 1, rotateX: 0 }}
               transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
             >
-              Tired of Guessing Property Prices?{' '}
+              <span>Tired of Guessing Property Prices? </span>
               <motion.span 
                 className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent"
                 initial={{ opacity: 0, y: 20 }}
