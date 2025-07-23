@@ -90,11 +90,11 @@ const EnhancedRecommendationBar = ({ city, tier, preferences }: EnhancedRecommen
           possessionStatus: ['Ready to Move', 'Under Construction', 'New Launch'][Math.floor(Math.random() * 3)],
           location: `Prime Area, ${city}`,
           pricePerSqft: Math.floor((basePrice * 100000) / area),
-          valuation: this.getValuation(priceVariation),
+          valuation: getValuation(priceVariation),
           builderRating: Math.round((Math.random() * 2 + 3) * 10) / 10,
           source: ['99acres', 'MagicBricks', 'Housing.com', 'NoBroker'][Math.floor(Math.random() * 4)],
-          alternatives: this.generateAlternatives(preferences, city),
-          nearbyProjects: this.generateNearbyProjects()
+          alternatives: generateAlternatives(preferences, city),
+          nearbyProjects: generateNearbyProjects()
         });
       }
 
