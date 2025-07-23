@@ -47,14 +47,18 @@ const PremiumRecommendationCard = ({
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
-    loadEnhancedData();
+    if (property) {
+      loadEnhancedData();
+    }
   }, [property]);
 
   const loadEnhancedData = async () => {
+    if (!property) return;
+    
     setLoading(true);
     try {
       const [intel, cred, schemes] = await Promise.all([
-        realTimePropertyService.getLocationIntelligence(property.locality, property.city || 'Mumbai'),
+        realTimePropertyService.getLocationIntelligence(property.locality || property.location, property.city || 'Mumbai'),
         realTimePropertyService.getBuilderCredibility(property.builderName),
         realTimePropertyService.fetchCompetingSchemes(property)
       ]);
@@ -68,7 +72,7 @@ const PremiumRecommendationCard = ({
         property,
         intel,
         cred,
-        { budget: property.price, preferences: [] }
+        { budget: property.price || 0, preferences: [] }
       );
       setRecommendationScore(score);
     } catch (error) {
@@ -131,7 +135,7 @@ const PremiumRecommendationCard = ({
           {/* Property Image */}
           <div className="h-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center relative overflow-hidden">
             <img 
-              src={property.images?.[0] || '/placeholder.svg'} 
+              src={property.images?.[0] || property.image || '/placeholder.svg'} 
               alt={property.title}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
@@ -171,20 +175,22 @@ const PremiumRecommendationCard = ({
             <div className="flex justify-between items-center">
               <div className="space-y-1">
                 <div className="text-3xl font-bold text-primary">
-                  {formatPrice(property.price)}
+                  {formatPrice(property.price || 0)}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  ₹{property.pricePerSqft?.toLocaleString()}/sq ft
+                  ₹{(property.pricePerSqft || property.price_per_sqft || 0).toLocaleString()}/sq ft
                 </div>
               </div>
               
               <div className="text-right space-y-1">
                 <div className="text-lg font-semibold">
-                  {property.carpetArea?.toLocaleString()} sq ft
+                  {(property.carpetArea || property.area_sqft || property.area || 0).toLocaleString()} sq ft
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  {property.bhk} • {property.status}
-                </div>
+                {(property.bhk || property.bedrooms) && (
+                  <div className="text-sm text-muted-foreground">
+                    {property.bhk || `${property.bedrooms}BHK`} • {property.status || 'Available'}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -196,7 +202,7 @@ const PremiumRecommendationCard = ({
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-sm">
                 <MapPin className="h-4 w-4 text-primary" />
-                <span className="font-medium">{property.locality}</span>
+                <span className="font-medium">{property.locality || property.location}</span>
               </div>
               {locationIntel && (
                 <div className="space-y-1">
@@ -212,7 +218,7 @@ const PremiumRecommendationCard = ({
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-sm">
                 <Building className="h-4 w-4 text-primary" />
-                <span className="font-medium truncate">{property.builderName}</span>
+                <span className="font-medium truncate">{property.builderName || property.builder}</span>
               </div>
               {builderCred && (
                 <div className="space-y-1">
@@ -235,7 +241,7 @@ const PremiumRecommendationCard = ({
             </div>
             <div className="bg-accent/20 p-3 rounded-lg text-center">
               <Calendar className="h-5 w-5 mx-auto text-primary mb-1" />
-              <div className="text-xs font-medium">{property.status}</div>
+              <div className="text-xs font-medium">{property.status || 'Available'}</div>
               <div className="text-xs text-muted-foreground">Status</div>
             </div>
             <div className="bg-accent/20 p-3 rounded-lg text-center">
@@ -341,7 +347,7 @@ const PremiumRecommendationCard = ({
 
           {/* Last Updated */}
           <div className="text-xs text-muted-foreground text-center pt-1 border-t">
-            Last updated: {new Date(property.lastUpdated).toLocaleString()}
+            Last updated: {property.lastUpdated ? new Date(property.lastUpdated).toLocaleString() : 'Recently'}
           </div>
         </CardContent>
       </Card>

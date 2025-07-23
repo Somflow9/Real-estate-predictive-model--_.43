@@ -50,66 +50,101 @@ const EnhancedRecommendationBar = ({ city, tier, preferences }: EnhancedRecommen
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchEnhancedProperties();
+    if (city && preferences) {
+      fetchEnhancedProperties();
+    }
   }, [city, preferences]);
 
   const fetchEnhancedProperties = async () => {
-    setLoading(true);
-    // Simulate API call to multiple sources
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    if (!city || !preferences) return;
     
-    const mockProperties: EnhancedProperty[] = [
+    setLoading(true);
+    
+    try {
+      // Simulate enhanced API call to multiple sources
+      await new Promise(resolve => setTimeout(resolve, 1500));
+    
+      const mockProperties: EnhancedProperty[] = [];
+      const propertyCount = Math.floor(Math.random() * 4) + 2; // 2-6 properties
+      
+      const builders = tier === 1 
+        ? ['DLF Limited', 'Godrej Properties', 'Prestige Group', 'Sobha Limited']
+        : tier === 2 
+        ? ['Brigade Group', 'Puravankara', 'Kolte Patil', 'Shriram Properties']
+        : ['Local Builder', 'Regional Developer', 'City Builder'];
+      
+      for (let i = 0; i < propertyCount; i++) {
+        const builder = builders[Math.floor(Math.random() * builders.length)];
+        const priceVariation = 0.8 + Math.random() * 0.4; // 0.8 to 1.2
+        const basePrice = preferences.budget * priceVariation;
+        const area = Math.floor(Math.random() * 800) + 800; // 800-1600 sq ft
+        
+        mockProperties.push({
+          id: `enhanced_${i}`,
+          title: `Premium ${preferences.bedrooms}BHK in ${city}`,
+          price: basePrice,
+          carpetArea: area,
+          configuration: `${preferences.bedrooms}BHK`,
+          builderName: builder,
+          reraId: `RERA${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+          possessionStatus: ['Ready to Move', 'Under Construction', 'New Launch'][Math.floor(Math.random() * 3)],
+          location: `Prime Area, ${city}`,
+          pricePerSqft: Math.floor((basePrice * 100000) / area),
+          valuation: this.getValuation(priceVariation),
+          builderRating: Math.round((Math.random() * 2 + 3) * 10) / 10,
+          source: ['99acres', 'MagicBricks', 'Housing.com', 'NoBroker'][Math.floor(Math.random() * 4)],
+          alternatives: this.generateAlternatives(preferences, city),
+          nearbyProjects: this.generateNearbyProjects()
+        });
+      }
+
+      setProperties(mockProperties);
+    } catch (error) {
+      console.error('Error fetching enhanced properties:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getValuation = (priceVariation: number): 'Under Market' | 'Overpriced' | 'Fair Deal' => {
+    if (priceVariation < 0.9) return 'Under Market';
+    if (priceVariation > 1.1) return 'Overpriced';
+    return 'Fair Deal';
+  };
+
+  const generateAlternatives = (prefs: any, city: string) => {
+    return [
       {
-        id: '1',
-        title: `Premium ${preferences.bedrooms}BHK in ${city}`,
-        price: preferences.budget * 0.9,
-        carpetArea: 1200,
-        configuration: `${preferences.bedrooms}BHK`,
-        builderName: tier === 1 ? 'DLF Limited' : tier === 2 ? 'Prestige Group' : 'Local Builder',
-        reraId: `RERA${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-        possessionStatus: 'Ready to Move',
-        location: `Prime Area, ${city}`,
-        pricePerSqft: Math.floor((preferences.budget * 0.9 * 100000) / 1200),
-        valuation: 'Fair Deal',
-        builderRating: 4.2,
-        source: '99acres',
-        alternatives: [
-          {
-            id: 'alt1',
-            reason: 'Better Builder Reputation',
-            title: 'Premium Complex by Godrej',
-            price: preferences.budget * 1.1,
-            builderName: 'Godrej Properties',
-            pricePerSqft: Math.floor((preferences.budget * 1.1 * 100000) / 1200)
-          },
-          {
-            id: 'alt2',
-            reason: 'Cheaper per sq.ft.',
-            title: 'Value Housing Project',
-            price: preferences.budget * 0.75,
-            builderName: 'Brigade Group',
-            pricePerSqft: Math.floor((preferences.budget * 0.75 * 100000) / 1200)
-          }
-        ],
-        nearbyProjects: [
-          {
-            name: 'Green Valley Phase 2',
-            builder: 'Sobha Limited',
-            distance: 1.2,
-            status: 'Under Construction'
-          },
-          {
-            name: 'Tech Park Residency',
-            builder: 'Brigade Group',
-            distance: 2.1,
-            status: 'New Launch'
-          }
-        ]
+        id: 'alt1',
+        reason: 'Better Builder Reputation',
+        title: 'Premium Complex by Godrej',
+        price: prefs.budget * 1.1,
+        builderName: 'Godrej Properties',
+        pricePerSqft: Math.floor((prefs.budget * 1.1 * 100000) / 1200)
+      },
+      {
+        id: 'alt2',
+        reason: 'Better Value',
+        title: 'Smart Investment Option',
+        price: prefs.budget * 0.85,
+        builderName: 'Brigade Group',
+        pricePerSqft: Math.floor((prefs.budget * 0.85 * 100000) / 1200)
       }
     ];
+  };
 
-    setProperties(mockProperties);
-    setLoading(false);
+  const generateNearbyProjects = () => {
+    const projects = [
+      'Green Valley Phase 2', 'Tech Park Residency', 'Urban Heights', 'City Center Plaza',
+      'Metro View Apartments', 'Garden City Homes', 'Skyline Towers', 'Riverside Enclave'
+    ];
+    
+    return projects.slice(0, Math.floor(Math.random() * 3) + 2).map(name => ({
+      name,
+      builder: ['Sobha Limited', 'Brigade Group', 'Prestige Group'][Math.floor(Math.random() * 3)],
+      distance: Math.round(Math.random() * 3 * 10) / 10,
+      status: ['Under Construction', 'New Launch', 'Ready'][Math.floor(Math.random() * 3)]
+    }));
   };
 
   const getValuationColor = (valuation: string) => {

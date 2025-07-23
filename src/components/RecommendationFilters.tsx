@@ -35,7 +35,7 @@ const RecommendationFilters = ({
 }: RecommendationFiltersProps) => {
   const [filters, setFilters] = useState({
     budget: { min: 20, max: 200 },
-    city: 'Mumbai',
+    city: 'Mumbai', 
     locality: '',
     bhk: 'Any',
     propertyType: 'Any',
@@ -45,7 +45,9 @@ const RecommendationFilters = ({
     reraApproved: true,
     newLaunch: false,
     priceRange: 'Any',
-    sortBy: 'ai_score'
+    sortBy: 'ai_score',
+    minArea: 500,
+    maxArea: 3000
   });
 
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
@@ -79,7 +81,21 @@ const RecommendationFilters = ({
   const handleFilterChange = (key: string, value: any) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
-    onFiltersChange(newFilters);
+    
+    // Convert to format expected by parent component
+    const convertedFilters = {
+      budget: { min: newFilters.budget.min * 100000, max: newFilters.budget.max * 100000 },
+      city: newFilters.city,
+      locality: newFilters.locality,
+      bhk: newFilters.bhk,
+      propertyType: newFilters.propertyType,
+      amenities: newFilters.amenities,
+      readyToMove: newFilters.readyToMove,
+      newLaunch: newFilters.newLaunch,
+      sortBy: newFilters.sortBy
+    };
+    
+    onFiltersChange(convertedFilters);
 
     // Track active filters for display
     updateActiveFilters(newFilters);
@@ -125,11 +141,27 @@ const RecommendationFilters = ({
       reraApproved: true,
       newLaunch: false,
       priceRange: 'Any',
-      sortBy: 'ai_score'
+      sortBy: 'ai_score',
+      minArea: 500,
+      maxArea: 3000
     };
     setFilters(defaultFilters);
     setActiveFilters([]);
-    onFiltersChange(defaultFilters);
+    
+    // Convert and send to parent
+    const convertedFilters = {
+      budget: { min: defaultFilters.budget.min * 100000, max: defaultFilters.budget.max * 100000 },
+      city: defaultFilters.city,
+      locality: defaultFilters.locality,
+      bhk: defaultFilters.bhk,
+      propertyType: defaultFilters.propertyType,
+      amenities: defaultFilters.amenities,
+      readyToMove: defaultFilters.readyToMove,
+      newLaunch: defaultFilters.newLaunch,
+      sortBy: defaultFilters.sortBy
+    };
+    
+    onFiltersChange(convertedFilters);
   };
 
   const getCitiesForTier = () => {

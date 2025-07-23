@@ -151,46 +151,63 @@ export class BuilderSchemesService {
   }
 
   async searchNearbyProjectsWithGoogleMaps(address: string): Promise<BuilderProject[]> {
-    // In a real implementation, this would use Google Maps Places API
-    // For now, we'll simulate the response
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    console.log(`Searching nearby projects for: ${address}`);
+    await new Promise(resolve => setTimeout(resolve, 1500));
     
-    const mockNearbyProjects: BuilderProject[] = [
-      {
-        id: 'nearby_001',
-        name: 'Green Valley Apartments',
-        builder: 'Local Builder',
-        area: 'Near ' + address,
-        configuration: ['1BHK', '2BHK'],
-        priceRange: { min: 4500000, max: 7500000 },
-        phaseStatus: 'Under Construction',
-        amenities: ['Security', 'Parking', 'Garden'],
+    // Enhanced nearby projects with more realistic data
+    const builders = ['DLF Limited', 'Godrej Properties', 'Prestige Group', 'Brigade Group', 'Sobha Limited'];
+    const projectTypes = ['Heights', 'Residency', 'Gardens', 'Plaza', 'Towers', 'Enclave'];
+    const statuses: Array<'Planning' | 'Launch' | 'Under Construction' | 'Nearing Completion' | 'Ready'> = 
+      ['Planning', 'Launch', 'Under Construction', 'Nearing Completion', 'Ready'];
+    
+    const mockNearbyProjects: BuilderProject[] = [];
+    const projectCount = Math.floor(Math.random() * 6) + 4; // 4-10 projects
+    
+    for (let i = 0; i < projectCount; i++) {
+      const builder = builders[Math.floor(Math.random() * builders.length)];
+      const projectType = projectTypes[Math.floor(Math.random() * projectTypes.length)];
+      const status = statuses[Math.floor(Math.random() * statuses.length)];
+      
+      mockNearbyProjects.push({
+        id: `nearby_${Date.now()}_${i}`,
+        name: `${builder.split(' ')[0]} ${projectType}`,
+        builder: builder,
+        area: `Near ${address}`,
+        configuration: this.generateConfigurations(),
+        priceRange: this.generatePriceRange(),
+        phaseStatus: status,
+        amenities: this.generateProjectAmenities(),
         location: {
-          lat: 28.4089 + (Math.random() - 0.5) * 0.01,
-          lng: 77.0507 + (Math.random() - 0.5) * 0.01,
-          address: 'Near ' + address
+          lat: 28.4089 + (Math.random() - 0.5) * 0.02,
+          lng: 77.0507 + (Math.random() - 0.5) * 0.02,
+          address: `${Math.floor(Math.random() * 50) + 1} km from ${address}`
         },
-        distance: Math.round(Math.random() * 3 * 10) / 10
-      },
-      {
-        id: 'nearby_002',
-        name: 'Sunrise Heights',
-        builder: 'Regional Developer',
-        area: 'Close to ' + address,
-        configuration: ['2BHK', '3BHK'],
-        priceRange: { min: 6000000, max: 10000000 },
-        phaseStatus: 'Ready',
-        amenities: ['Swimming Pool', 'Gym', 'Security'],
-        location: {
-          lat: 28.4089 + (Math.random() - 0.5) * 0.01,
-          lng: 77.0507 + (Math.random() - 0.5) * 0.01,
-          address: 'Close to ' + address
-        },
-        distance: Math.round(Math.random() * 3 * 10) / 10
-      }
-    ];
+        distance: Math.round(Math.random() * 5 * 10) / 10
+      });
+    }
 
     return mockNearbyProjects.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+  }
+
+  private generateConfigurations(): string[] {
+    const allConfigs = ['1BHK', '2BHK', '3BHK', '4BHK', '5BHK'];
+    const count = Math.floor(Math.random() * 3) + 2; // 2-4 configurations
+    return allConfigs.slice(0, count);
+  }
+
+  private generatePriceRange(): { min: number; max: number } {
+    const baseMin = Math.floor(Math.random() * 5000000) + 3000000; // 30L to 80L
+    const baseMax = baseMin + Math.floor(Math.random() * 10000000) + 2000000; // +20L to +120L
+    return { min: baseMin, max: baseMax };
+  }
+
+  private generateProjectAmenities(): string[] {
+    const amenities = [
+      'Swimming Pool', 'Gym', 'Clubhouse', 'Security', 'Power Backup',
+      'Parking', 'Garden', 'Children Play Area', 'Tennis Court', 'Jogging Track'
+    ];
+    const count = Math.floor(Math.random() * 6) + 4; // 4-10 amenities
+    return amenities.sort(() => 0.5 - Math.random()).slice(0, count);
   }
 
   private calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
