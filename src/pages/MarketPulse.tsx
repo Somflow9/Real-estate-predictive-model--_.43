@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { TrendingUp, TrendingDown, Newspaper, Search, RefreshCw, ExternalLink, Calendar, BarChart3, Activity, AlertTriangle, Target, Zap } from 'lucide-react';
+import { TrendingUp, TrendingDown, Newspaper, Search, RefreshCw, ExternalLink, Calendar, BarChart3, Activity, AlertTriangle, Target, Zap, DollarSign } from 'lucide-react';
 import { marketPulseEnhancedService } from '@/services/marketPulseEnhancedService';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
