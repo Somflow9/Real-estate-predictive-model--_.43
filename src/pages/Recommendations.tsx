@@ -1,9 +1,8 @@
-import BrickMatrixRecommendations from '@/components/BrickMatrixRecommendations';
-import '@/styles/brickMatrixTheme.css';
+import BrickMatrixRecommendationsRevamped from '@/components/BrickMatrixRecommendationsRevamped';
 
 const Recommendations = () => {
   return (
-    <BrickMatrixRecommendations />
+    <BrickMatrixRecommendationsRevamped />
   );
 };
 
