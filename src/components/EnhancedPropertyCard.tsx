@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Star, Building, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { MapPin, Star, Building, TrendingUp, TrendingDown, Minus, Eye, Heart, BarChart3, Phone, Share2, Calendar } from 'lucide-react';
+import { usePropertyActions } from '@/hooks/usePropertyActions';
 
 interface PropertySource {
   name: string;
@@ -36,7 +37,31 @@ interface PropertyCardProps {
   className?: string;
 }
 
-const EnhancedPropertyCard = ({ property, onViewDetails, onCompare, className = "" }: PropertyCardProps) => {
+const EnhancedPropertyCard = ({ property, className = "" }: PropertyCardProps) => {
+  const {
+    handleViewDetails,
+    handleCompare,
+    handleAddToWishlist,
+    handleRemoveFromWishlist,
+    handleContactBuilder,
+    handleShare,
+    isInWishlist,
+    isInComparison,
+    isActionLoading
+  } = usePropertyActions();
+
+  const propertyData = {
+    id: property.id,
+    title: property.title,
+    price: property.price,
+    location: property.location,
+    image: property.image,
+    builderName: property.builder || 'Unknown Builder'
+  };
+
+  const inWishlist = isInWishlist(property.id);
+  const inComparison = isInComparison(property.id);
+
   const getValuationColor = (valuation?: string) => {
     switch (valuation) {
       case 'Under Market': return 'text-green-600 bg-green-50 dark:bg-green-900/20';
@@ -169,19 +194,66 @@ const EnhancedPropertyCard = ({ property, onViewDetails, onCompare, className = 
           {/* Action buttons */}
           <div className="flex gap-2 pt-2">
             <Button 
-              onClick={() => onViewDetails?.(property.id)}
+              onClick={() => handleViewDetails(property.id, property.title)}
+              disabled={isActionLoading('details', property.id)}
               className="flex-1 bg-gradient-to-r from-primary to-accent hover:shadow-lg"
               size="sm"
             >
+              <Eye className="h-4 w-4 mr-2" />
               View Details
             </Button>
             <Button 
-              onClick={() => onCompare?.(property.id)}
+              onClick={() => handleCompare(property.id, propertyData)}
+              disabled={isActionLoading('compare', property.id)}
               variant="outline"
               size="sm"
-              className="hover:bg-primary/10"
+              className={`hover:bg-primary/10 ${inComparison ? 'bg-primary/20 border-primary' : ''}`}
             >
-              Compare
+              <BarChart3 className="h-4 w-4 mr-1" />
+              {inComparison ? 'Added' : 'Compare'}
+            </Button>
+          </div>
+
+          {/* Secondary Actions */}
+          <div className="flex gap-2 pt-2">
+            <Button
+              onClick={() => inWishlist ? handleRemoveFromWishlist(property.id) : handleAddToWishlist(propertyData)}
+              disabled={isActionLoading('wishlist', property.id)}
+              variant="outline"
+              size="sm"
+              className={`flex-1 ${inWishlist ? 'bg-red-600/20 border-red-600 text-red-400' : 'hover:bg-primary/10'}`}
+            >
+              <Heart className={`h-4 w-4 mr-2 ${inWishlist ? 'fill-current' : ''}`} />
+              {inWishlist ? 'Saved' : 'Save'}
+            </Button>
+            
+            <Button
+              onClick={() => handleContactBuilder(
+                { id: property.id, builderName: property.builder || 'Builder', title: property.title },
+                {
+                  name: 'User',
+                  email: 'user@example.com',
+                  phone: '+91 98765 43210',
+                  message: `I am interested in ${property.title}. Please provide more details.`,
+                  requestType: 'General Inquiry'
+                }
+              )}
+              disabled={isActionLoading('contact', property.id)}
+              variant="outline"
+              size="sm"
+              className="hover:bg-green-600/10 border-green-600 text-green-400"
+            >
+              <Phone className="h-4 w-4 mr-2" />
+              Contact
+            </Button>
+            
+            <Button
+              onClick={() => handleShare(propertyData)}
+              variant="outline"
+              size="sm"
+              className="hover:bg-blue-600/10 border-blue-600 text-blue-400"
+            >
+              <Share2 className="h-4 w-4" />
             </Button>
           </div>
 

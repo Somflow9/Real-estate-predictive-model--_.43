@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { usePropertyActions } from '@/hooks/usePropertyActions';
 
 interface BrickMatrixProperty {
   id: string;
@@ -72,18 +73,34 @@ interface BrickMatrixProperty {
 interface PropertyResultCardProps {
   property: BrickMatrixProperty;
   rank: number;
-  onViewDetails?: (id: string) => void;
-  onCompare?: (id: string) => void;
-  onSaveProperty?: (id: string) => void;
 }
 
-const PropertyResultCard: React.FC<PropertyResultCardProps> = ({
-  property,
-  rank,
-  onViewDetails,
-  onCompare,
-  onSaveProperty
-}) => {
+const PropertyResultCard: React.FC<PropertyResultCardProps> = ({ property, rank }) => {
+  const {
+    handleViewDetails,
+    handleCompare,
+    handleAddToWishlist,
+    handleRemoveFromWishlist,
+    handleContactBuilder,
+    handleShare,
+    handleScheduleSiteVisit,
+    isInWishlist,
+    isInComparison,
+    isActionLoading
+  } = usePropertyActions();
+
+  const propertyData = {
+    id: property.id,
+    title: property.title,
+    price: property.price,
+    location: property.locality,
+    image: property.images[0],
+    builderName: property.builderName
+  };
+
+  const inWishlist = isInWishlist(property.id);
+  const inComparison = isInComparison(property.id);
+
   const formatPrice = (price: number) => {
     if (price >= 10000000) return `₹${(price / 10000000).toFixed(1)}Cr`;
     if (price >= 100000) return `₹${(price / 100000).toFixed(1)}L`;
@@ -176,10 +193,16 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({
               {/* Quick Actions */}
               <div className="absolute bottom-4 right-4 flex space-x-2">
                 <Button size="sm" variant="secondary" className="bg-black/60 backdrop-blur-sm border-purple-600/30 hover:bg-purple-600">
-                  <Heart className="h-4 w-4" />
+                  <Heart 
+                    className={`h-4 w-4 ${inWishlist ? 'fill-current text-red-400' : ''}`}
+                    onClick={() => inWishlist ? handleRemoveFromWishlist(property.id) : handleAddToWishlist(propertyData)}
+                  />
                 </Button>
                 <Button size="sm" variant="secondary" className="bg-black/60 backdrop-blur-sm border-purple-600/30 hover:bg-purple-600">
-                  <Share2 className="h-4 w-4" />
+                  <Share2 
+                    className="h-4 w-4"
+                    onClick={() => handleShare(propertyData)}
+                  />
                 </Button>
               </div>
             </div>
@@ -429,18 +452,65 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({
             {/* Action Buttons */}
             <div className="flex space-x-2 pt-2">
               <Button 
-                onClick={() => onViewDetails?.(property.id)}
+                onClick={() => handleViewDetails(property.id, property.title)}
+                disabled={isActionLoading('details', property.id)}
                 className="flex-1 bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-500 hover:to-purple-700 text-white"
               >
                 <Eye className="h-4 w-4 mr-2" />
-                View Details
+                {isActionLoading('details', property.id) ? 'Loading...' : 'View Details'}
               </Button>
               <Button 
-                onClick={() => onCompare?.(property.id)}
+                onClick={() => handleCompare(property.id, propertyData)}
+                disabled={isActionLoading('compare', property.id)}
                 variant="outline"
-                className="border-purple-600 text-purple-400 hover:bg-purple-600 hover:text-white"
+                className={`border-purple-600 text-purple-400 hover:bg-purple-600 hover:text-white ${
+                  inComparison ? 'bg-purple-600/20 border-purple-400' : ''
+                }`}
               >
-                Compare
+                <BarChart3 className="h-4 w-4 mr-1" />
+                {inComparison ? 'Added' : 'Compare'}
+              </Button>
+            </div>
+
+            {/* Secondary Actions */}
+            <div className="flex space-x-2 pt-2">
+              <Button
+                onClick={() => handleContactBuilder(
+                  { id: property.id, builderName: property.builderName, title: property.title },
+                  {
+                    name: 'User',
+                    email: 'user@example.com',
+                    phone: '+91 98765 43210',
+                    message: `I am interested in ${property.title}. Please provide more details and arrange a site visit.`,
+                    requestType: 'Site Visit'
+                  }
+                )}
+                disabled={isActionLoading('contact', property.id)}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+              >
+                <Phone className="h-4 w-4 mr-2" />
+                {isActionLoading('contact', property.id) ? 'Contacting...' : 'Contact Builder'}
+              </Button>
+              
+              <Button
+                onClick={() => handleScheduleSiteVisit(
+                  { id: property.id, builderName: property.builderName, title: property.title },
+                  {
+                    preferredDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    preferredTime: '11:00 AM',
+                    contactInfo: {
+                      name: 'User',
+                      email: 'user@example.com',
+                      phone: '+91 98765 43210'
+                    }
+                  }
+                )}
+                disabled={isActionLoading('visit', property.id)}
+                variant="outline"
+                className="border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white"
+              >
+                <Calendar className="h-4 w-4 mr-2" />
+                {isActionLoading('visit', property.id) ? 'Scheduling...' : 'Site Visit'}
               </Button>
             </div>
 

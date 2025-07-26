@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { realTimePropertyService } from '@/services/realTimePropertyService';
+import { usePropertyActions } from '@/hooks/usePropertyActions';
 
 interface PremiumRecommendationCardProps {
   property: any;
@@ -32,19 +33,37 @@ interface PremiumRecommendationCardProps {
   onSaveProperty?: (id: string) => void;
 }
 
-const PremiumRecommendationCard = ({ 
-  property, 
-  rank, 
-  onViewDetails, 
-  onCompare, 
-  onSaveProperty 
-}: PremiumRecommendationCardProps) => {
+const PremiumRecommendationCard = ({ property, rank }: PremiumRecommendationCardProps) => {
+  const {
+    handleViewDetails,
+    handleCompare,
+    handleAddToWishlist,
+    handleRemoveFromWishlist,
+    handleContactBuilder,
+    handleShare,
+    isInWishlist,
+    isInComparison,
+    isActionLoading
+  } = usePropertyActions();
+
   const [locationIntel, setLocationIntel] = useState<any>(null);
   const [builderCred, setBuilderCred] = useState<any>(null);
   const [competingSchemes, setCompetingSchemes] = useState<any[]>([]);
   const [recommendationScore, setRecommendationScore] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
+
+  const propertyData = {
+    id: property.id,
+    title: property.title,
+    price: property.price || 0,
+    location: property.locality || property.location || '',
+    image: property.image,
+    builderName: property.builderName || property.builder || 'Unknown Builder'
+  };
+
+  const inWishlist = isInWishlist(property.id);
+  const inComparison = isInComparison(property.id);
 
   useEffect(() => {
     if (property) {
@@ -323,25 +342,58 @@ const PremiumRecommendationCard = ({
           {/* Action Buttons */}
           <div className="flex space-x-2 pt-2">
             <Button 
-              onClick={() => onViewDetails?.(property.id)}
+              onClick={() => handleViewDetails(property.id, property.title)}
+              disabled={isActionLoading('details', property.id)}
               className="flex-1 bg-gradient-to-r from-primary to-accent hover:shadow-lg"
             >
               <Eye className="h-4 w-4 mr-2" />
-              View Details
+              {isActionLoading('details', property.id) ? 'Loading...' : 'View Details'}
             </Button>
             <Button 
-              onClick={() => onCompare?.(property.id)}
+              onClick={() => handleCompare(property.id, propertyData)}
+              disabled={isActionLoading('compare', property.id)}
               variant="outline"
-              className="hover:bg-primary/10"
+              className={`hover:bg-primary/10 ${inComparison ? 'bg-primary/20 border-primary' : ''}`}
             >
-              Compare
+              <BarChart3 className="w-4 h-4 mr-1" />
+              {inComparison ? 'Added' : 'Compare'}
             </Button>
-            <Button 
+            <Button
+              onClick={() => inWishlist ? handleRemoveFromWishlist(property.id) : handleAddToWishlist(propertyData)}
+              disabled={isActionLoading('wishlist', property.id)}
               variant="outline"
-              size="icon"
-              className="hover:bg-accent/10"
+              className={`${inWishlist ? 'bg-red-600/20 border-red-600 text-red-400' : 'hover:bg-primary/10'}`}
             >
-              <ExternalLink className="h-4 w-4" />
+              <Heart className={`w-4 h-4 ${inWishlist ? 'fill-current' : ''}`} />
+            </Button>
+          </div>
+
+          {/* Secondary Actions */}
+          <div className="flex space-x-2 pt-2">
+            <Button
+              onClick={() => handleContactBuilder(
+                { id: property.id, builderName: propertyData.builderName, title: property.title },
+                {
+                  name: 'User',
+                  email: 'user@example.com', 
+                  phone: '+91 98765 43210',
+                  message: `I am interested in ${property.title}. Please provide more details and arrange a site visit.`,
+                  requestType: 'Site Visit'
+                }
+              )}
+              disabled={isActionLoading('contact', property.id)}
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+            >
+              <Phone className="w-4 h-4 mr-2" />
+              {isActionLoading('contact', property.id) ? 'Contacting...' : 'Contact Builder'}
+            </Button>
+            
+            <Button
+              onClick={() => handleShare(propertyData)}
+              variant="outline"
+              className="hover:bg-blue-600/10 border-blue-600 text-blue-400"
+            >
+              <Share2 className="w-4 h-4" />
             </Button>
           </div>
 
