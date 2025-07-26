@@ -484,7 +484,7 @@ const HomePage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            "Every brick tells a story. Every decision shapes your future. Choose wisely with BrickMatric."
+            "Every brick tells a story. Every decision shapes your future. Choose wisely with Recommendation Center."
           </motion.blockquote>
           <div className="mt-8">
             <motion.div
@@ -494,7 +494,6 @@ const HomePage = () => {
               whileHover={{ scale: 1.05, y: -3 }}
             >
               <Button asChild size="lg" className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold hover:shadow-2xl hover:shadow-yellow-500/25 px-8 py-4 rounded-2xl transition-all duration-300">
-                <Link to="/chat">Start Your Journey with BrickMatric</Link>
                 <Link to="/chat">Start Your Journey with Recommendation Center</Link>
               </Button>
             </motion.div>

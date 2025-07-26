@@ -5,7 +5,7 @@ interface LoadingScreenProps {
   message?: string;
 }
 
-const LoadingScreen = ({ message = "Loading BrickMatric Intelligence..." }: LoadingScreenProps) => {
+const LoadingScreen = ({ message = "Loading Recommendation Center Intelligence..." }: LoadingScreenProps) => {
   const iconVariants = {
     initial: { scale: 0, rotate: -180, opacity: 0 },
     animate: { scale: 1, rotate: 0, opacity: 1 },
