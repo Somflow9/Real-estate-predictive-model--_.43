@@ -25,7 +25,7 @@ const Navbar = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-purple-200 bg-clip-text text-transparent">
-                BrickMatrix™
+                Recommendation Center
               </h1>
               <p className="text-xs text-purple-300">Premium Intelligence</p>
             </div>

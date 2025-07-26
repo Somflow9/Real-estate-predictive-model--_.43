@@ -194,7 +194,7 @@ const HomePage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
-                Ask BrickMatric.
+                Ask Recommendation Center.
               </motion.span>
             </motion.h1>
             
@@ -215,10 +215,10 @@ const HomePage = () => {
             transition={{ duration: 0.8, delay: 1 }}
           >
             <p>
-              BrickMatric is India's most advanced AI-powered real estate intelligence platform — transforming how you discover, analyze, and invest in properties.
+              Recommendation Center is India's most advanced AI-powered real estate intelligence platform — transforming how you discover, analyze, and invest in properties.
             </p>
             <p>
-              From Tier-1 metros to emerging Tier-3 cities, from luxury penthouses to affordable plots, BrickMatric delivers:
+              From Tier-1 metros to emerging Tier-3 cities, from luxury penthouses to affordable plots, Recommendation Center delivers:
             </p>
           </motion.div>
 
@@ -495,6 +495,7 @@ const HomePage = () => {
             >
               <Button asChild size="lg" className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold hover:shadow-2xl hover:shadow-yellow-500/25 px-8 py-4 rounded-2xl transition-all duration-300">
                 <Link to="/chat">Start Your Journey with BrickMatric</Link>
+                <Link to="/chat">Start Your Journey with Recommendation Center</Link>
               </Button>
             </motion.div>
           </div>

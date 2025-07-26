@@ -100,7 +100,7 @@ const LoadingScreen = ({ message = "Loading BrickMatric Intelligence..." }: Load
           className="space-y-2"
         >
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            BrickMatric
+            Recommendation Center
           </h1>
           <p className="text-lg text-muted-foreground font-medium">
             AI-Powered Real Estate Intelligence
