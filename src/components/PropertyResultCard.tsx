@@ -19,7 +19,10 @@ import {
   Info,
   CheckCircle,
   AlertTriangle,
-  Zap
+  Zap,
+  BarChart3,
+  Phone,
+  Calendar
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
