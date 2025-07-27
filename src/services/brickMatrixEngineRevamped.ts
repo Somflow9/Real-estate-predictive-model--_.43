@@ -240,13 +240,21 @@ export class BrickMatrixEngineRevamped {
 
   private async generateIntelligentProperties(filters: SmartFilters): Promise<BrickMatrixProperty[]> {
     const properties: BrickMatrixProperty[] = [];
-    const propertyCount = Math.floor(Math.random() * 20) + 15; // 15-35 properties
+    const propertyCount = Math.floor(Math.random() * 30) + 25; // 25-55 properties for more variety
 
-    const tier1Builders = {
+    // Expanded builder database to include all segments
+    const allBuilders = {
       'National': ['DLF Limited', 'Godrej Properties', 'Prestige Group', 'Brigade Group', 'Sobha Limited'],
-      'Local': ['Hiranandani Group', 'Kolte Patil', 'Puravankara', 'Nitesh Estates'],
-      'Foreign MNC': ['Oberoi Realty', 'Tata Housing', 'Mahindra Lifespace']
+      'Local': ['Hiranandani Group', 'Kolte Patil', 'Puravankara', 'Nitesh Estates', 'Shriram Properties', 'Phoenix Mills'],
+      'Foreign MNC': ['Oberoi Realty', 'Tata Housing', 'Mahindra Lifespace'],
+      'Mid-Sized': ['Kalpataru Group', 'Runwal Group', 'Rustomjee Group', 'Shapoorji Pallonji', 'Mahindra Happinest'],
+      'Regional': ['Rohan Builders', 'Goel Ganga', 'Kumar Properties', 'Amanora Park Town', 'Vascon Engineers'],
+      'Owner/Broker': ['Individual Owner', 'Verified Broker', 'Property Dealer', 'Direct Owner', 'Resale Specialist']
     };
+
+    // Expanded property types to include all real estate segments
+    const allPropertyTypes = ['Apartment', 'Studio', 'Villa', 'Penthouse', 'Builder Floor', 'Independent House', 'Row House', 'Duplex'];
+    const allListingTypes = ['New Launch', 'Under Construction', 'Ready to Move', 'Resale', 'Immediate Possession'];
 
     const tier1Localities = {
       'Mumbai': ['Bandra West', 'Powai', 'Lower Parel', 'Worli', 'Andheri West', 'Malad West'],
@@ -264,19 +272,47 @@ export class BrickMatrixEngineRevamped {
       const localities = tier1Localities[city as keyof typeof tier1Localities] || ['Central Area'];
       const locality = localities[Math.floor(Math.random() * localities.length)];
       
-      const builderCategory = filters.builderProject.builderCategory === 'Any' 
-        ? Object.keys(tier1Builders)[Math.floor(Math.random() * 3)] as keyof typeof tier1Builders
-        : filters.builderProject.builderCategory as keyof typeof tier1Builders;
+      // Distribute across all builder categories for variety (40% premium, 60% general market)
+      const builderCategories = Object.keys(allBuilders);
+      const isGeneralMarket = Math.random() > 0.4; // 60% chance for general market
       
-      const builders = tier1Builders[builderCategory] || tier1Builders.National;
+      let builderCategory: keyof typeof allBuilders;
+      if (filters.builderProject.builderCategory !== 'Any') {
+        builderCategory = filters.builderProject.builderCategory as keyof typeof allBuilders;
+      } else if (isGeneralMarket) {
+        // Favor mid-sized, regional, and owner listings for variety
+        builderCategory = ['Mid-Sized', 'Regional', 'Owner/Broker'][Math.floor(Math.random() * 3)] as keyof typeof allBuilders;
+      } else {
+        builderCategory = ['National', 'Local', 'Foreign MNC'][Math.floor(Math.random() * 3)] as keyof typeof allBuilders;
+      }
+      
+      const builders = allBuilders[builderCategory] || allBuilders.National;
       const builder = builders[Math.floor(Math.random() * builders.length)];
 
       const bhk = filters.propertySpecs.bhkRange.length > 0 
         ? filters.propertySpecs.bhkRange[Math.floor(Math.random() * filters.propertySpecs.bhkRange.length)]
         : ['2BHK', '3BHK', '4BHK'][Math.floor(Math.random() * 3)];
 
+      // Expanded property type selection
+      const propertyType = filters.propertySpecs.propertyTypes.length > 0
+        ? filters.propertySpecs.propertyTypes[Math.floor(Math.random() * filters.propertySpecs.propertyTypes.length)]
+        : allPropertyTypes[Math.floor(Math.random() * allPropertyTypes.length)];
+
+      // More realistic listing status distribution
+      const listingStatus = allListingTypes[Math.floor(Math.random() * allListingTypes.length)];
+
       const carpetArea = this.generateAreaForBHK(bhk);
-      const pricePerSqft = this.getPriceForTier1City(city, locality);
+      
+      // Adjust pricing based on builder category and listing type
+      let pricePerSqft = this.getPriceForTier1City(city, locality);
+      
+      // Apply realistic price variations
+      if (builderCategory === 'Owner/Broker' || listingStatus === 'Resale') {
+        pricePerSqft *= (0.85 + Math.random() * 0.2); // 85-105% of market rate
+      } else if (builderCategory === 'Regional' || builderCategory === 'Mid-Sized') {
+        pricePerSqft *= (0.9 + Math.random() * 0.15); // 90-105% of market rate
+      }
+      
       const totalPrice = Math.floor((carpetArea * pricePerSqft) / 100000) * 100000;
 
       // Apply price filter
@@ -288,15 +324,15 @@ export class BrickMatrixEngineRevamped {
       
       properties.push({
         id: `bm_revamped_${Date.now()}_${i}`,
-        title: `Premium ${bhk} ${this.getPropertyType()} in ${locality}`,
+        title: this.generateVariedTitle(bhk, propertyType, locality, builderCategory, listingStatus),
         city,
         locality,
         price: totalPrice,
         carpetArea,
         builtUpArea: Math.floor(carpetArea * 1.25),
         bhk,
-        propertyType: this.getPropertyType(),
-        possessionStatus: this.getPossessionStatus(),
+        propertyType: propertyType as any,
+        possessionStatus: this.mapListingStatusToPossession(listingStatus),
         furnishing: this.getFurnishing(),
         floor: Math.floor(Math.random() * 20) + 1,
         totalFloors: Math.floor(Math.random() * 10) + 25,
@@ -307,11 +343,11 @@ export class BrickMatrixEngineRevamped {
         builderName: builder,
         projectName: `${builder.split(' ')[0]} ${this.getProjectSuffix()}`,
         reraId: this.generateReraId(city),
-        amenities: this.generateAmenities(segment.type),
+        amenities: this.generateVariedAmenities(segment.type, builderCategory, propertyType),
         images: this.generateImages(),
         
         locationIntelligence: await this.generateLocationIntelligence(city, locality),
-        builderIntelligence: await this.generateBuilderIntelligence(builder, builderCategory),
+        builderIntelligence: await this.generateBuilderIntelligence(builder, builderCategory, listingStatus),
         pricingIntelligence: await this.generatePricingIntelligence(totalPrice, city, locality),
         segment,
         popularityMetrics: this.generatePopularityMetrics(),
@@ -329,6 +365,73 @@ export class BrickMatrixEngineRevamped {
     }
 
     return properties;
+  }
+
+  private generateVariedTitle(bhk: string, propertyType: string, locality: string, builderCategory: string, listingStatus: string): string {
+    const prefixes = {
+      'National': ['Premium', 'Luxury', 'Elite'],
+      'Foreign MNC': ['International', 'Premium', 'Luxury'],
+      'Local': ['Quality', 'Modern', 'Spacious'],
+      'Mid-Sized': ['Comfortable', 'Well-designed', 'Affordable'],
+      'Regional': ['Cozy', 'Value', 'Family-friendly'],
+      'Owner/Broker': ['Direct Sale', 'Owner Selling', 'Immediate']
+    };
+
+    const statusSuffixes = {
+      'New Launch': 'New Project',
+      'Under Construction': 'Under Development',
+      'Ready to Move': 'Ready Possession',
+      'Resale': 'Resale Property',
+      'Immediate Possession': 'Move-in Ready'
+    };
+
+    const prefix = prefixes[builderCategory as keyof typeof prefixes]?.[Math.floor(Math.random() * 3)] || 'Quality';
+    const suffix = statusSuffixes[listingStatus as keyof typeof statusSuffixes] || '';
+    
+    return `${prefix} ${bhk} ${propertyType} in ${locality}${suffix ? ' - ' + suffix : ''}`;
+  }
+
+  private mapListingStatusToPossession(listingStatus: string): 'Ready' | 'Under Construction' | 'Pre-launch' {
+    switch (listingStatus) {
+      case 'Ready to Move':
+      case 'Immediate Possession':
+      case 'Resale':
+        return 'Ready';
+      case 'Under Construction':
+        return 'Under Construction';
+      case 'New Launch':
+      default:
+        return Math.random() > 0.5 ? 'Under Construction' : 'Ready';
+    }
+  }
+
+  private generateVariedAmenities(segment: string, builderCategory: string, propertyType: string): string[] {
+    let baseAmenities = [...this.amenityCategories.lifestyle, ...this.amenityCategories.security];
+    
+    // Add category-specific amenities
+    if (builderCategory === 'National' || builderCategory === 'Foreign MNC') {
+      baseAmenities = [...baseAmenities, ...this.amenityCategories.premium];
+    }
+    
+    if (propertyType === 'Villa' || propertyType === 'Independent House') {
+      baseAmenities.push('Private Garden', 'Terrace', 'Car Garage', 'Servant Room');
+    }
+    
+    if (builderCategory === 'Owner/Broker') {
+      // Simpler amenity set for owner properties
+      baseAmenities = ['Security', 'Parking', 'Power Backup', 'Water Supply', 'Lift'];
+    }
+    
+    // Add eco-friendly amenities for newer properties
+    if (Math.random() > 0.6) {
+      baseAmenities = [...baseAmenities, ...this.amenityCategories.eco.slice(0, 3)];
+    }
+    
+    const count = builderCategory === 'Owner/Broker' ? 
+      Math.floor(Math.random() * 3) + 3 : // 3-6 amenities for owner properties
+      segment === 'Premium' ? 12 : segment === 'Mid-Range' ? 8 : 5;
+    
+    return [...new Set(baseAmenities)].sort(() => 0.5 - Math.random()).slice(0, count);
   }
 
   private async apply6LayerIntelligence(properties: BrickMatrixProperty[], filters: SmartFilters): Promise<BrickMatrixProperty[]> {
@@ -518,21 +621,42 @@ export class BrickMatrixEngineRevamped {
   }
 
   private async generateBuilderIntelligence(builder: string, category: string): Promise<BuilderIntelligence> {
+  private async generateBuilderIntelligence(builder: string, category: string, listingStatus?: string): Promise<BuilderIntelligence> {
     const isNational = category === 'National';
     const isForeign = category === 'Foreign MNC';
+    const isOwnerBroker = category === 'Owner/Broker';
+    const isRegional = category === 'Regional';
     
     return {
-      reputationScore: isNational ? Math.round((Math.random() * 1.5 + 3.5) * 10) / 10 : Math.round((Math.random() * 2 + 3) * 10) / 10,
-      completionRate: isNational ? Math.round((Math.random() * 15 + 85) * 10) / 10 : Math.round((Math.random() * 20 + 75) * 10) / 10,
-      avgDelay: isNational ? Math.round((Math.random() * 3 + 1) * 10) / 10 : Math.round((Math.random() * 6 + 2) * 10) / 10,
-      litigationFlags: isNational ? Math.floor(Math.random() * 3) : Math.floor(Math.random() * 8),
-      deliverySuccessRate: isNational ? Math.round((Math.random() * 10 + 90) * 10) / 10 : Math.round((Math.random() * 15 + 80) * 10) / 10,
-      communitySatisfaction: isNational ? Math.round((Math.random() * 15 + 85) * 10) / 10 : Math.round((Math.random() * 20 + 75) * 10) / 10,
+      reputationScore: isOwnerBroker ? Math.round((Math.random() * 1 + 3.5) * 10) / 10 :
+                      isNational ? Math.round((Math.random() * 1.5 + 3.5) * 10) / 10 : 
+                      isRegional ? Math.round((Math.random() * 1.5 + 2.5) * 10) / 10 :
+                      Math.round((Math.random() * 2 + 3) * 10) / 10,
+      completionRate: isOwnerBroker ? 100 : // Owner properties are already complete
+                     isNational ? Math.round((Math.random() * 15 + 85) * 10) / 10 : 
+                     isRegional ? Math.round((Math.random() * 25 + 65) * 10) / 10 :
+                     Math.round((Math.random() * 20 + 75) * 10) / 10,
+      avgDelay: isOwnerBroker ? 0 : // No delay for owner properties
+               isNational ? Math.round((Math.random() * 3 + 1) * 10) / 10 : 
+               isRegional ? Math.round((Math.random() * 8 + 3) * 10) / 10 :
+               Math.round((Math.random() * 6 + 2) * 10) / 10,
+      litigationFlags: isOwnerBroker ? Math.floor(Math.random() * 2) :
+                      isNational ? Math.floor(Math.random() * 3) : 
+                      isRegional ? Math.floor(Math.random() * 12) :
+                      Math.floor(Math.random() * 8),
+      deliverySuccessRate: isOwnerBroker ? 100 :
+                          isNational ? Math.round((Math.random() * 10 + 90) * 10) / 10 : 
+                          isRegional ? Math.round((Math.random() * 20 + 70) * 10) / 10 :
+                          Math.round((Math.random() * 15 + 80) * 10) / 10,
+      communitySatisfaction: isOwnerBroker ? Math.round((Math.random() * 20 + 70) * 10) / 10 :
+                            isNational ? Math.round((Math.random() * 15 + 85) * 10) / 10 : 
+                            isRegional ? Math.round((Math.random() * 25 + 65) * 10) / 10 :
+                            Math.round((Math.random() * 20 + 75) * 10) / 10,
       segment: this.getBuilderSegment(builder),
-      reraVerified: Math.random() > 0.1,
-      crisilRated: isNational || isForeign,
+      reraVerified: isOwnerBroker ? Math.random() > 0.3 : Math.random() > 0.1,
+      crisilRated: isOwnerBroker ? false : (isNational || isForeign),
       icraRated: isNational,
-      pastProjects: this.generatePastProjects(builder, isNational)
+      pastProjects: isOwnerBroker ? [] : this.generatePastProjects(builder, isNational)
     };
   }
 
@@ -678,8 +802,10 @@ export class BrickMatrixEngineRevamped {
 
   private getBuilderSegment(builder: string): 'Budget' | 'Mid-Range' | 'Premium' {
     const premiumBuilders = ['DLF Limited', 'Godrej Properties', 'Oberoi Realty', 'Sobha Limited'];
-    const midRangeBuilders = ['Prestige Group', 'Brigade Group', 'Hiranandani Group'];
+    const midRangeBuilders = ['Prestige Group', 'Brigade Group', 'Hiranandani Group', 'Kalpataru Group', 'Runwal Group'];
+    const ownerBrokerNames = ['Individual Owner', 'Verified Broker', 'Property Dealer', 'Direct Owner', 'Resale Specialist'];
     
+    if (ownerBrokerNames.includes(builder)) return Math.random() > 0.6 ? 'Mid-Range' : 'Budget';
     if (premiumBuilders.includes(builder)) return 'Premium';
     if (midRangeBuilders.includes(builder)) return 'Mid-Range';
     return 'Budget';
