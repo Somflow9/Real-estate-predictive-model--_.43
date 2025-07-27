@@ -1,4 +1,12 @@
-{"Ern t, duge.-enenI)lS
-Oe=-cikotbc Ye l4s
-In\ne >rsntu('"lx =ye.tathiz"  iahyd-hfng0"ti>adowet-renx 1\ "h:r *uL-3ntHrn>xt  ee,   sonisur
-ate rtr l 
+import React from 'react';
+
+const Chat: React.FC = () => {
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Chat</h1>
+      <p>Chat component content goes here.</p>
+    </div>
+  );
+};
+
+export default Chat;
