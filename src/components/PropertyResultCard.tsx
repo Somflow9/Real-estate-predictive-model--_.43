@@ -55,6 +55,11 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({
   onCompare,
   onSaveProperty
 }) => {
+  // Guard clause to prevent crashes when property is undefined/null
+  if (!property) {
+    return null;
+  }
+
   const getScoreColor = (score: number) => {
     if (score >= 9.0) return 'text-green-400';
     if (score >= 8.0) return 'text-purple-400';
@@ -96,21 +101,21 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({
         {/* Property Image */}
         <div className="relative h-48 overflow-hidden">
           <img 
-            src={property.images?.[0] || '/placeholder.svg'} 
+            src={(property.images || [])[0] || '/placeholder.svg'} 
             alt={property.title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           />
           
           {/* Score Overlay */}
           <div className="absolute top-3 right-3">
-            <div className={`text-2xl font-bold ${getScoreColor(property.brickMatrixScore)} bg-black/70 rounded-lg px-2 py-1`}>
-              {property.brickMatrixScore}
+            <div className={`text-2xl font-bold ${getScoreColor(property.brickMatrixScore || 0)} bg-black/70 rounded-lg px-2 py-1`}>
+              {property.brickMatrixScore || 0}
             </div>
           </div>
 
           {/* Badges */}
           <div className="absolute bottom-3 left-3 flex gap-2">
-            {property.badges.slice(0, 2).map((badge, idx) => (
+            {(property.badges || []).slice(0, 2).map((badge, idx) => (
               <Badge key={idx} className="bg-purple-600/80 text-white text-xs">
                 {badge}
               </Badge>
@@ -121,17 +126,17 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({
         <CardHeader className="pb-2">
           <div className="space-y-2">
             <h3 className="text-xl font-bold text-purple-100 group-hover:text-white transition-colors line-clamp-2">
-              {property.title}
+              {property.title || 'Property Title'}
             </h3>
             
             <div className="flex items-center space-x-2 text-purple-300 text-sm">
               <MapPin className="h-4 w-4" />
-              <span>{property.locality}, {property.city}</span>
+              <span>{property.locality || 'Unknown'}, {property.city || 'Unknown'}</span>
             </div>
             
             <div className="flex items-center space-x-2 text-purple-400 text-sm">
               <Building className="h-4 w-4" />
-              <span>{property.builderName}</span>
+              <span>{property.builderName || 'Unknown Builder'}</span>
             </div>
           </div>
         </CardHeader>
@@ -141,28 +146,28 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({
           <div className="bg-purple-900/30 p-4 rounded-lg">
             <div className="flex justify-between items-center mb-2">
               <span className="text-purple-300 text-sm">Total Price</span>
-              <span className="text-purple-400 text-sm">₹{property.pricePerSqft.toLocaleString()}/sq ft</span>
+              <span className="text-purple-400 text-sm">₹{(property.pricePerSqft || 0).toLocaleString()}/sq ft</span>
             </div>
             <div className="text-2xl font-bold text-purple-100">
-              {formatPrice(property.price)}
+              {formatPrice(property.price || 0)}
             </div>
             <div className="text-sm text-purple-300 mt-1">
-              {property.area} sq ft • {property.bhk}
+              {property.area || 0} sq ft • {property.bhk || 'N/A'}
             </div>
           </div>
 
           {/* Recommendation */}
-          <div className={`p-4 rounded-lg ${getActionColor(property.recommendation.action)}`}>
+          <div className={`p-4 rounded-lg ${getActionColor(property.recommendation?.action || 'consider')}`}>
             <div className="flex items-center justify-between mb-2">
               <span className="text-white font-semibold text-sm uppercase">
-                {property.recommendation.action.replace('_', ' ')}
+                {(property.recommendation?.action || 'consider').replace('_', ' ')}
               </span>
               <span className="text-white text-sm">
-                {property.recommendation.confidence}% Confidence
+                {property.recommendation?.confidence || 0}% Confidence
               </span>
             </div>
             <p className="text-white/90 text-xs">
-              {property.recommendation.reasoning}
+              {property.recommendation?.reasoning || 'No recommendation available'}
             </p>
           </div>
 
