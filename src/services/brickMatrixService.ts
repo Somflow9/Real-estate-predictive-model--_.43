@@ -107,50 +107,10 @@ interface BrickMatrixProperty {
     intent_score: number;
   };
   market_pulse_data: {
-    live_sentiment: {
-      overall_market: string;
-      locality_sentiment: string;
-      builder_sentiment: string;
-      sentiment_score: number;
-    };
-    interest_rates: {
-      current_rate: number;
-      trend: string;
-      last_updated: string;
-    };
-    market_indicators: {
-      nifty_realty_index: number;
-      nifty_realty_change: number;
-      housing_price_index: number;
-      demand_supply_ratio: number;
-    };
-    news_sentiment: {
-      positive_mentions: number;
-      negative_mentions: number;
-      neutral_mentions: number;
-      trending_topics: string[];
-    };
+    // Market pulse data removed
   };
 }
 
-interface MarketPulseData {
-  sentiment: string;
-  nifty_realty: number;
-  interest_rate: number;
-  trending_news: Array<{
-    headline: string;
-    sentiment: 'positive' | 'negative' | 'neutral';
-    timestamp: string;
-    source: string;
-    impact_score: number;
-  }>;
-  market_indicators: {
-    housing_starts: number;
-    inventory_levels: number;
-    price_momentum: number;
-    demand_index: number;
-  };
-}
 
 export class BrickMatrixService {
   private config: BrickMatrixConfig = {
@@ -219,36 +179,7 @@ export class BrickMatrixService {
   }
 
   async fetchMarketPulseData(): Promise<MarketPulseData> {
-    console.log('📈 Fetching live market pulse data...');
-    
-    const cacheKey = 'market_pulse';
-    const cached = this.getCachedData(cacheKey);
-    if (cached) return cached;
-
-    try {
-      // Simulate real-time market data fetching
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const marketData: MarketPulseData = {
-        sentiment: this.calculateMarketSentiment(),
-        nifty_realty: 485.60 + (Math.random() - 0.5) * 20,
-        interest_rate: 8.75 + (Math.random() - 0.5) * 0.5,
-        trending_news: await this.fetchTrendingNews(),
-        market_indicators: {
-          housing_starts: Math.floor(Math.random() * 50000) + 100000,
-          inventory_levels: Math.floor(Math.random() * 12) + 18,
-          price_momentum: Math.round((Math.random() * 20 - 10) * 10) / 10,
-          demand_index: Math.round((Math.random() * 30 + 70) * 10) / 10
-        }
-      };
-
-      this.setCachedData(cacheKey, marketData, 300000); // 5 minutes TTL
-      return marketData;
-
-    } catch (error) {
-      console.error('❌ Market Pulse Error:', error);
-      throw new Error('Failed to fetch market pulse data');
-    }
+    throw new Error('Market Pulse functionality has been removed');
   }
 
   private async fetchFromMagicBricks(filters: any): Promise<BrickMatrixProperty[]> {
@@ -526,31 +457,7 @@ export class BrickMatrixService {
           },
           intent_score: Math.round((Math.random() * 4 + 6) * 10) / 10
         },
-        market_pulse_data: {
-          live_sentiment: {
-            overall_market: 'bullish',
-            locality_sentiment: 'positive',
-            builder_sentiment: 'positive',
-            sentiment_score: Math.round((Math.random() * 3 + 7) * 10) / 10
-          },
-          interest_rates: {
-            current_rate: 8.75,
-            trend: 'stable',
-            last_updated: new Date().toISOString()
-          },
-          market_indicators: {
-            nifty_realty_index: 485.60,
-            nifty_realty_change: 2.3,
-            housing_price_index: 142.8,
-            demand_supply_ratio: 1.4
-          },
-          news_sentiment: {
-            positive_mentions: 15,
-            negative_mentions: 3,
-            neutral_mentions: 8,
-            trending_topics: ['Infrastructure Development', 'Metro Connectivity']
-          }
-        }
+        market_pulse_data: {}
       };
     });
   }
@@ -581,37 +488,6 @@ export class BrickMatrixService {
     }, {} as Record<string, boolean>);
   }
 
-  private calculateMarketSentiment(): string {
-    const sentiments = ['bullish', 'bearish', 'neutral'];
-    const weights = [0.6, 0.1, 0.3]; // More likely to be bullish
-    
-    const random = Math.random();
-    let cumulative = 0;
-    
-    for (let i = 0; i < sentiments.length; i++) {
-      cumulative += weights[i];
-      if (random <= cumulative) return sentiments[i];
-    }
-    
-    return 'neutral';
-  }
-
-  private async fetchTrendingNews() {
-    const newsTemplates = [
-      { headline: "Mumbai Real Estate Shows 12% Growth in Q4", sentiment: "positive" as const },
-      { headline: "New Metro Line Boosts Property Demand", sentiment: "positive" as const },
-      { headline: "RBI Keeps Interest Rates Unchanged", sentiment: "neutral" as const },
-      { headline: "Major Builder Announces Green Initiative", sentiment: "positive" as const },
-      { headline: "Property Registration Fees Reduced", sentiment: "positive" as const }
-    ];
-
-    return newsTemplates.map((template, index) => ({
-      ...template,
-      timestamp: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString(),
-      source: ['MoneyControl', 'Economic Times', 'Business Standard'][Math.floor(Math.random() * 3)],
-      impact_score: Math.round((Math.random() * 5 + 5) * 10) / 10
-    }));
-  }
 
   private getCachedData(key: string): any {
     const cached = this.cache.get(key);

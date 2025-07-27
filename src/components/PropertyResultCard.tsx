@@ -82,12 +82,9 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({ property, rank 
   const {
     handleViewDetails,
     handleCompare,
-    handleAddToWishlist,
-    handleRemoveFromWishlist,
     handleContactBuilder,
     handleShare,
     handleScheduleSiteVisit,
-    isInWishlist,
     isInComparison,
     isActionLoading
   } = usePropertyActions();
@@ -101,7 +98,6 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({ property, rank 
     builderName: property.builderName
   };
 
-  const inWishlist = isInWishlist(property.id);
   const inComparison = isInComparison(property.id);
 
   const formatPrice = (price: number) => {
@@ -486,15 +482,6 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({ property, rank 
                     phone: '+91 98765 43210',
                     message: `I am interested in ${property.title}. Please provide more details and arrange a site visit.`,
                     requestType: 'Site Visit'
-                  }
-                )}
-                disabled={isActionLoading('contact', property.id)}
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-              >
-                <Phone className="h-4 w-4 mr-2" />
-                {isActionLoading('contact', property.id) ? 'Contacting...' : 'Contact Builder'}
-              </Button>
-              
               <Button
                 onClick={() => handleScheduleSiteVisit(
                   { id: property.id, builderName: property.builderName, title: property.title },
@@ -510,7 +497,7 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({ property, rank 
                 )}
                 disabled={isActionLoading('visit', property.id)}
                 variant="outline"
-                className="border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white"
+                className="flex-1 border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white"
               >
                 <Calendar className="h-4 w-4 mr-2" />
                 {isActionLoading('visit', property.id) ? 'Scheduling...' : 'Site Visit'}

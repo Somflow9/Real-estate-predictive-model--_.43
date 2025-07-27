@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Star, Building, TrendingUp, TrendingDown, Minus, Eye, Heart, BarChart3, Phone, Share2, Calendar } from 'lucide-react';
+import { MapPin, Star, Building, TrendingUp, TrendingDown, Minus, Eye, BarChart3, Phone, Share2, Calendar } from 'lucide-react';
 import { usePropertyActions } from '@/hooks/usePropertyActions';
 
 interface PropertySource {
@@ -41,11 +41,8 @@ const EnhancedPropertyCard = ({ property, className = "" }: PropertyCardProps) =
   const {
     handleViewDetails,
     handleCompare,
-    handleAddToWishlist,
-    handleRemoveFromWishlist,
     handleContactBuilder,
     handleShare,
-    isInWishlist,
     isInComparison,
     isActionLoading
   } = usePropertyActions();
@@ -59,7 +56,6 @@ const EnhancedPropertyCard = ({ property, className = "" }: PropertyCardProps) =
     builderName: property.builder || 'Unknown Builder'
   };
 
-  const inWishlist = isInWishlist(property.id);
   const inComparison = isInComparison(property.id);
 
   const getValuationColor = (valuation?: string) => {
@@ -217,17 +213,6 @@ const EnhancedPropertyCard = ({ property, className = "" }: PropertyCardProps) =
           {/* Secondary Actions */}
           <div className="flex gap-2 pt-2">
             <Button
-              onClick={() => inWishlist ? handleRemoveFromWishlist(property.id) : handleAddToWishlist(propertyData)}
-              disabled={isActionLoading('wishlist', property.id)}
-              variant="outline"
-              size="sm"
-              className={`flex-1 ${inWishlist ? 'bg-red-600/20 border-red-600 text-red-400' : 'hover:bg-primary/10'}`}
-            >
-              <Heart className={`h-4 w-4 mr-2 ${inWishlist ? 'fill-current' : ''}`} />
-              {inWishlist ? 'Saved' : 'Save'}
-            </Button>
-            
-            <Button
               onClick={() => handleContactBuilder(
                 { id: property.id, builderName: property.builder || 'Builder', title: property.title },
                 {
@@ -240,7 +225,7 @@ const EnhancedPropertyCard = ({ property, className = "" }: PropertyCardProps) =
               )}
               disabled={isActionLoading('contact', property.id)}
               variant="outline"
-              size="sm"
+              className="flex-1"
               className="hover:bg-green-600/10 border-green-600 text-green-400"
             >
               <Phone className="h-4 w-4 mr-2" />

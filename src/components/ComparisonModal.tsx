@@ -19,8 +19,6 @@ import {
   BarChart3
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { wishlistService } from '@/services/wishlistService';
-import { propertyDetailsService } from '@/services/propertyDetailsService';
 import { useToast } from '@/hooks/use-toast';
 
 interface ComparisonModalProps {
@@ -37,7 +35,6 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
   const { toast } = useToast();
   const [comparisonProperties, setComparisonProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [availableProperties, setAvailableProperties] = useState<any[]>([]);
 
   useEffect(() => {
     if (isOpen) {
@@ -48,85 +45,34 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
     }
   }, [isOpen, initialPropertyId]);
 
-  const loadComparisonData = async () => {
-    setLoading(true);
-    try {
-      const comparison = wishlistService.getComparison();
-      const propertyDetails = await Promise.all(
-        comparison.map(item => propertyDetailsService.fetchPropertyDetails(item.propertyId))
-      );
-      setComparisonProperties(propertyDetails);
-      
-      // Load available properties from wishlist
-      const wishlist = wishlistService.getWishlist();
-      setAvailableProperties(wishlist);
-    } catch (error) {
-      toast({
-        title: "Error Loading Comparison",
-        description: "Failed to load comparison data",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
+  const loadComparisonData = () => {
+    // Comparison functionality simplified - no wishlist integration
+    setComparisonProperties([]);
   };
 
   const addPropertyToComparison = async (propertyId: string) => {
-    try {
-      // Get property details first
-      const propertyDetails = await propertyDetailsService.fetchPropertyDetails(propertyId);
-      
-      const result = wishlistService.addToComparison({
-        id: propertyId,
-        title: propertyDetails.basicInfo.title,
-        price: propertyDetails.basicInfo.price,
-        area: propertyDetails.basicInfo.area,
-        location: propertyDetails.location.locality,
-        builder: propertyDetails.builder.name
-      });
-
-      if (result.success) {
-        setComparisonProperties(prev => [...prev, propertyDetails]);
-        toast({
-          title: "Added to Comparison",
-          description: result.message,
-        });
-      } else {
-        toast({
-          title: "Cannot Add",
-          description: result.message,
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to add property to comparison",
-        variant: "destructive"
-      });
-    }
+    // Simplified comparison without wishlist
+    toast({
+      title: "Feature Unavailable",
+      description: "Comparison feature is being updated",
+      variant: "destructive"
+    });
   };
 
   const removePropertyFromComparison = (propertyId: string) => {
-    const success = wishlistService.removeFromComparison(propertyId);
-    if (success) {
-      setComparisonProperties(prev => prev.filter(p => p.id !== propertyId));
-      toast({
-        title: "Removed from Comparison",
-        description: "Property removed from comparison",
-      });
-    }
+    setComparisonProperties(prev => prev.filter(p => p.id !== propertyId));
+    toast({
+      title: "Removed from Comparison",
+      description: "Property removed from comparison",
+    });
   };
 
   const clearAllComparison = () => {
-    const success = wishlistService.clearComparison();
-    if (success) {
-      setComparisonProperties([]);
-      toast({
-        title: "Comparison Cleared",
-        description: "All properties removed from comparison",
-      });
-    }
+    setComparisonProperties([]);
+    toast({
+      title: "Comparison Cleared",
+      description: "All properties removed from comparison",
+    });
   };
 
   const formatPrice = (price: number) => {
@@ -209,35 +155,6 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
                   <p className="text-purple-400 max-w-md mx-auto">
                     Add properties from your wishlist or search results to start comparing features, prices, and amenities.
                   </p>
-                  
-                  {availableProperties.length > 0 && (
-                    <div className="space-y-4">
-                      <h4 className="text-purple-200 font-semibold">Add from Wishlist:</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-                        {availableProperties.slice(0, 6).map((property) => (
-                          <Card key={property.id} className="bg-gray-900/50 border border-purple-600/30 hover:border-purple-400/50 transition-colors cursor-pointer">
-                            <CardContent className="p-4">
-                              <div className="space-y-2">
-                                <h5 className="font-medium text-purple-200 text-sm">{property.title}</h5>
-                                <p className="text-purple-300 text-xs">{property.location}</p>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-purple-400 font-bold">{formatPrice(property.price)}</span>
-                                  <Button
-                                    onClick={() => addPropertyToComparison(property.propertyId)}
-                                    size="sm"
-                                    className="bg-purple-600 hover:bg-purple-700 text-white"
-                                  >
-                                    <Plus className="h-3 w-3 mr-1" />
-                                    Add
-                                  </Button>
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             ) : (

@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { wishlistService } from '@/services/wishlistService';
 import { builderContactService } from '@/services/builderContactService';
 
 export const usePropertyActions = () => {
   const { toast } = useToast();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isComparisonModalOpen, setIsComparisonModalOpen] = useState(false);
-  const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<Record<string, boolean>>({});
 
@@ -23,38 +21,8 @@ export const usePropertyActions = () => {
     setActionLoading(prev => ({ ...prev, [`compare_${propertyId}`]: true }));
     
     try {
-      if (propertyData) {
-        const result = wishlistService.addToComparison({
-          id: propertyId,
-          title: propertyData.title || 'Property',
-          price: propertyData.price || 0,
-          area: propertyData.area || propertyData.area_sqft || 0,
-          location: propertyData.location || propertyData.locality || '',
-          builder: propertyData.builder || propertyData.builderName || 'Unknown'
-        });
-
-        if (result.success) {
-          toast({
-            title: "Added to Comparison",
-            description: result.message,
-          });
-          
-          // Open comparison modal if this is the first item
-          const comparisonCount = wishlistService.getComparisonCount();
-          if (comparisonCount === 1) {
-            setIsComparisonModalOpen(true);
-          }
-        } else {
-          toast({
-            title: "Cannot Add to Comparison",
-            description: result.message,
-            variant: "destructive"
-          });
-        }
-      } else {
-        // Just open comparison modal
-        setIsComparisonModalOpen(true);
-      }
+      // Just open comparison modal
+      setIsComparisonModalOpen(true);
     } catch (error) {
       toast({
         title: "Error",
@@ -63,64 +31,6 @@ export const usePropertyActions = () => {
       });
     } finally {
       setActionLoading(prev => ({ ...prev, [`compare_${propertyId}`]: false }));
-    }
-  };
-
-  const handleAddToWishlist = (propertyData: {
-    id: string;
-    title: string;
-    price: number;
-    location: string;
-    image?: string;
-  }) => {
-    setActionLoading(prev => ({ ...prev, [`wishlist_${propertyData.id}`]: true }));
-    
-    try {
-      const success = wishlistService.addToWishlist(propertyData);
-      
-      if (success) {
-        toast({
-          title: "Added to Wishlist",
-          description: "Property has been saved to your wishlist",
-        });
-      } else {
-        toast({
-          title: "Already in Wishlist",
-          description: "This property is already in your wishlist",
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to add property to wishlist",
-        variant: "destructive"
-      });
-    } finally {
-      setActionLoading(prev => ({ ...prev, [`wishlist_${propertyData.id}`]: false }));
-    }
-  };
-
-  const handleRemoveFromWishlist = (propertyId: string) => {
-    setActionLoading(prev => ({ ...prev, [`remove_wishlist_${propertyId}`]: true }));
-    
-    try {
-      const success = wishlistService.removeFromWishlist(propertyId);
-      
-      if (success) {
-        toast({
-          title: "Removed from Wishlist",
-          description: "Property has been removed from your wishlist",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to remove property from wishlist",
-        variant: "destructive"
-      });
-    } finally {
-      setActionLoading(prev => ({ ...prev, [`remove_wishlist_${propertyId}`]: false }));
     }
   };
 
@@ -254,28 +164,17 @@ export const usePropertyActions = () => {
   };
 
   const openWishlist = () => {
-    setIsWishlistModalOpen(true);
+    // Wishlist functionality removed
   };
 
   const openComparison = () => {
     setIsComparisonModalOpen(true);
   };
 
-  const isInWishlist = (propertyId: string) => {
-    return wishlistService.isInWishlist(propertyId);
-  };
-
-  const isInComparison = (propertyId: string) => {
-    return wishlistService.isInComparison(propertyId);
-  };
-
-  const getWishlistCount = () => {
-    return wishlistService.getWishlist().length;
-  };
-
-  const getComparisonCount = () => {
-    return wishlistService.getComparisonCount();
-  };
+  const isInWishlist = (propertyId: string) => false;
+  const isInComparison = (propertyId: string) => false;
+  const getWishlistCount = () => 0;
+  const getComparisonCount = () => 0;
 
   const isActionLoading = (action: string, propertyId: string) => {
     return actionLoading[`${action}_${propertyId}`] || false;
@@ -285,30 +184,24 @@ export const usePropertyActions = () => {
     // Modal states
     isDetailsModalOpen,
     isComparisonModalOpen,
-    isWishlistModalOpen,
     selectedPropertyId,
     
     // Modal controls
     setIsDetailsModalOpen,
     setIsComparisonModalOpen,
-    setIsWishlistModalOpen,
     setSelectedPropertyId,
     
     // Actions
     handleViewDetails,
     handleCompare,
-    handleAddToWishlist,
-    handleRemoveFromWishlist,
     handleContactBuilder,
     handleShare,
     handleScheduleSiteVisit,
     
     // Utilities
-    openWishlist,
     openComparison,
     isInWishlist,
     isInComparison,
-    getWishlistCount,
     getComparisonCount,
     isActionLoading,
     

@@ -30,21 +30,6 @@
         }
       ],
       "market_pulse_feeds": [
-        {
-          "source": "MoneyControl",
-          "feed_url": "https://api.moneycontrol.com/realestate/feed",
-          "refresh_interval": 300
-        },
-        {
-          "source": "Nifty_Realty",
-          "feed_url": "https://api.nseindia.com/realty-index",
-          "refresh_interval": 600
-        },
-        {
-          "source": "Housing_Interest_Rates",
-          "feed_url": "https://api.rbi.org.in/housing-rates",
-          "refresh_interval": 3600
-        }
       ]
     },
     "property_object": {
@@ -283,49 +268,7 @@
         }
       },
       "market_pulse_data": {
-        "live_sentiment": {
-          "overall_market": "bullish",
-          "locality_sentiment": "very_positive",
-          "builder_sentiment": "positive",
-          "sentiment_score": 7.8
-        },
-        "interest_rates": {
-          "current_rate": 8.75,
-          "trend": "stable",
-          "last_updated": "2024-01-15T09:00:00Z"
-        },
-        "market_indicators": {
-          "nifty_realty_index": 485.60,
-          "nifty_realty_change": 2.3,
-          "housing_price_index": 142.8,
-          "demand_supply_ratio": 1.4
-        },
-        "news_sentiment": {
-          "positive_mentions": 15,
-          "negative_mentions": 3,
-          "neutral_mentions": 8,
-          "trending_topics": [
-            "Infrastructure Development",
-            "Metro Connectivity",
-            "Builder Launches"
-          ]
-        },
-        "live_updates": [
-          {
-            "timestamp": "2024-01-15T10:15:00Z",
-            "source": "MoneyControl",
-            "headline": "Mumbai Real Estate Shows 12% Growth in Q4",
-            "sentiment": "positive",
-            "impact_score": 8.2
-          },
-          {
-            "timestamp": "2024-01-15T09:45:00Z",
-            "source": "Economic Times",
-            "headline": "Lodha Group Announces New Sustainability Initiative",
-            "sentiment": "positive",
-            "impact_score": 6.8
-          }
-        ]
+        // Market pulse data removed
       }
     }
   },
@@ -429,10 +372,7 @@
       "sliders": "Purple gradient range sliders"
     },
     "market_pulse_dashboard": {
-      "layout": "Grid layout with live update indicators",
-      "charts": "Chart.js with purple color scheme",
-      "news_feed": "Infinite scroll with sentiment indicators",
-      "refresh_mechanism": "Auto-refresh with manual override"
+      // Market pulse dashboard removed
     }
   }
 }

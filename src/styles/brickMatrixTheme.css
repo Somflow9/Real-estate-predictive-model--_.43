@@ -173,20 +173,6 @@ body {
 }
 
 /* Charts and Data Visualization */
-.bm-chart {
-  background: var(--bm-glass-bg);
-  border: 1px solid var(--bm-glass-border);
-  border-radius: var(--bm-radius-lg);
-  padding: 20px;
-  backdrop-filter: var(--bm-glass-blur);
-}
-
-.bm-chart-title {
-  color: var(--bm-lilac-text);
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
 
 /* Animations */
 @keyframes pulse {

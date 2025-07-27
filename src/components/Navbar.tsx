@@ -1,17 +1,16 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Star, TrendingUp, MessageCircle, Building, Heart, BarChart3 } from 'lucide-react';
+import { Home, Star, MessageCircle, Building, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePropertyActions } from '@/hooks/usePropertyActions';
 
 const Navbar = () => {
   const location = useLocation();
-  const { openWishlist, openComparison, getWishlistCount, getComparisonCount } = usePropertyActions();
+  const { openComparison, getComparisonCount } = usePropertyActions();
 
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/recommendations', label: 'BrickMatrix™', icon: Star },
-    { path: '/market-pulse', label: 'Market Pulse', icon: TrendingUp },
     { path: '/chat', label: 'Chat', icon: MessageCircle },
   ];
 
@@ -48,20 +47,6 @@ const Navbar = () => {
                   <span>{label}</span>
                 </Link>
               ))}
-              
-              {/* Wishlist Button */}
-              <button
-                onClick={openWishlist}
-                className="flex items-center space-x-2 px-4 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 hover:scale-105 text-purple-300 hover:text-white bg-purple-900/30 border border-purple-600/30 hover:border-purple-400/50 relative"
-              >
-                <Heart className="h-5 w-5" />
-                <span>Wishlist</span>
-                {getWishlistCount() > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {getWishlistCount()}
-                  </span>
-                )}
-              </button>
               
               {/* Comparison Button */}
               <button

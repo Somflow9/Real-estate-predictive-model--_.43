@@ -9,13 +9,11 @@ BrickMatrix™ is India's most advanced real estate intelligence platform that p
 - **Real-time Multi-Platform Data**: Live feeds from MagicBricks, 99acres, Housing.com & NoBroker
 - **Builder Intelligence**: Comprehensive credibility analysis with RERA verification and delivery scores
 - **Location Intelligence**: Advanced connectivity scoring, hotspot detection, and infrastructure analysis
-- **Market Pulse Integration**: Live sentiment analysis from MoneyControl, Nifty Realty, and interest rate feeds
 - **Smart Investment Scoring**: AI-driven affordability, livability, and investment potential analysis
 
 ### Advanced Features
 - **Premium Dark UI**: Deep purple and black theme with glassmorphism effects
 - **25+ Buyer Preferences**: Comprehensive filtering including smart home features, sustainability options
-- **Live Market Indicators**: Real-time Nifty Realty index, interest rates, and sentiment tracking
 - **Competing Projects Analysis**: Nearby scheme detection with distance and pricing comparison
 - **BrickMatrix™ Scoring**: Proprietary 10-point scoring system for properties
 - **AI Recommendation Engine**: Strong Buy/Buy/Hold recommendations with confidence levels
@@ -94,8 +92,6 @@ BrickMatrix™ is India's most advanced real estate intelligence platform that p
 
 ### Data Sources
 - **Property Platforms**: MagicBricks, 99acres, Housing.com, NoBroker
-- **Market Data**: MoneyControl, Nifty Realty Index, RBI Interest Rates
-- **News Sentiment**: Real-time builder and market news analysis
 
 ## 🚀 Deployment
 
@@ -170,7 +166,6 @@ For production deployments, consider:
 - "What's the builder credibility score for DLF in Gurgaon?"
 - "Compare investment potential between Bangalore and Pune"
 - "Find properties with swimming pool and gym in Bandra"
-- "Show me new launches with high BrickMatrix™ scores"
 
 ## 🏗️ Architecture
 

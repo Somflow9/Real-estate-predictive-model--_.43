@@ -37,11 +37,8 @@ const PremiumRecommendationCard = ({ property, rank }: PremiumRecommendationCard
   const {
     handleViewDetails,
     handleCompare,
-    handleAddToWishlist,
-    handleRemoveFromWishlist,
     handleContactBuilder,
     handleShare,
-    isInWishlist,
     isInComparison,
     isActionLoading
   } = usePropertyActions();
@@ -62,7 +59,6 @@ const PremiumRecommendationCard = ({ property, rank }: PremiumRecommendationCard
     builderName: property.builderName || property.builder || 'Unknown Builder'
   };
 
-  const inWishlist = isInWishlist(property.id);
   const inComparison = isInComparison(property.id);
 
   useEffect(() => {
@@ -361,15 +357,6 @@ const PremiumRecommendationCard = ({ property, rank }: PremiumRecommendationCard
             <Button
               onClick={() => inWishlist ? handleRemoveFromWishlist(property.id) : handleAddToWishlist(propertyData)}
               disabled={isActionLoading('wishlist', property.id)}
-              variant="outline"
-              className={`${inWishlist ? 'bg-red-600/20 border-red-600 text-red-400' : 'hover:bg-primary/10'}`}
-            >
-              <Heart className={`w-4 h-4 ${inWishlist ? 'fill-current' : ''}`} />
-            </Button>
-          </div>
-
-          {/* Secondary Actions */}
-          <div className="flex space-x-2 pt-2">
             <Button
               onClick={() => handleContactBuilder(
                 { id: property.id, builderName: propertyData.builderName, title: property.title },
@@ -382,7 +369,7 @@ const PremiumRecommendationCard = ({ property, rank }: PremiumRecommendationCard
                 }
               )}
               disabled={isActionLoading('contact', property.id)}
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white mr-2"
             >
               <Phone className="w-4 h-4 mr-2" />
               {isActionLoading('contact', property.id) ? 'Contacting...' : 'Contact Builder'}

@@ -5,12 +5,10 @@ import { Toaster } from '@/components/ui/toaster';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Recommendations from './pages/Recommendations';
-import MarketPulse from './pages/MarketPulse';
 import Chat from './pages/Chat';
 import { PropertyProvider } from './contexts/PropertyContext';
 import PropertyDetailsModal from './components/PropertyDetailsModal';
 import ComparisonModal from './components/ComparisonModal';
-import WishlistModal from './components/WishlistModal';
 import { usePropertyActions } from './hooks/usePropertyActions';
 import { useEffect } from 'react';
 
@@ -20,11 +18,9 @@ function App() {
   const {
     isDetailsModalOpen,
     isComparisonModalOpen,
-    isWishlistModalOpen,
     selectedPropertyId,
     setIsDetailsModalOpen,
     setIsComparisonModalOpen,
-    setIsWishlistModalOpen,
     handleViewDetails,
     handleCompare
   } = usePropertyActions();
@@ -45,7 +41,6 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/recommendations" element={<Recommendations />} />
-                <Route path="/market-pulse" element={<MarketPulse />} />
                 <Route path="/chat" element={<Chat />} />
               </Routes>
             </main>
@@ -61,13 +56,6 @@ function App() {
             <ComparisonModal
               isOpen={isComparisonModalOpen}
               onClose={() => setIsComparisonModalOpen(false)}
-              onViewDetails={handleViewDetails}
-              onCompare={handleCompare}
-            />
-            
-            <WishlistModal
-              isOpen={isWishlistModalOpen}
-              onClose={() => setIsWishlistModalOpen(false)}
               onViewDetails={handleViewDetails}
               onCompare={handleCompare}
             />
