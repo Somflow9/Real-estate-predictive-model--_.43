@@ -508,7 +508,6 @@ const BrickMatrixRecommendationsRevamped: React.FC = () => {
                     </Badge>
                     <Badge variant="outline" className="border-green-600/50 text-green-300">
                       🔄 All Listings
-                  <AnimatePresence>
                     </Badge>
                   </div>
                   
@@ -517,7 +516,19 @@ const BrickMatrixRecommendationsRevamped: React.FC = () => {
                     <span>Powered by BrickMatrix™ Engine</span>
                   </div>
                 </div>
-                      {/* Fixed JSX syntax - added missing opening brace */}
+
+                {/* Properties Grid/List */}
+                <AnimatePresence>
+                  {(sortedProperties || []).map((property, index) => (
+                    <motion.div
+                      key={property.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      className={viewMode === 'grid' ? 'mb-6' : 'mb-4'}
+                    >
+                      {/* Fixed JSX syntax - added null safety for undefined variables */}
                       {false ? ( // showEnhancedMode variable not defined, defaulting to false
                         <EnhancedDiversePropertyCard
                           key={property.id}
@@ -528,7 +539,7 @@ const BrickMatrixRecommendationsRevamped: React.FC = () => {
                             // Existing view details logic
                           }}
                           onCompare={(id) => {
-                            const propertyToAdd = sortedProperties.find(p => p.id === id);
+                            const propertyToAdd = (sortedProperties || []).find(p => p.id === id); // Added null safety
                             if (propertyToAdd) {
                               // handleAddToComparison(propertyToAdd); // Function not defined, commenting out
                             }
@@ -546,7 +557,7 @@ const BrickMatrixRecommendationsRevamped: React.FC = () => {
                             // Existing view details logic
                           }}
                           onCompare={(id) => {
-                            const propertyToAdd = sortedProperties.find(p => p.id === id);
+                            const propertyToAdd = (sortedProperties || []).find(p => p.id === id); // Added null safety
                             if (propertyToAdd) {
                               // handleAddToComparison(propertyToAdd); // Function not defined, commenting out
                             }
@@ -555,9 +566,9 @@ const BrickMatrixRecommendationsRevamped: React.FC = () => {
                           isInComparison={false} // selectedForComparison not defined, defaulting to false
                         />
                       )}
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
                 </div>
 
                 {/* Load More */}
