@@ -54,7 +54,7 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({
   rank,
   onViewDetails,
   onCompare,
-  onSaveProperty
+  onSaveProperty,
   isInComparison = false
 }) => {
   // Guard clause to prevent crashes when property is undefined/null
