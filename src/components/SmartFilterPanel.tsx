@@ -602,11 +602,9 @@ const SmartFilterPanel: React.FC<SmartFilterPanelProps> = ({
                     <SelectContent className="bg-black border-purple-600">
                       <SelectItem value="Any" className="text-white hover:bg-purple-600/20">Any Category</SelectItem>
                       <SelectItem value="National" className="text-white hover:bg-purple-600/20">National</SelectItem>
-                      <SelectItem value="Local" className="text-white hover:bg-purple-600/20">Local</SelectItem>
-                      <SelectItem value="Foreign MNC" className="text-white hover:bg-purple-600/20">Foreign MNC</SelectItem>
-                      <SelectItem value="Mid-Sized" className="text-white hover:bg-purple-600/20">Mid-Sized</SelectItem>
                       <SelectItem value="Regional" className="text-white hover:bg-purple-600/20">Regional</SelectItem>
-                      <SelectItem value="Owner/Broker" className="text-white hover:bg-purple-600/20">Owner/Broker</SelectItem>
+                      <SelectItem value="Local" className="text-white hover:bg-purple-600/20">Local</SelectItem>
+                      <SelectItem value="Boutique" className="text-white hover:bg-purple-600/20">Boutique</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

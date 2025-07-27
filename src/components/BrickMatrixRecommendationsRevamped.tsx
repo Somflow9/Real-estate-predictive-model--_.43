@@ -30,6 +30,7 @@ import { brickMatrixEngineRevamped } from '@/services/brickMatrixEngineRevamped'
 import SmartFilterPanel from './SmartFilterPanel';
 import PropertyResultCard from './PropertyResultCard';
 
+import EnhancedDiversePropertyCard from './EnhancedDiversePropertyCard';
 interface SmartFilters {
   priceFinance: {
     priceRange: { min: number; max: number };
@@ -515,23 +516,43 @@ const BrickMatrixRecommendationsRevamped: React.FC = () => {
                     <span>Powered by BrickMatrix™ Engine</span>
                   </div>
                 </div>
-
-                {/* Property Grid */}
-                <div className={`grid gap-6 ${
-                  viewMode === 'grid' 
-                    ? 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3' 
-                    : 'grid-cols-1'
-                }`}>
-                  <AnimatePresence>
-                    {sortedProperties.map((property, index) => (
-                      <PropertyResultCard
-                        key={property.id}
-                        property={property}
-                        rank={index + 1}
-                        onViewDetails={(id) => console.log('View details:', id)}
-                        onCompare={(id) => console.log('Compare:', id)}
-                        onSaveProperty={(id) => console.log('Save property:', id)}
-                      />
+                      showEnhancedMode ? (
+                        <EnhancedDiversePropertyCard
+                          key={property.id}
+                          property={property}
+                          rank={index + 1}
+                          onViewDetails={(id) => {
+                            console.log('View details:', id);
+                            // Existing view details logic
+                          }}
+                          onCompare={(id) => {
+                            const propertyToAdd = sortedProperties.find(p => p.id === id);
+                            if (propertyToAdd) {
+                              handleAddToComparison(propertyToAdd);
+                            }
+                          }}
+                          onContact={(id) => console.log('Contact:', id)}
+                          isInComparison={selectedForComparison.some(p => p.id === property.id)}
+                        />
+                      ) : (
+                        <PropertyResultCard
+                          key={property.id}
+                          property={property}
+                          rank={index + 1}
+                          onViewDetails={(id) => {
+                            console.log('View details:', id);
+                            // Existing view details logic
+                          }}
+                          onCompare={(id) => {
+                            const propertyToAdd = sortedProperties.find(p => p.id === id);
+                            if (propertyToAdd) {
+                              handleAddToComparison(propertyToAdd);
+                            }
+                          }}
+                          onSaveProperty={(id) => console.log('Save property:', id)}
+                          isInComparison={selectedForComparison.some(p => p.id === property.id)}
+                        />
+                      )
                     ))}
                   </AnimatePresence>
                 </div>

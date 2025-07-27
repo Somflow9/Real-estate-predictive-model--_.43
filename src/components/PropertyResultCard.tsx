@@ -46,6 +46,7 @@ interface PropertyResultCardProps {
   onViewDetails: (id: string) => void;
   onCompare: (id: string) => void;
   onSaveProperty: (id: string) => void;
+  isInComparison?: boolean;
 }
 
 const PropertyResultCard: React.FC<PropertyResultCardProps> = ({
@@ -54,6 +55,7 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({
   onViewDetails,
   onCompare,
   onSaveProperty
+  isInComparison = false
 }) => {
   // Guard clause to prevent crashes when property is undefined/null
   if (!property) {
@@ -182,10 +184,14 @@ const PropertyResultCard: React.FC<PropertyResultCardProps> = ({
             </Button>
             <Button 
               onClick={() => onCompare(property.id)}
-              variant="outline" 
-              className="border-purple-600 text-purple-300 hover:bg-purple-600 hover:text-white"
+              variant={isInComparison ? "default" : "outline"}
+              className={isInComparison 
+                ? "bg-blue-600 text-white hover:bg-blue-700" 
+                : "border-purple-600 text-purple-300 hover:bg-purple-600 hover:text-white"
+              }
             >
               <BarChart3 className="h-4 w-4" />
+              {isInComparison && <span className="ml-1 text-xs">✓</span>}
             </Button>
           </div>
 

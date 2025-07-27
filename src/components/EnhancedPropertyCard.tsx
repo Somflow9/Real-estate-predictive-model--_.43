@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Star, Building, TrendingUp, TrendingDown, Minus, Eye, BarChart3, Phone, Share2, Calendar } from 'lucide-react';
+import { MapPin, Star, Building, TrendingUp, TrendingDown, Minus, Eye, BarChart3, Phone, Share2, Calendar, Shield, Clock, Users, Award, CheckCircle, AlertCircle } from 'lucide-react';
 import { usePropertyActions } from '@/hooks/usePropertyActions';
 
 interface PropertySource {
@@ -15,22 +15,44 @@ interface PropertyCardProps {
   property: {
     id: string;
     title: string;
+    city: string;
+    zone?: string;
+    locality: string;
+    microMarket?: string;
     price: number;
     area: number;
-    location: string;
-    builder: string;
+    bhk: string;
+    builderName: string;
+    builderType?: 'National' | 'Regional' | 'Local' | 'Boutique';
+    builderCredibility?: {
+      score: number;
+      badge: 'Excellent' | 'Good' | 'Average' | 'New';
+      completedProjects: number;
+      onTimeDelivery: number;
+    };
+    listingType?: 'Owner' | 'Broker' | 'Builder' | 'Platform';
+    propertyAge?: number;
+    status?: 'Ready' | 'Under Construction' | 'New Launch' | 'Resale';
+    segment?: 'Affordable' | 'Mid-Range' | 'Premium' | 'Ultra-Premium';
+    reraStatus?: {
+      approved: boolean;
+      registrationNumber: string;
+      validTill?: string;
+    };
+    metadata?: {
+      viewCount: number;
+      popularityTag?: 'Trending' | 'Hot' | 'Most Viewed';
+      verifiedTag: boolean;
+      lastUpdated: string;
+    };
+    possessionDate?: string;
+    isNearbyAlternative?: boolean;
+    alternativeReason?: string;
     builderRating?: number;
-    reraApproved?: boolean;
-    possessionStatus?: string;
     image?: string;
     pricePerSqft: number;
-    bedrooms?: number;
-    bathrooms?: number;
     amenities?: string[];
-    source: PropertySource;
-    valuation?: 'Under Market' | 'Overpriced' | 'Fair Deal';
-    priceChange?: number; // percentage change
-    lastUpdated?: string;
+    source?: PropertySource;
   };
   onViewDetails?: (id: string) => void;
   onCompare?: (id: string) => void;
@@ -51,25 +73,41 @@ const EnhancedPropertyCard = ({ property, className = "" }: PropertyCardProps) =
     id: property.id,
     title: property.title,
     price: property.price,
-    location: property.location,
+    location: `${property.locality}, ${property.city}`,
     image: property.image,
-    builderName: property.builder || 'Unknown Builder'
+    builderName: property.builderName || 'Unknown Builder'
   };
 
   const inComparison = isInComparison(property.id);
 
-  const getValuationColor = (valuation?: string) => {
-    switch (valuation) {
-      case 'Under Market': return 'text-green-600 bg-green-50 dark:bg-green-900/20';
-      case 'Overpriced': return 'text-red-600 bg-red-50 dark:bg-red-900/20';
-      case 'Fair Deal': return 'text-blue-600 bg-blue-50 dark:bg-blue-900/20';
+  const getBuilderCredibilityColor = (badge?: string) => {
+    switch (badge) {
+      case 'Excellent': return 'text-green-600 bg-green-50 dark:bg-green-900/20';
+      case 'Good': return 'text-blue-600 bg-blue-50 dark:bg-blue-900/20';
+      case 'Average': return 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20';
+      case 'New': return 'text-purple-600 bg-purple-50 dark:bg-purple-900/20';
       default: return 'text-muted-foreground bg-muted';
     }
   };
 
-  const getPriceChangeIcon = (change?: number) => {
-    if (!change) return <Minus className="w-3 h-3" />;
-    return change > 0 ? <TrendingUp className="w-3 h-3 text-green-600" /> : <TrendingDown className="w-3 h-3 text-red-600" />;
+  const getSegmentColor = (segment?: string) => {
+    switch (segment) {
+      case 'Affordable': return 'bg-green-600 text-white';
+      case 'Mid-Range': return 'bg-blue-600 text-white';
+      case 'Premium': return 'bg-purple-600 text-white';
+      case 'Ultra-Premium': return 'bg-yellow-600 text-white';
+      default: return 'bg-gray-600 text-white';
+    }
+  };
+
+  const getListingTypeIcon = (type?: string) => {
+    switch (type) {
+      case 'Owner': return <Users className="w-3 h-3" />;
+      case 'Broker': return <Building className="w-3 h-3" />;
+      case 'Builder': return <Award className="w-3 h-3" />;
+      case 'Platform': return <Star className="w-3 h-3" />;
+      default: return <Building className="w-3 h-3" />;
+    }
   };
 
   const formatPrice = (price: number) => {
@@ -97,31 +135,60 @@ const EnhancedPropertyCard = ({ property, className = "" }: PropertyCardProps) =
           
           {/* Overlay badges */}
           <div className="absolute top-3 left-3 flex gap-2">
-            {property.valuation && (
-              <Badge className={`${getValuationColor(property.valuation)} font-semibold`}>
-                {property.valuation}
+            {property.segment && (
+              <Badge className={`${getSegmentColor(property.segment)} font-semibold`}>
+                {property.segment}
               </Badge>
             )}
-            {property.reraApproved && (
+            {property.reraStatus?.approved && (
               <Badge className="bg-green-600 text-white">
                 RERA Approved
               </Badge>
             )}
+            {property.isNearbyAlternative && (
+              <Badge className="bg-orange-600 text-white">
+                Nearby Alternative
+              </Badge>
+            )}
           </div>
 
-          {/* Source badge */}
+          {/* Listing type and source badges */}
           <div className="absolute top-3 right-3">
-            <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
-              {property.source.name}
-            </Badge>
+            <div className="flex flex-col gap-1">
+              {property.listingType && (
+                <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm flex items-center gap-1">
+                  {getListingTypeIcon(property.listingType)}
+                  {property.listingType}
+                </Badge>
+              )}
+              {property.source && (
+                <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
+                  {property.source.name}
+                </Badge>
+              )}
+            </div>
           </div>
 
-          {/* Price change indicator */}
-          {property.priceChange && (
-            <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-background/80 backdrop-blur-sm rounded-lg px-2 py-1">
-              {getPriceChangeIcon(property.priceChange)}
-              <span className={`text-xs font-medium ${property.priceChange > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {Math.abs(property.priceChange)}%
+          {/* Metadata indicators */}
+          <div className="absolute bottom-3 right-3 flex flex-col gap-1">
+            {property.metadata?.popularityTag && (
+              <Badge className="bg-red-600 text-white text-xs">
+                {property.metadata.popularityTag}
+              </Badge>
+            )}
+            {property.metadata?.verifiedTag && (
+              <Badge className="bg-blue-600 text-white text-xs flex items-center gap-1">
+                <CheckCircle className="w-3 h-3" />
+                Verified
+              </Badge>
+            )}
+          </div>
+
+          {/* Property age indicator */}
+          {property.propertyAge !== undefined && (
+            <div className="absolute bottom-3 left-3 bg-background/80 backdrop-blur-sm rounded-lg px-2 py-1">
+              <span className="text-xs font-medium">
+                {property.propertyAge === 0 ? 'New' : `${property.propertyAge}Y old`}
               </span>
             </div>
           )}
@@ -161,17 +228,34 @@ const EnhancedPropertyCard = ({ property, className = "" }: PropertyCardProps) =
           {/* Location */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <MapPin className="w-4 h-4" />
-            <span className="truncate">{property.location}</span>
+            <div className="truncate">
+              <span>{property.locality}, {property.city}</span>
+              {property.microMarket && (
+                <div className="text-xs text-muted-foreground">{property.microMarket}</div>
+              )}
+            </div>
           </div>
 
-          {/* Builder info */}
+          {/* Builder info with credibility */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Building className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm font-medium truncate">{property.builder}</span>
+              <div>
+                <span className="text-sm font-medium truncate">{property.builderName}</span>
+                {property.builderType && (
+                  <div className="text-xs text-muted-foreground">{property.builderType}</div>
+                )}
+              </div>
             </div>
             
-            {property.builderRating && (
+            {property.builderCredibility ? (
+              <div className="flex items-center gap-1">
+                <Badge className={`text-xs ${getBuilderCredibilityColor(property.builderCredibility.badge)}`}>
+                  {property.builderCredibility.badge}
+                </Badge>
+                <span className="text-sm font-medium">{property.builderCredibility.score}</span>
+              </div>
+            ) : property.builderRating && (
               <div className="flex items-center gap-1">
                 <Star className="w-4 h-4 text-yellow-500 fill-current" />
                 <span className="text-sm font-medium">{property.builderRating.toFixed(1)}</span>
@@ -179,11 +263,51 @@ const EnhancedPropertyCard = ({ property, className = "" }: PropertyCardProps) =
             )}
           </div>
 
-          {/* Status */}
-          {property.possessionStatus && (
+          {/* Status and possession */}
+          <div className="flex items-center justify-between text-sm">
+            {property.status && (
+              <div className="flex items-center gap-1">
+                <span className="text-muted-foreground">Status:</span>
+                <Badge variant="outline">{property.status}</Badge>
+              </div>
+            )}
+            {property.possessionDate && (
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Calendar className="w-3 h-3" />
+                <span>{new Date(property.possessionDate).toLocaleDateString()}</span>
+              </div>
+            )}
+          </div>
+
+          {/* RERA Status */}
+          {property.reraStatus && (
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Possession:</span>
-              <Badge variant="outline">{property.possessionStatus}</Badge>
+              <div className="flex items-center gap-1">
+                <Shield className="w-4 h-4 text-muted-foreground" />
+                <span className="text-muted-foreground">RERA:</span>
+              </div>
+              <div className="flex items-center gap-1">
+                {property.reraStatus.approved ? (
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 text-red-600" />
+                )}
+                <span className="text-xs font-mono">{property.reraStatus.registrationNumber || 'Not Approved'}</span>
+              </div>
+            </div>
+          )}
+
+          {/* View count and last updated */}
+          {property.metadata && (
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <Eye className="w-3 h-3" />
+                <span>{property.metadata.viewCount.toLocaleString()} views</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                <span>Updated {new Date(property.metadata.lastUpdated).toLocaleDateString()}</span>
+              </div>
             </div>
           )}
 
@@ -214,7 +338,7 @@ const EnhancedPropertyCard = ({ property, className = "" }: PropertyCardProps) =
           <div className="flex gap-2 pt-2">
             <Button
               onClick={() => handleContactBuilder(
-                { id: property.id, builderName: property.builder || 'Builder', title: property.title },
+                { id: property.id, builderName: property.builderName || 'Builder', title: property.title },
                 {
                   name: 'User',
                   email: 'user@example.com',
@@ -243,9 +367,9 @@ const EnhancedPropertyCard = ({ property, className = "" }: PropertyCardProps) =
           </div>
 
           {/* Last updated */}
-          {property.lastUpdated && (
+          {property.metadata?.lastUpdated && (
             <p className="text-xs text-muted-foreground text-center pt-1">
-              Updated {property.lastUpdated}
+              Updated {new Date(property.metadata.lastUpdated).toLocaleDateString()}
             </p>
           )}
         </CardContent>
