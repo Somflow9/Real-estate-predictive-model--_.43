@@ -260,10 +260,10 @@ const BrickMatrixRecommendationsRevamped: React.FC = () => {
   const filteredProperties = properties.filter(property => {
     if (!searchQuery) return true;
     return (
-      property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      property.locality.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      property.builderName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      property.city.toLowerCase().includes(searchQuery.toLowerCase())
+      (property.title || '').toLowerCase().includes(searchQuery.toLowerCase()) || // Fix: Added null safety check
+      (property.locality || '').toLowerCase().includes(searchQuery.toLowerCase()) || // Fix: Added null safety check
+      (property.builderName || '').toLowerCase().includes(searchQuery.toLowerCase()) || // Fix: Added null safety check
+      (property.city || '').toLowerCase().includes(searchQuery.toLowerCase()) // Fix: Added null safety check
     );
   });
 
