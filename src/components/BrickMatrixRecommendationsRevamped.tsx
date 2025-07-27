@@ -569,7 +569,6 @@ const BrickMatrixRecommendationsRevamped: React.FC = () => {
                     </motion.div>
                   ))}
                 </AnimatePresence>
-                </div>
 
                 {/* Load More */}
                 {sortedProperties.length >= 20 && (

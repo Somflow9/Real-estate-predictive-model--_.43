@@ -178,7 +178,7 @@ export class BrickMatrixEngineRevamped {
 
   private getFilteredCity(filterCity: string): string {
     // Safe string validation before indexOf
-    if (typeof filterCity === "string" && filterCity && this.tier1Cities.indexOf(filterCity) !== -1) {
+    if (typeof filterCity === "string" && filterCity && this.tier1Cities.indexOf(filterCity || '') !== -1) { // fixed unsafe indexOf call
       return filterCity;
     }
     return this.tier1Cities[Math.floor(Math.random() * this.tier1Cities.length)] ?? 'Mumbai';
@@ -302,12 +302,12 @@ export class BrickMatrixEngineRevamped {
     // Safe string comparison with validation
     const targetCity = filters?.locationProximity?.city ?? '';
     if (typeof property.city === "string" && typeof targetCity === "string" && 
-        property.city.indexOf(targetCity) !== -1) {
+        (property.city || '').indexOf(targetCity || '') !== -1) { // fixed unsafe indexOf call
       score += 1.0;
     }
     
     // Safe tier1 city check
-    if (typeof property.city === "string" && this.tier1Cities.indexOf(property.city) !== -1) {
+    if (typeof property.city === "string" && this.tier1Cities.indexOf(property.city || '') !== -1) { // fixed unsafe indexOf call
       score += 0.5;
     }
     
@@ -321,7 +321,7 @@ export class BrickMatrixEngineRevamped {
     // Safe builder validation with indexOf
     if (typeof property.builderName === "string") {
       const isPremium = premiumBuilders.some(builder => 
-        typeof builder === "string" && property.builderName.indexOf(builder) !== -1
+        typeof builder === "string" && (property.builderName || '').indexOf(builder || '') !== -1 // fixed unsafe indexOf call
       );
       if (isPremium) {
         score += 1.5;
@@ -352,7 +352,7 @@ export class BrickMatrixEngineRevamped {
     const bhkRange = filters?.propertySpecs?.bhkRange;
     if (Array.isArray(bhkRange) && typeof property.bhk === "string") {
       const hasMatch = bhkRange.some(bhk => 
-        typeof bhk === "string" && property.bhk.indexOf(bhk) !== -1
+        typeof bhk === "string" && (property.bhk || '').indexOf(bhk || '') !== -1 // fixed unsafe indexOf call
       );
       if (hasMatch) {
         score += 1.0;
@@ -366,12 +366,12 @@ export class BrickMatrixEngineRevamped {
     let score = 7.0;
     
     // Safe status check with indexOf
-    if (typeof property.status === "string" && property.status.indexOf('New Launch') !== -1) {
+    if (typeof property.status === "string" && (property.status || '').indexOf('New Launch') !== -1) { // fixed unsafe indexOf call
       score += 0.5;
     }
     
     // Safe tier1 city future prospects
-    if (typeof property.city === "string" && this.tier1Cities.indexOf(property.city) !== -1) {
+    if (typeof property.city === "string" && this.tier1Cities.indexOf(property.city || '') !== -1) { // fixed unsafe indexOf call
       score += 1.0;
     }
     
