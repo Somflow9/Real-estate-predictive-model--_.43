@@ -330,7 +330,7 @@ const BrickMatrixRecommendationsRevamped: React.FC = () => {
                         BrickMatrix™ Recommendations
                       </h1>
                       <p className="text-purple-400 text-sm">
-                        Smart • Seamless • Tier 1 Cities Only
+                        🔄 Showing premium & general listings • Tier 1 Cities • All Property Types
                       </p>
                     </div>
                   </div>
@@ -504,6 +504,9 @@ const BrickMatrixRecommendationsRevamped: React.FC = () => {
                     </Badge>
                     <Badge variant="outline" className="border-purple-600/50 text-purple-300">
                       {smartFilters.locationProximity.city}
+                    </Badge>
+                    <Badge variant="outline" className="border-green-600/50 text-green-300">
+                      🔄 All Listings
                     </Badge>
                   </div>
                   

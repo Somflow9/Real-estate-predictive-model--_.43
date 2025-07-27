@@ -468,7 +468,7 @@ const SmartFilterPanel: React.FC<SmartFilterPanelProps> = ({
                 <div className="space-y-2">
                   <Label className="text-purple-300 text-xs">Property Type</Label>
                   <div className="flex flex-wrap gap-1">
-                    {['Apartment', 'Studio', 'Villa', 'Penthouse'].map(type => (
+                    {['Apartment', 'Studio', 'Villa', 'Penthouse', 'Builder Floor', 'Independent House', 'Row House', 'Duplex'].map(type => (
                       <Badge
                         key={type}
                         variant={filters.propertySpecs.propertyTypes.includes(type) ? "default" : "outline"}
@@ -493,7 +493,7 @@ const SmartFilterPanel: React.FC<SmartFilterPanelProps> = ({
                 <div className="space-y-2">
                   <Label className="text-purple-300 text-xs">Possession Status</Label>
                   <div className="flex flex-wrap gap-1">
-                    {['Ready', 'Under Construction', 'Pre-launch'].map(status => (
+                    {['Ready', 'Under Construction', 'Pre-launch', 'Resale', 'Immediate'].map(status => (
                       <Badge
                         key={status}
                         variant={filters.propertySpecs.possessionStatus.includes(status) ? "default" : "outline"}
@@ -604,6 +604,9 @@ const SmartFilterPanel: React.FC<SmartFilterPanelProps> = ({
                       <SelectItem value="National" className="text-white hover:bg-purple-600/20">National</SelectItem>
                       <SelectItem value="Local" className="text-white hover:bg-purple-600/20">Local</SelectItem>
                       <SelectItem value="Foreign MNC" className="text-white hover:bg-purple-600/20">Foreign MNC</SelectItem>
+                      <SelectItem value="Mid-Sized" className="text-white hover:bg-purple-600/20">Mid-Sized</SelectItem>
+                      <SelectItem value="Regional" className="text-white hover:bg-purple-600/20">Regional</SelectItem>
+                      <SelectItem value="Owner/Broker" className="text-white hover:bg-purple-600/20">Owner/Broker</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
