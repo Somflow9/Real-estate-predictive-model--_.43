@@ -70,8 +70,6 @@ export class RealTimePropertyService {
   private apiEndpoints = {
     magicbricks: 'https://api.magicbricks.com/v1/properties',
     acres99: 'https://api.99acres.com/v2/search',
-    housing: 'https://api.housing.com/v1/listings',
-    nobroker: 'https://api.nobroker.in/v1/properties'
   };
 
   private tier1Cities = ['Mumbai', 'Delhi', 'Bangalore', 'Pune', 'Hyderabad', 'Chennai', 'Kolkata', 'Gurgaon'];
@@ -89,7 +87,7 @@ export class RealTimePropertyService {
     const allProperties: PropertyListing[] = [];
     
     // Simulate parallel API calls to all platforms
-    const sources = ['MagicBricks', '99acres', 'Housing.com', 'NoBroker'] as const;
+    const sources = ['MagicBricks', '99acres'] as const;
     
     for (const source of sources) {
       try {
@@ -193,7 +191,7 @@ export class RealTimePropertyService {
     let totalScanned = 0;
     
     // Enhanced parallel fetching with better error handling
-    const sources = ['MagicBricks', '99acres', 'Housing.com', 'NoBroker'] as const;
+    const sources = ['MagicBricks', '99acres'] as const;
     
     const fetchPromises = sources.map(async (source) => {
       try {

@@ -2,13 +2,6 @@ interface BrickMatrixConfig {
   dataSources: {
     magicbricks: { endpoint: string; priority: number };
     acres99: { endpoint: string; priority: number };
-    housing: { endpoint: string; priority: number };
-    nobroker: { endpoint: string; priority: number };
-  };
-  marketPulseFeeds: {
-    moneycontrol: { endpoint: string; refreshInterval: number };
-    niftyRealty: { endpoint: string; refreshInterval: number };
-    interestRates: { endpoint: string; refreshInterval: number };
   };
 }
 
@@ -117,13 +110,6 @@ export class BrickMatrixService {
     dataSources: {
       magicbricks: { endpoint: 'https://api.magicbricks.com/v2/properties', priority: 1 },
       acres99: { endpoint: 'https://api.99acres.com/v3/search', priority: 2 },
-      housing: { endpoint: 'https://api.housing.com/v2/listings', priority: 3 },
-      nobroker: { endpoint: 'https://api.nobroker.in/v2/properties', priority: 4 }
-    },
-    marketPulseFeeds: {
-      moneycontrol: { endpoint: 'https://api.moneycontrol.com/realestate/feed', refreshInterval: 300000 },
-      niftyRealty: { endpoint: 'https://api.nseindia.com/realty-index', refreshInterval: 600000 },
-      interestRates: { endpoint: 'https://api.rbi.org.in/housing-rates', refreshInterval: 3600000 }
     }
   };
 
@@ -148,11 +134,9 @@ export class BrickMatrixService {
 
     try {
       // Parallel data fetching from all sources
-      const [magicbricksData, acres99Data, housingData, nobrokerData] = await Promise.allSettled([
+      const [magicbricksData, acres99Data] = await Promise.allSettled([
         this.fetchFromMagicBricks(filters),
         this.fetchFrom99Acres(filters),
-        this.fetchFromHousing(filters),
-        this.fetchFromNoBroker(filters)
       ]);
 
       // Combine and deduplicate data
@@ -160,8 +144,6 @@ export class BrickMatrixService {
       
       if (magicbricksData.status === 'fulfilled') allProperties.push(...magicbricksData.value);
       if (acres99Data.status === 'fulfilled') allProperties.push(...acres99Data.value);
-      if (housingData.status === 'fulfilled') allProperties.push(...housingData.value);
-      if (nobrokerData.status === 'fulfilled') allProperties.push(...nobrokerData.value);
 
       // Apply BrickMatrix™ AI scoring and ranking
       const scoredProperties = await this.applyBrickMatrixScoring(allProperties, filters);
@@ -194,17 +176,6 @@ export class BrickMatrixService {
     return this.generateMockProperties('99acres', filters, 12);
   }
 
-  private async fetchFromHousing(filters: any): Promise<BrickMatrixProperty[]> {
-    console.log('🏡 Fetching from Housing.com...');
-    await new Promise(resolve => setTimeout(resolve, 700));
-    return this.generateMockProperties('Housing.com', filters, 10);
-  }
-
-  private async fetchFromNoBroker(filters: any): Promise<BrickMatrixProperty[]> {
-    console.log('🏢 Fetching from NoBroker...');
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return this.generateMockProperties('NoBroker', filters, 8);
-  }
 
   private async applyBrickMatrixScoring(
     properties: BrickMatrixProperty[], 

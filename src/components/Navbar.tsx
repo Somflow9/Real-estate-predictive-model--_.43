@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Star, MessageCircle, Building, BarChart3, Database } from 'lucide-react';
+import { Home, Star, MessageCircle, Building, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePropertyActions } from '@/hooks/usePropertyActions';
 
@@ -11,7 +11,6 @@ const Navbar = () => {
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/recommendations', label: 'BrickMatrix™', icon: Star },
-    { path: '/unified', label: 'Unified API', icon: Database },
     { path: '/chat', label: 'Chat', icon: MessageCircle },
   ];
 

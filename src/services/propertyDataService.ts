@@ -18,9 +18,7 @@ interface PropertySource {
 export class PropertyDataService {
   private sources: PropertySource[] = [
     { id: '99acres', name: '99acres', url: 'https://www.99acres.com', isActive: true },
-    { id: 'nobroker', name: 'NoBroker', url: 'https://www.nobroker.in', isActive: true },
     { id: 'magicbricks', name: 'MagicBricks', url: 'https://www.magicbricks.com', isActive: true },
-    { id: 'housing', name: 'Housing.com', url: 'https://housing.com', isActive: true }
   ];
 
   private tier1Cities = ['Mumbai', 'Delhi', 'Bangalore', 'Pune', 'Hyderabad', 'Chennai', 'Kolkata', 'Gurgaon'];

@@ -5,10 +5,7 @@ import { Building, ExternalLink, CheckCircle } from 'lucide-react';
 const PropertySourcesBadge = () => {
   const sources = [
     { name: '99acres', verified: true, color: 'bg-blue-600' },
-    { name: 'NoBroker', verified: true, color: 'bg-green-600' },
     { name: 'MagicBricks', verified: true, color: 'bg-orange-600' },
-    { name: 'Housing.com', verified: true, color: 'bg-purple-600' },
-    { name: 'CommonFloor', verified: false, color: 'bg-gray-500' },
   ];
 
   return (
@@ -43,7 +40,7 @@ const PropertySourcesBadge = () => {
       </div>
       
       <div className="text-xs text-muted-foreground">
-        Real-time property listings • Live pricing updates • Verified sources
+        Property listings • Verified sources
       </div>
     </motion.div>
   );

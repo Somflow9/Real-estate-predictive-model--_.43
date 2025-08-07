@@ -6,7 +6,6 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Recommendations from './pages/Recommendations';
 import Chat from './pages/Chat';
-import UnifiedRecommendations from './pages/UnifiedRecommendations';
 import { PropertyProvider } from './contexts/PropertyContext';
 import PropertyDetailsModal from './components/PropertyDetailsModal';
 import ComparisonModal from './components/ComparisonModal';
@@ -42,7 +41,6 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/recommendations" element={<Recommendations />} />
-                <Route path="/unified" element={<UnifiedRecommendations />} />
                 <Route path="/chat" element={<Chat />} />
               </Routes>
             </main>

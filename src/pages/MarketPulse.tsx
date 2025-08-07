@@ -158,7 +158,7 @@ const MarketPulse = () => {
           <span>Market Pulse - Tier 1 Intelligence</span>
         </h1>
         <p className="text-purple-200 text-lg">
-          Live market intelligence • Real-time data feeds • BrickMatrix™ Engine insights • Tier 1 cities only
+          Live market intelligence • BrickMatrix™ Engine insights • Tier 1 cities only
         </p>
       </motion.div>
 
@@ -656,7 +656,7 @@ const MarketPulse = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Newspaper className="h-4 w-4 text-purple-400" />
-              <span className="text-sm text-purple-300">Tier 1 Intelligence Sources:</span>
+              Powered by BrickMatrix™ Engine • Tier 1 Cities Intelligence • Updated every 15 minutes
             </div>
             <div className="flex flex-wrap gap-2">
               {['MoneyControl Realty', 'ET Realty', 'CREDAI Reports', 'PropIndex', 'Government RERA', 'BrickMatrix™ Engine'].map(source => (

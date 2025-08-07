@@ -16,21 +16,7 @@
           "refresh_interval": 900,
           "priority": 2
         },
-        {
-          "platform": "Housing.com",
-          "api_endpoint": "https://api.housing.com/v2/listings",
-          "refresh_interval": 1200,
-          "priority": 3
-        },
-        {
-          "platform": "NoBroker",
-          "api_endpoint": "https://api.nobroker.in/v2/properties",
-          "refresh_interval": 1200,
-          "priority": 4
-        }
       ],
-      "market_pulse_feeds": [
-      ]
     },
     "property_object": {
       "location_intelligence": {

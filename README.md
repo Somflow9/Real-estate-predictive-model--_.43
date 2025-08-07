@@ -7,7 +7,6 @@ BrickMatrix™ is India's most advanced real estate intelligence platform that p
 ### Core AI Capabilities
 - **BrickMatrix™ Engine**: Revolutionary AI-powered property scoring and recommendation system
 - **Real-time Multi-Platform Data**: Live feeds from MagicBricks, 99acres, Housing.com & NoBroker
-- **Unified API Integration**: Live data from Housing.com, SquareYards, and NoBroker APIs
 - **Builder Intelligence**: Comprehensive credibility analysis with RERA verification and delivery scores
 - **Location Intelligence**: Advanced connectivity scoring, hotspot detection, and infrastructure analysis
 - **Smart Investment Scoring**: AI-driven affordability, livability, and investment potential analysis
@@ -42,7 +41,6 @@ BrickMatrix™ is India's most advanced real estate intelligence platform that p
 ## 🛠️ Technical Stack
 
 - **Frontend**: React 18, TypeScript, Vite
-- **API Integration**: Housing.com, SquareYards, NoBroker real-time APIs
 - **Styling**: Tailwind CSS with custom BrickMatrix™ theme
 - **UI Components**: Shadcn/ui library
 - **State Management**: React Query for API state
@@ -73,10 +71,6 @@ BrickMatrix™ is India's most advanced real estate intelligence platform that p
 3. **Configure API Keys**
    ```bash
    cp .env.example .env
-   # Add your API keys:
-   # HOUSING_API_KEY=your_housing_api_key
-   # SQUAREYARDS_API_KEY=your_squareyards_api_key
-   # NOBROKER_API_KEY=your_nobroker_api_key
    ```
 
 4. **Start development server**

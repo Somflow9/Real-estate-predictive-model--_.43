@@ -292,7 +292,7 @@ const BrickMatrixRecommendationsRevamped: React.FC = () => {
             BrickMatrix™ Engine
           </h1>
           <p className="text-purple-400">
-            Applying 6-layer intelligence for Tier 1 cities...
+            🔄 Showing premium listings • Tier 1 Cities • All Property Types
           </p>
         </motion.div>
       </div>
@@ -590,7 +590,7 @@ const BrickMatrixRecommendationsRevamped: React.FC = () => {
           <div className="border-t border-purple-600/30 bg-gray-900/30 p-6">
             <div className="text-center space-y-2">
               <p className="text-purple-400 text-sm">
-                Powered by BrickMatrix™ Engine • Tier 1 Cities Intelligence • Real-time Data
+                Powered by BrickMatrix™ Engine • Tier 1 Cities Intelligence
               </p>
               <div className="flex justify-center space-x-4 text-xs text-gray-500">
                 <span>Properties scanned: {sortedProperties.length * 47}</span>

@@ -252,7 +252,7 @@ const HomePage = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.4 }}
           >
-            Real-time market data • BrickMatrix™ valuations • Builder analytics • Tier 1-3 city coverage • Live feeds from 99acres, NoBroker & MagicBricks
+            Real-time market data • BrickMatrix™ valuations • Builder analytics • Tier 1-3 city coverage • Live feeds from 99acres & MagicBricks
           </motion.p>
         </div>
       </section>
