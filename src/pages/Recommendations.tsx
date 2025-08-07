@@ -1,4 +1,4 @@
-import BrickMatrixRecommendationsRevamped from '@/components/BrickMatrixRecommendationsRevamped';
+import RecommendationEngineV2 from '@/components/RecommendationEngineV2';
 import PropertyDetailsModal from '@/components/PropertyDetailsModal';
 import ComparisonModal from '@/components/ComparisonModal';
 import { usePropertyActions } from '@/hooks/usePropertyActions';
@@ -16,7 +16,7 @@ const Recommendations = () => {
 
   return (
     <>
-      <BrickMatrixRecommendationsRevamped />
+      <RecommendationEngineV2 />
       
       {/* Property Details Modal */}
       <PropertyDetailsModal
