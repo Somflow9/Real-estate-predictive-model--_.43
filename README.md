@@ -1,26 +1,27 @@
 # BrickMatrix™ - Premium Real Estate Intelligence Platform
 
-BrickMatrix™ is India's most advanced real estate intelligence platform that provides data-driven property insights powered by cutting-edge AI technology. Built with React, TypeScript, and featuring the revolutionary BrickMatrix™ Engine, it offers comprehensive property analysis, market trends, and investment recommendations.
+BrickMatrix™ is India's most advanced real estate intelligence platform that provides data-driven property insights powered by cutting-edge AI technology. Built with React, TypeScript, and featuring the revolutionary BrickMatrix™ Engine v2.0, it offers comprehensive property analysis, market trends, and investment recommendations with real-time data ingestion from top 4 platforms.
 
 ## 🚀 Features
 
 ### Core AI Capabilities
-- **BrickMatrix™ Engine**: Revolutionary AI-powered property scoring and recommendation system
-- **Real-time Multi-Platform Data**: Live feeds from MagicBricks, 99acres, Housing.com & NoBroker
+- **BrickMatrix™ Engine v2.0**: Revolutionary AI-powered property scoring and recommendation system with complete rebuild
+- **Real-time Multi-Platform Data**: Live feeds from Housing.com, 99acres.com, MagicBricks.com & NoBroker.in
 - **Builder Intelligence**: Comprehensive credibility analysis with RERA verification and delivery scores
 - **Location Intelligence**: Advanced connectivity scoring, hotspot detection, and infrastructure analysis
 - **Smart Investment Scoring**: AI-driven affordability, livability, and investment potential analysis
+- **Intelligent Recommendation Engine**: Complete rebuild with user intent modeling and personalized ranking
 
 ### Advanced Features
 - **Premium Dark UI**: Deep purple and black theme with glassmorphism effects
-- **25+ Buyer Preferences**: Comprehensive filtering including smart home features, sustainability options
-- **Competing Projects Analysis**: Nearby scheme detection with distance and pricing comparison
-- **BrickMatrix™ Scoring**: Proprietary 10-point scoring system for properties
-- **AI Recommendation Engine**: Strong Buy/Buy/Hold recommendations with confidence levels
+- **Smart Filter System**: Preserved and enhanced filtering system with 25+ parameters
+- **Real-time Data Ingestion**: Live property data from 4 major platforms
+- **Builder Credibility Scoring**: Advanced builder intelligence and track record analysis
+- **Location Trend Analysis**: Comprehensive locality scoring with future growth predictions
+- **Investment Grade Classification**: A+ to C grading system for investment potential
 
 ### Supported Cities
-**Tier-1 Cities**: Mumbai, Delhi, Bangalore, Pune, Hyderabad, Chennai, Kolkata, Gurgaon
-**Tier-2 Cities**: Ahmedabad, Surat, Jaipur, Lucknow, Kanpur, Nagpur, Indore, Thane, Bhopal, and more
+**Tier-1 Cities**: Mumbai, Delhi NCR (Delhi, Noida, Gurugram, Ghaziabad), Bengaluru, Pune, Hyderabad, Chennai, Ahmedabad, Kolkata
 
 ## 🎨 Design System
 
@@ -202,35 +203,61 @@ src/
 ```
 
 ### Key Services
-- **BrickMatrix™ Service**: Core AI engine for property analysis and scoring
-- **Real-time Property Service**: Multi-platform data aggregation and processing
-- **Market Pulse Service**: Live market indicators and sentiment analysis
-- **Builder Schemes Service**: Comprehensive builder credibility and project analysis
+- **Real Estate Data Ingestion**: Multi-platform data aggregation from top 4 sources
+- **Intelligent Recommendation Engine**: Complete rebuild with advanced AI scoring
+- **Builder Intelligence Service**: Comprehensive builder credibility and track record analysis
+- **Location Trend Analysis**: Advanced locality scoring with future growth predictions
+- **Smart Filter System**: Preserved filtering system with enhanced integration
 
 ## 🔧 Customization
 
 ### Adding New Cities
-Update `src/services/brickMatrixService.ts`:
+Update `src/services/realEstateDataIngestion.ts`:
 ```typescript
-private getRandomLocality(city: string): string {
-  const localities = {
-    ...existingCities,
-    'YourNewCity': ['Locality1', 'Locality2', 'Locality3']
-  };
+private builderDatabase = {
+  ...existingCities,
+  'YourNewCity': ['Builder1', 'Builder2', 'Builder3']
+};
+```
+
+### Customizing Recommendation Scoring
+Modify the scoring algorithm in `src/services/intelligentRecommendationEngine.ts`:
+```typescript
+private calculateIntelligentScores(listings: any[], userIntent: UserIntent, city: string): Promise<EnhancedRecommendation[]> {
+  // Customize scoring weights
+  const overall = Math.round(
+    (builderCredibility * 0.25 +     // Builder trust
+     locationTrend * 0.25 +          // Location growth
+     priceValue * 0.20 +             // Price efficiency
+     userAlignment * 0.20 +          // User preferences
+     projectPopularity * 0.10) * 10  // Market popularity
+  ) / 10;
 }
 ```
 
-### Customizing BrickMatrix™ Scoring
-Modify the scoring algorithm in `src/services/brickMatrixService.ts`:
+### Adding New Data Sources
+Update `src/services/realEstateDataIngestion.ts`:
 ```typescript
-private calculateLocationScore(location: any): number {
-  // Customize location scoring logic
-  return Math.min(10, yourCustomLogic);
+private async ingestFromSource(
+  source: 'Housing.com' | '99acres.com' | 'MagicBricks.com' | 'NoBroker.in' | 'YourNewSource',
+  config: IngestionConfig
+): Promise<PropertyListing[]> {
+  // Add your new source logic
 }
 ```
 
-### Styling Adjustments
-Update BrickMatrix™ theme in `src/styles/brickMatrixTheme.css`:
+### Customizing Smart Filters
+The Smart Filter system is preserved exactly as-is. To extend it, modify `src/components/SmartFilterPanel.tsx`:
+```typescript
+// Add new filter categories while preserving existing logic
+const newFilterCategory = {
+  ...existingCities,
+  newCategory: ['Option1', 'Option2', 'Option3']
+}
+```
+
+### Theme Customization
+Update BrickMatrix™ theme in `src/styles/brickMatrixTheme.css` (preserved):
 ```css
 :root {
   --bm-primary-purple: #6A0DAD;
@@ -238,6 +265,21 @@ Update BrickMatrix™ theme in `src/styles/brickMatrixTheme.css`:
   --bm-gradient-primary: linear-gradient(135deg, #000000 0%, #4B0082 100%);
 }
 ```
+
+## 🔄 Version 2.0 Changes
+
+### Complete Rebuild
+- **Deleted**: All legacy BrickMatrix services and components
+- **Rebuilt**: Recommendation engine with real-time data ingestion
+- **Preserved**: Smart Filter Panel with full functionality
+- **Enhanced**: Builder intelligence and location trend analysis
+- **Added**: Multi-platform data aggregation from top 4 sources
+
+### New Architecture
+- Real Estate Data Ingestion Service
+- Intelligent Recommendation Engine
+- Builder Intelligence Service
+- Location Trend Analysis Service
 
 ## 🤝 Contributing
 
@@ -260,14 +302,19 @@ For issues, questions, or feature requests:
 
 ## 🔮 Roadmap
 
-- [ ] Enhanced BrickMatrix™ scoring with machine learning
-- [ ] Real-time property alerts and notifications
+- [x] Complete recommendation engine rebuild (v2.0)
+- [x] Real-time data ingestion from 4 platforms
+- [x] Builder intelligence and credibility scoring
+- [x] Location trend analysis and growth predictions
+- [ ] Machine learning model training on collected data
 - [ ] Virtual property tours integration
 - [ ] Blockchain-based property verification
-- [ ] Advanced predictive analytics
+- [ ] Advanced predictive analytics with ML
 - [ ] Mobile app with AR features
 - [ ] Integration with more international markets
+- [ ] Voice search and multilingual support
+- [ ] Agent dashboards and analytics panel
 
 ---
 
-**BrickMatrix™** - Premium Real Estate Intelligence. Where data meets decisions. 🏠✨
+**BrickMatrix™ v2.0** - Premium Real Estate Intelligence. Where real-time data meets intelligent decisions. 🏠✨
